@@ -1,0 +1,49 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/core/assests/fonts/NanumGothic-Bold.ttf",
+      "sha1": "c036b6e55f5b44a924dc28229afbbad8b0eca908"
+    },
+    {
+      "path": "src/core/assests/fonts/NanumGothic-ExtraBold.ttf",
+      "sha1": "d904153dbcf659ab2a704f7aba5909114dee57ae"
+    },
+    {
+      "path": "src/core/assests/fonts/NanumGothic-Regular.ttf",
+      "sha1": "16b60dd27e95e2898aee302aeb0ee8546a24b4ac"
+    },
+    {
+      "path": "src/core/assests/fonts/OFL.txt",
+      "sha1": "205fc911af5a4c8c4135b443afe214d20780acbc"
+    },
+    {
+      "path": "src/core/assests/fonts/Poppins-Black.ttf",
+      "sha1": "645e04c53c6b5b35bce654a811ebce16af8aa721"
+    },
+    {
+      "path": "src/core/assests/fonts/Poppins-BlackItalic.ttf",
+      "sha1": "be4ef2aac7775a4b0179c0ecfce6cea8f7783f63"
+    },
+    {
+      "path": "src/core/assests/fonts/Poppins-Bold copy.ttf",
+      "sha1": "875cf0cecd647bcf22e79d633d868c1b1ec98dfa"
+    },
+    {
+      "path": "src/core/assests/fonts/Poppins-Bold.ttf",
+      "sha1": "875cf0cecd647bcf22e79d633d868c1b1ec98dfa"
+    },
+    {
+      "path": "src/core/assests/fonts/Poppins-Medium.ttf",
+      "sha1": "283f21b44efbdbf276ba802be2d949a36bbc4233"
+    },
+    {
+      "path": "src/core/assests/fonts/Poppins-Regular.ttf",
+      "sha1": "fdd3002e7d814ee47c1c1b8487c72c6bbb3a2d00"
+    },
+    {
+      "path": "src/core/assests/fonts/Poppins-SemiBold.ttf",
+      "sha1": "8a4ace9392d06bcb7f8ea2f5169b07e4c383a90d"
+    }
+  ]
+}
