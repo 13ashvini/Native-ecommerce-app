@@ -2,6 +2,7 @@ import React from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import images from '../../core/assests/images';
 import AllRestaurantsCard from '../../core/component/ui/AllRestaurantsCard';
+import { Routes } from '../../core/navigation/type';
 export const allRestaurantsListData = [
     {
         id: 1,
@@ -140,7 +141,7 @@ export const allRestaurantsListData = [
 
 ];
 
-const AllRestrauntsList = () => {
+const AllRestrauntsList = ({ navigation }: any) => {
     return (
         <View style={styles.mainView}>
             <FlatList
@@ -149,6 +150,7 @@ const AllRestrauntsList = () => {
                 renderItem={({ item }: any) => {
                     return (
                         <AllRestaurantsCard
+                            onPress={() => { navigation.navigate(Routes.RestaurantDetail) }}
                             ratingNumber={item?.ratingNumber}
                             availableFoodType={item?.availableFoodType}
                             image={item?.image}

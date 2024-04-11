@@ -15,6 +15,7 @@ type Props = {
     delivery: string
     availableFoodType: any
     ratingNumber: string
+    onPress: () => void
 }
 const AllRestaurantsCard = ({
     image,
@@ -24,7 +25,8 @@ const AllRestaurantsCard = ({
     time,
     delivery,
     availableFoodType,
-    ratingNumber
+    ratingNumber,
+    onPress
 }: Props) => {
     const width = Dimensions.get('window').width;
     const DotIcon = Icon.dotIcon
@@ -57,7 +59,9 @@ const AllRestaurantsCard = ({
                 // autoplayInterval={3000}
 
                 />
-                <Text style={styles.partnerNameStyle}>{partnerName}</Text>
+                <Text style={styles.partnerNameStyle}
+                    onPress={onPress}
+                >{partnerName}</Text>
                 <Text>{location}</Text>
                 <View style={styles.deliveryView}>
                     {/* <Text>$$</Text> */}
@@ -79,7 +83,7 @@ const AllRestaurantsCard = ({
                     {rating && <Text style={styles.ratingStyle}>{rating || 1} </Text>}
                     <View style={styles.iconStyle}>
                         <Icon.StarIcon />
-                        <Text style={styles?.iconStyle}> Ratings</Text>
+                        <Text style={styles?.iconStyle}>{ratingNumber}+ Ratings</Text>
                     </View>
                     <View style={styles.iconStyle}>
                         < Icon.ClockIcon color={Color?.mds_global_gray_color} size={20} />

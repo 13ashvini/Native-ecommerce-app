@@ -4,6 +4,7 @@ import { Routes } from '../type';
 import HomeScreen from '../../../screens/Home/HomeScreen';
 import FeaturedPartnersList from '../../../screens/Home/FeaturedPartnersList';
 import AllRestrauntsList from '../../../screens/Home/AllRestrauntsList';
+import RestrauntsDetail from '../../../screens/Home/RestrauntsDetail/RestrauntsDetail';
 const DashboardStack = createStackNavigator()
 const HomeNavigation = () => {
 
@@ -28,7 +29,7 @@ const HomeNavigation = () => {
 
             <DashboardStack.Screen
                 name={Routes.RestaurantDetail}
-                component={AllRestrauntsList} />
+                component={RestrauntsDetail} />
         </DashboardStack.Navigator>
 
     )

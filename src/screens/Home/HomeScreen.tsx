@@ -115,6 +115,7 @@ const HomeScreen = ({ navigation }: any) => {
                         renderItem={({ item }: any) => {
                             return (
                                 <AllRestaurantsCard
+                                    onPress={() => { }}
                                     ratingNumber={item?.ratingNumber}
                                     availableFoodType={item?.availableFoodType}
                                     image={item?.image}
