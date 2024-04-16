@@ -2,6 +2,7 @@ import React from 'react'
 import { View } from 'react-native'
 import RestrauntsDetail from './RestrauntsDetail'
 import images from '../../../core/assests/images'
+
 export const RestaurantsFeaturedItem = [{
     image: images.FeatureFoodImage1,
     foodName: "Cookie Sandwich",
@@ -9,6 +10,7 @@ export const RestaurantsFeaturedItem = [{
     foodType: "Chinese",
     price: 100,
     id: 52,
+    category: "dessert"
 },
 {
     image: images.FeatureFoodImage2,
@@ -17,6 +19,7 @@ export const RestaurantsFeaturedItem = [{
     foodType: "Chinese",
     price: 150,
     id: 53,
+    category: "Chinese"
 },
 {
     image: images.FeatureFoodImage3,
@@ -25,6 +28,7 @@ export const RestaurantsFeaturedItem = [{
     foodType: "Indian",
     price: 100,
     id: 54,
+    category: "burger"
 },
 {
     image: images.FeatureFoodImage4,
@@ -33,6 +37,7 @@ export const RestaurantsFeaturedItem = [{
     foodType: "Chinese",
     price: 18,
     id: 55,
+    category: "salad"
 },
 {
     image: images.FeatureFoodImage5,
@@ -41,6 +46,7 @@ export const RestaurantsFeaturedItem = [{
     foodType: "Chinese",
     price: 120,
     id: 56,
+    category: "dessert"
 },
 {
     image: images.FeatureFoodImage6,
@@ -49,7 +55,7 @@ export const RestaurantsFeaturedItem = [{
     foodType: "messican",
     price: 123,
     id: 57,
-
+    category: "Burger"
 },
 {
     image: images.FeatureFoodImage7,
@@ -58,6 +64,7 @@ export const RestaurantsFeaturedItem = [{
     foodType: "Chinese",
     price: 50,
     id: 58,
+    category: "Chinese"
 },
 {
     image: images.FeatureFoodImage8,
@@ -66,6 +73,7 @@ export const RestaurantsFeaturedItem = [{
     foodType: "Chinese",
     price: 108,
     id: 59,
+    category: "Chinese"
 },
 {
     image: images.FeatureFoodImage9,
@@ -74,22 +82,26 @@ export const RestaurantsFeaturedItem = [{
     foodType: "Indian",
     price: 100,
     id: 60,
+    category: "Main Course"
 },
 {
     image: images.FeatureFoodImage10,
-    foodName: "Straberry Shake",
+    foodName: "Strawberry Shake",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Indian",
     price: 30,
     id: 61,
-}]
+    category: "dessert"
+}];
+
 export const MostPopularFood = [{
     image: images.mostPopularlFood1,
     foodName: "Cookie Sandwich",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
     price: 10,
-    id: 26
+    id: 26,
+    category: "dessert"
 },
 {
     id: 27,
@@ -97,7 +109,8 @@ export const MostPopularFood = [{
     foodName: "Combo Burger",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 15
+    price: 15,
+    category: "burger"
 },
 {
     id: 28,
@@ -105,7 +118,8 @@ export const MostPopularFood = [{
     foodName: "Combo Sandwich",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 20
+    price: 20,
+    category: "burger"
 },
 {
     id: 29,
@@ -113,7 +127,8 @@ export const MostPopularFood = [{
     foodName: "Pasta",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 25
+    price: 25,
+    category: "Chinese"
 },
 {
     id: 30,
@@ -121,15 +136,18 @@ export const MostPopularFood = [{
     foodName: "Pub Classic",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 15
-}]
+    price: 15,
+    category: "burger"
+}];
+
 export const Seafood = [{
     id: 21,
     image: images.seaFoodImage1,
     foodName: "Oyster Dish",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 10
+    price: 10,
+    category: "Chinese"
 },
 {
     id: 22,
@@ -137,7 +155,8 @@ export const Seafood = [{
     foodName: "Oyster On Ice",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 10
+    price: 10,
+    category: "Chinese"
 },
 {
     id: 23,
@@ -145,7 +164,8 @@ export const Seafood = [{
     foodName: "Fried Rice on Pot",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 10
+    price: 10,
+    category: "Chinese"
 },
 {
     id: 24,
@@ -153,7 +173,8 @@ export const Seafood = [{
     foodName: "Oyster Dish",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 10
+    price: 10,
+    category: "Chinese"
 },
 {
     id: 25,
@@ -161,8 +182,10 @@ export const Seafood = [{
     foodName: "Oyster aqua Dish",
     description: "Shortbread, chocolate turtle cookies, and red velvet.",
     foodType: "Chinese",
-    price: 10
-}]
+    price: 10,
+    category: "Chinese"
+}];
+
 export const appetizers = [
     {
         id: 11,
@@ -170,7 +193,8 @@ export const appetizers = [
         description: "Mushrooms stuffed with a savory mixture of breadcrumbs, garlic, and cheese, baked until golden brown.",
         foodType: "Appetizers",
         price: 9.99,
-        image: images.AppetizersImage
+        image: images.AppetizersImage,
+        category: "appetizer"
     },
     {
         id: 12,
@@ -178,7 +202,8 @@ export const appetizers = [
         description: "Toasted bread topped with a mixture of diced tomatoes, garlic, basil, and olive oil, served as an appetizer or snack.",
         foodType: "Appetizers",
         price: 7.99,
-        image: images.AppetizersImage2
+        image: images.AppetizersImage2,
+        category: "appetizer"
     },
     {
         id: 13,
@@ -186,7 +211,8 @@ export const appetizers = [
         description: "Creamy dip made with spinach, artichokes, and cheese, served warm with tortilla chips or bread for dipping.",
         foodType: "Appetizers",
         price: 10.99,
-        image: images.AppetizersImage3
+        image: images.AppetizersImage3,
+        category: "appetizer"
     },
     {
         id: 14,
@@ -194,7 +220,8 @@ export const appetizers = [
         description: "Crispy chicken wings tossed in your choice of sauce: buffalo, barbecue, honey garlic, or teriyaki.",
         foodType: "Appetizers",
         price: 12.99,
-        image: images.AppetizersImage4
+        image: images.AppetizersImage4,
+        category: "appetizer"
     },
     {
         id: 15,
@@ -202,7 +229,8 @@ export const appetizers = [
         description: "Skewers featuring cherry tomatoes, fresh mozzarella, and basil leaves drizzled with balsamic glaze.",
         foodType: "Appetizers",
         price: 8.99,
-        image: images.AppetizersImage5
+        image: images.AppetizersImage5,
+        category: "appetizer"
     },
     {
         id: 16,
@@ -210,7 +238,8 @@ export const appetizers = [
         description: "Tender calamari rings lightly battered and fried until golden, served with marinara sauce for dipping.",
         foodType: "Appetizers",
         price: 11.99,
-        image: images.AppetizersImage6
+        image: images.AppetizersImage6,
+        category: "appetizer"
     },
     {
         id: 17,
@@ -218,7 +247,8 @@ export const appetizers = [
         description: "Crispy potato skins filled with melted cheese, bacon bits, sour cream, and green onions.",
         foodType: "Appetizers",
         price: 9.99,
-        image: images.AppetizersImage7
+        image: images.AppetizersImage7,
+        category: "appetizer"
     },
     {
         id: 18,
@@ -226,7 +256,8 @@ export const appetizers = [
         description: "An assortment of cheeses served with crackers, grapes, and nuts.",
         foodType: "Appetizers",
         price: 13.99,
-        image: images.AppetizersImage8
+        image: images.AppetizersImage8,
+        category: "appetizer"
     },
     {
         id: 19,
@@ -234,7 +265,8 @@ export const appetizers = [
         description: "Golden-fried mozzarella sticks served with marinara sauce for dipping.",
         foodType: "Appetizers",
         price: 8.99,
-        image: images.AppetizersImage9
+        image: images.AppetizersImage9,
+        category: "appetizer"
     },
     {
         id: 20,
@@ -242,7 +274,8 @@ export const appetizers = [
         description: "Sliced baguette brushed with garlic butter and toasted until golden brown.",
         foodType: "Appetizers",
         price: 6.99,
-        image: images.AppetizersImage
+        image: images.AppetizersImage,
+        category: "appetizer"
     }
 ];
 export const desiMainCourses = [
@@ -253,6 +286,7 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 12.99,
         image: images.DesiFoodImage1
+        , category: "Main Course"
     },
     {
         id: 2,
@@ -261,6 +295,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 14.99,
         image: images.DesiFoodImage2
+        , category: "Main Course"
+
     },
     {
         id: 3,
@@ -269,6 +305,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 11.99,
         image: images.DesiFoodImage3
+        , category: "Main Course"
+
     },
     {
         id: 4,
@@ -277,6 +315,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 13.99,
         image: images.DesiFoodImage4
+        , category: "Main Course"
+
     },
     {
         id: 5,
@@ -285,6 +325,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 10.99,
         image: images.DesiFoodImage5
+        , category: "Main Course"
+
     },
     {
         id: 6,
@@ -293,6 +335,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 13.99,
         image: images.DesiFoodImage6
+        , category: "Main Course"
+
     },
     {
         id: 7,
@@ -301,6 +345,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 11.99,
         image: images.DesiFoodImage7
+        , category: "Main Course"
+
     },
     {
         id: 8,
@@ -309,6 +355,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 15.99,
         image: images.DesiFoodImage8
+        , category: "Main Course"
+
     },
     {
         id: 9,
@@ -317,6 +365,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 9.99,
         image: images.DesiFoodImage9
+        , category: "Main Course"
+
     },
     {
         id: 10,
@@ -325,6 +375,8 @@ export const desiMainCourses = [
         foodType: "Desi Main Course",
         price: 14.99,
         image: images.DesiFoodImage10
+        , category: "Main Course"
+
     }
 ];
 export const desserts = [
@@ -334,7 +386,9 @@ export const desserts = [
         description: "Rich and moist chocolate cake, layered with creamy chocolate frosting, a classic indulgence.",
         foodType: "Dessert",
         price: 5.99,
-        image: images.DesertImage
+        image: images.DesertImage,
+        category: "Desert"
+
     },
     {
         id: 32,
@@ -342,7 +396,9 @@ export const desserts = [
         description: "Flaky pastry crust filled with sweetened apples, cinnamon, and spices, baked until golden brown.",
         foodType: "Dessert",
         price: 4.99,
-        image: images.DesertImage10
+        image: images.DesertImage10,
+        category: "Desert"
+
     },
     {
         id: 33,
@@ -350,7 +406,9 @@ export const desserts = [
         description: "Creamy and velvety cheesecake with a graham cracker crust, topped with fruit compote or chocolate ganache.",
         foodType: "Dessert",
         price: 6.99,
-        image: images.DesertImage3
+        image: images.DesertImage3,
+        category: "Desert"
+
     },
     {
         id: 34,
@@ -358,7 +416,9 @@ export const desserts = [
         description: "Smooth and creamy vanilla-flavored ice cream, perfect on its own or as a topping for pies and cakes.",
         foodType: "Dessert",
         price: 3.49,
-        image: images.DesertImage4
+        image: images.DesertImage4,
+        category: "Desert"
+
     },
     {
         id: 35,
@@ -366,7 +426,9 @@ export const desserts = [
         description: "Light and fluffy shortcake biscuits layered with fresh strawberries and whipped cream, a delightful summer treat.",
         foodType: "Dessert",
         price: 4.49,
-        image: images.DesertImage5
+        image: images.DesertImage5,
+        category: "Desert"
+
     },
     {
         id: 36,
@@ -374,7 +436,9 @@ export const desserts = [
         description: "Italian dessert made with layers of espresso-soaked ladyfingers, mascarpone cheese, and cocoa powder, rich and decadent.",
         foodType: "Dessert",
         price: 7.49,
-        image: images.DesertImage6
+        image: images.DesertImage6,
+        category: "Desert"
+
     },
     {
         id: 37,
@@ -382,7 +446,9 @@ export const desserts = [
         description: "Tangy and refreshing pie made with key lime juice, sweetened condensed milk, and a graham cracker crust, a taste of the tropics.",
         foodType: "Dessert",
         price: 5.49,
-        image: images.DesertImage7
+        image: images.DesertImage7,
+        category: "Desert"
+
     },
     {
         id: 38,
@@ -390,7 +456,8 @@ export const desserts = [
         description: "Italian dessert made with sweetened cream that is set with gelatin, often flavored with vanilla, coffee, or fruit.",
         foodType: "Dessert",
         price: 6.49,
-        image: images.DesertImage8
+        image: images.DesertImage8,
+        category: "Bakery"
     },
     {
         id: 39,
@@ -398,7 +465,8 @@ export const desserts = [
         description: "Indulgent pie made with a biscuit base, caramel filling, sliced bananas, whipped cream, and grated chocolate.",
         foodType: "Dessert",
         price: 6.99,
-        image: images.DesertImage9
+        image: images.DesertImage9,
+        category: "Bakery"
     },
     {
         id: 40,
@@ -406,7 +474,8 @@ export const desserts = [
         description: "Refreshing frozen dessert made with ripe mangoes, sugar, and lemon juice, dairy-free and bursting with tropical flavor.",
         foodType: "Dessert",
         price: 4.99,
-        image: images.DesertImage2
+        image: images.DesertImage2,
+        category: "Bakery"
     },
     {
         id: 41,
@@ -414,7 +483,8 @@ export const desserts = [
         description: "Moist and velvety red-colored cupcake topped with cream cheese frosting, a classic treat for any occasion.",
         foodType: "Dessert",
         price: 3.99,
-        image: images.DesertImage6
+        image: images.DesertImage6,
+        category: "Bakery"
     }
 ];
 export const soups = [
@@ -424,7 +494,9 @@ export const soups = [
         description: "Classic tomato soup made with ripe tomatoes, onions, garlic, and basil, pureed until smooth and creamy.",
         foodType: "Soup",
         price: 4.99,
-        image: images?.soupImage1
+        image: images?.soupImage1,
+        category: "Soup"
+
     },
     {
         id: 43,
@@ -432,7 +504,9 @@ export const soups = [
         description: "Hearty soup made with tender chicken, vegetables, egg noodles, and aromatic herbs, comforting and delicious.",
         foodType: "Soup",
         price: 5.99,
-        image: images.soupImage2
+        image: images.soupImage2,
+        category: "Soup"
+
     },
     {
         id: 44,
@@ -440,7 +514,9 @@ export const soups = [
         description: "Smooth and velvety soup made with roasted butternut squash, onions, carrots, and a hint of nutmeg, perfect for fall.",
         foodType: "Soup",
         price: 6.49,
-        image: images.soupImage3
+        image: images.soupImage3,
+        category: "Soup"
+
     },
     {
         id: 45,
@@ -448,7 +524,9 @@ export const soups = [
         description: "Italian vegetable soup made with tomatoes, beans, pasta, and assorted vegetables, flavored with herbs and Parmesan cheese.",
         foodType: "Soup",
         price: 6.99,
-        image: images.soupImage4
+        image: images.soupImage4,
+        category: "Soup"
+
     },
     {
         id: 46,
@@ -456,7 +534,9 @@ export const soups = [
         description: "Hearty soup made with lentils, vegetables, and spices, simmered until thick and flavorful, a nutritious and satisfying meal.",
         foodType: "Soup",
         price: 5.49,
-        image: images.soupImage5
+        image: images.soupImage5,
+        category: "Soup"
+
     },
     {
         id: 47,
@@ -464,7 +544,9 @@ export const soups = [
         description: "Rich and creamy soup made with mushrooms, onions, garlic, and cream, garnished with fresh herbs, a comforting classic.",
         foodType: "Soup",
         price: 6.99,
-        image: images.soupImage6
+        image: images.soupImage6,
+        category: "Soup"
+
     },
     {
         id: 48,
@@ -472,7 +554,9 @@ export const soups = [
         description: "Healthy and flavorful soup made with a variety of vegetables, simmered in a savory broth, a nutritious choice for any day.",
         foodType: "Soup",
         price: 5.99,
-        image: images.soupImage7
+        image: images.soupImage7,
+        category: "Soup"
+
     },
     {
         id: 49,
@@ -480,7 +564,9 @@ export const soups = [
         description: "Creamy soup made with tender broccoli florets, onions, cheddar cheese, and cream, a comforting and cheesy delight.",
         foodType: "Soup",
         price: 7.49,
-        image: images.soupImage8
+        image: images.soupImage8,
+        category: "Soup"
+
     },
     {
         id: 50,
@@ -488,7 +574,9 @@ export const soups = [
         description: "Rich and creamy soup made with tender clams, potatoes, onions, celery, and bacon, a classic New England favorite.",
         foodType: "Soup",
         price: 8.49,
-        image: images.soupImage9
+        image: images.soupImage9,
+        category: "Soup"
+
     },
     {
         id: 51,
@@ -496,7 +584,9 @@ export const soups = [
         description: "Classic French soup made with caramelized onions, beef broth, and topped with toasted bread and melted cheese, savory and satisfying.",
         foodType: "Soup",
         price: 7.99,
-        image: images.soupImage10
+        image: images.soupImage10,
+        category: "Soup"
+
     }
 ];
 

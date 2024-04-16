@@ -5,7 +5,7 @@ import { SvgIconType } from '../type';
 
 
 function Icon({
-    color = Color.mds_global_darkblue_color,
+    color = Color.mds_global_gray_color,
     size = 24,
     ...props
 }: SvgIconType): React.ReactElement {

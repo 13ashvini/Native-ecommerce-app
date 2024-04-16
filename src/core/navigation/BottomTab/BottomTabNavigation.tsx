@@ -11,6 +11,7 @@ import BottomBar from './BottomBar'
 import HomeScreen from '../../../screens/Home/HomeScreen'
 import HomeNavigation from '../stack/HomeNavigation'
 import SearchNavigation from '../stack/SearchNavigation'
+import AccountSettingNavigation from '../stack/AccountSettingNavigation'
 
 const BottomTabStack = createBottomTabNavigator()
 const BottomTabNavigation = () => {
@@ -35,7 +36,7 @@ const BottomTabNavigation = () => {
         name={Routes.HOME} component={HomeNavigation} />
       <BottomTabStack.Screen name={Routes.SEARCH} component={SearchNavigation} />
       <BottomTabStack.Screen name={Routes.ORDERS} component={ForgotPassword} />
-      <BottomTabStack.Screen name={Routes.Profile} component={VerifyNumber} />
+      <BottomTabStack.Screen name={Routes.Profile} component={AccountSettingNavigation} />
     </BottomTabStack.Navigator>
 
   )

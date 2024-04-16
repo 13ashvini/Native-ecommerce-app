@@ -22,4 +22,7 @@ export enum Routes {
     RestaurantDetail = " Restaurants Detail",
     AddToOrder = "Add to Order",
     RestaurantsSearch = "Restaurants Search",
+    RestaurantCategorySearch = "Restaurants Categories Search",
+    searchFoodItems = "Search Food Items",
+    AccountSettings = "Account Settings"
 }

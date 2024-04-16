@@ -7,6 +7,7 @@ import images from '../../core/assests/images'
 import Fonts from '../../core/contstants/Fonts'
 import FastImage from 'react-native-fast-image'
 import { allRestaurantsListData } from '../Home/AllRestrauntsList'
+import { Routes } from '../../core/navigation/type'
 const TopRastarants = [{
     id: 12,
     image: [images?.TopRestaurants1],
@@ -97,7 +98,6 @@ const RestaurantSearch = ({ navigation }: any) => {
             const filteredData = concatedRestaurtData?.filter((item) => {
                 return item?.partnerName?.toUpperCase().includes(searchRestaurants?.toUpperCase())
             })
-            console.log("filteredDataerrwer", filteredData)
             setSearchRestaurantsData(filteredData)
         }
 
@@ -105,7 +105,6 @@ const RestaurantSearch = ({ navigation }: any) => {
     const SearchIcon = Icons.SearchTabIcon
     const renderItemData = (() => {
         const cardWidth = (screenWidth);
-        console.log("cardWidth", cardWidth)
         return (
             <View style={[{ display: "flex", gap: 5, paddingHorizontal: 10, paddingVertical: 5, }]}>
                 <View>
@@ -134,7 +133,9 @@ const RestaurantSearch = ({ navigation }: any) => {
                                 return (
                                     <View style={[{ marginHorizontal: 5, flex: 1 }, ((searchRestaurantsData.length % 2 === 0 && TopRastarants?.length % 2 === 0)) && { width: cardWidth }]}>
                                         <TouchableOpacity
-                                            onPress={() => { }}
+                                            onPress={() => {
+                                                navigation.navigate(Routes.RestaurantCategorySearch)
+                                            }}
                                         >
                                             <FastImage source={item?.image[0]} style={styles?.featureImageStyle} resizeMode="cover" />
                                         </TouchableOpacity>
