@@ -19,5 +19,7 @@ export enum Routes {
     AllRestaurants = "All Restaurants",
     HomeNavigation = "Home navigation",
     HomeScreen = "Home Screen",
-    RestaurantDetail = " Restaurants Detail"
+    RestaurantDetail = " Restaurants Detail",
+    AddToOrder = "Add to Order",
+    RestaurantsSearch = "Restaurants Search",
 }

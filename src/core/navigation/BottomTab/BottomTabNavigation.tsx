@@ -10,6 +10,7 @@ import ResetEmail from '../../../screens/Authorization/ResetEmail/ResetEmail'
 import BottomBar from './BottomBar'
 import HomeScreen from '../../../screens/Home/HomeScreen'
 import HomeNavigation from '../stack/HomeNavigation'
+import SearchNavigation from '../stack/SearchNavigation'
 
 const BottomTabStack = createBottomTabNavigator()
 const BottomTabNavigation = () => {
@@ -32,7 +33,7 @@ const BottomTabNavigation = () => {
           title: "Home"
         }}
         name={Routes.HOME} component={HomeNavigation} />
-      <BottomTabStack.Screen name={Routes.SEARCH} component={Login} />
+      <BottomTabStack.Screen name={Routes.SEARCH} component={SearchNavigation} />
       <BottomTabStack.Screen name={Routes.ORDERS} component={ForgotPassword} />
       <BottomTabStack.Screen name={Routes.Profile} component={VerifyNumber} />
     </BottomTabStack.Navigator>

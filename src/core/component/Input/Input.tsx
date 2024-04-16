@@ -24,6 +24,7 @@ type Props = {
     leftIcon?: IconSource | undefined
     secureTextEntry?: boolean
     name: string
+    activeOutlineColor?: string
 }
 
 const Input = ({
@@ -44,10 +45,11 @@ const Input = ({
     rightIcon,
     leftIcon,
     secureTextEntry,
-    name
+    name,
+    activeOutlineColor
 }: Props) => {
     return (
-        <View style={{ }}>
+        <View style={{}}>
             <TextInput
                 style={{ fontSize: Fonts.fontSize.body, backgroundColor: "white", paddingBottom: 0 }}
                 multiline={multiline}
@@ -63,6 +65,7 @@ const Input = ({
                 mode={type}
                 label={label}
                 value={value}
+                activeOutlineColor={activeOutlineColor}
                 onChangeText={onChangeText}
                 secureTextEntry={secureTextEntry}
                 right={rightIcon ? <TextInput.Icon icon={rightIcon} /> : undefined}

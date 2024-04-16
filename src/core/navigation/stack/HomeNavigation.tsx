@@ -5,6 +5,8 @@ import HomeScreen from '../../../screens/Home/HomeScreen';
 import FeaturedPartnersList from '../../../screens/Home/FeaturedPartnersList';
 import AllRestrauntsList from '../../../screens/Home/AllRestrauntsList';
 import RestrauntsDetail from '../../../screens/Home/RestrauntsDetail/RestrauntsDetail';
+import RestaurantWrapper from '../../../screens/Home/RestrauntsDetail/RestaurantWrapper';
+import AddToOrder from '../../../screens/Home/AddToOrder/AddToOrder';
 const DashboardStack = createStackNavigator()
 const HomeNavigation = () => {
 
@@ -29,7 +31,10 @@ const HomeNavigation = () => {
 
             <DashboardStack.Screen
                 name={Routes.RestaurantDetail}
-                component={RestrauntsDetail} />
+                component={RestaurantWrapper} />
+            <DashboardStack.Screen
+                name={Routes.AddToOrder}
+                component={AddToOrder} />
         </DashboardStack.Navigator>
 
     )

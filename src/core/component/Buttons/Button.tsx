@@ -10,9 +10,9 @@ type Props = {
     buttonstyle?: any
     loader?: boolean
     small?: boolean
-    loaderColor? :any
+    loaderColor?: any
 }
-const Button = ({ onPress, title, textStyle, loader,small,loaderColor }: Props) => {
+const Button = ({ onPress, title, textStyle, loader, small, loaderColor }: Props) => {
     return (
         <View>
             <Pressable
@@ -24,7 +24,7 @@ const Button = ({ onPress, title, textStyle, loader,small,loaderColor }: Props) 
                 {loader && (
                     <ActivityIndicator
 
-                        size={small? 'small' : 'large'}
+                        size={small ? 'small' : 'large'}
                         color={loaderColor}
                     />
                 )}
@@ -54,7 +54,8 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         ...Fonts.style.mds_ui_gothic_font_subText_bold,
         color: Color.mds_global_white_color,
-        marginHorizontal: 10
+        marginHorizontal: 10,
+
     },
     pressed: {
         backgroundColor: "transparent",

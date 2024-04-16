@@ -55,6 +55,8 @@ const AllRestaurantsCard = ({
                     sliderWidth={width - 30}
                     itemWidth={width - 30}
                     loop={true}
+                    onItemClick={onPress}
+
                 // autoplay={true}
                 // autoplayInterval={3000}
 

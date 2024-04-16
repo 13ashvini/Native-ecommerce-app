@@ -51,6 +51,7 @@ const fontSize = {
     h4: fontSizeLabel.mds_global_font_size_28,
     h5: fontSizeLabel.mds_global_font_size_24,
     h6: fontSizeLabel.mds_global_font_size_20,
+    title: fontSizeLabel.mds_global_font_size_18,
     body: fontSizeLabel.mds_global_font_size_16,
     medium: fontSizeLabel.mds_global_font_size_14,
     subText: fontSizeLabel.mds_global_font_size_13,
@@ -62,58 +63,58 @@ const fontSize = {
 
 export const fontHeadings = {
     heading1: {
-        fontSize:fontSize.large,
-        color:Color.mds_global_black_color,
+        fontSize: fontSize.large,
+        color: Color.mds_global_black_color,
     },
     heading2: {
-        fontSize:fontSize.h1,
-        color:Color.mds_global_black_color,
+        fontSize: fontSize.h1,
+        color: Color.mds_global_black_color,
     },
     heading3: {
-        fontSize:fontSize.h2,
-        color:Color.mds_global_black_color,
+        fontSize: fontSize.h2,
+        color: Color.mds_global_black_color,
     },
     heading4: {
-        fontSize:fontSize.h4,
-        color:Color.mds_global_black_color,
+        fontSize: fontSize.h4,
+        color: Color.mds_global_black_color,
     },
     heading5: {
-        fontSize:fontSize.h5,
-        color:Color.mds_global_black_color,
+        fontSize: fontSize.h5,
+        color: Color.mds_global_black_color,
     },
     heading6: {
-        fontSize:fontSize.h6,
-        color:Color.mds_global_black_color,
+        fontSize: fontSize.h6,
+        color: Color.mds_global_black_color,
     },
     body: {
         fontSize: fontSize.body,
-          color:Color.mds_global_black_color,
+        color: Color.mds_global_black_color,
     },
     medium: {
         fontSize: fontSize.medium,
     },
     subText: {
         fontSize: fontSize.subText,
-          color:Color.mds_global_black_color,
+        color: Color.mds_global_black_color,
     },
     footnote: {
         fontSize: fontSize.footnote,
-          color:Color.mds_global_black_color,
+        color: Color.mds_global_black_color,
     },
     small: {
         fontSize: fontSize.small,
-          color:Color.mds_global_black_color,
+        color: Color.mds_global_black_color,
     },
     caption: {
         fontSize: fontSize.caption,
-          color:Color.mds_global_black_color,
+        color: Color.mds_global_black_color,
     },
-   
+
     grey_text: {
         fontSize: fontSize.caption,
         color: Color.mds_global_black_color,
     },
-    
+
 }
 const createStyleFont = () => {
 
@@ -188,10 +189,10 @@ const createStyleFont = () => {
             ...value,
             fontFamily: fontFamily.poppins.thin
         },
-        boldFonts[`mds_ui_gothic_font_${key}_bold`] = {
-            ...value,
-            fontFamily: fontFamily.gothic.bold
-        };
+            boldFonts[`mds_ui_gothic_font_${key}_bold`] = {
+                ...value,
+                fontFamily: fontFamily.gothic.bold
+            };
         semiBoldFonts[`mds_ui_gothic_font_${key}_semi`] = {
             ...value,
             fontFamily: fontFamily.gothic.semi
@@ -209,7 +210,7 @@ const createStyleFont = () => {
             fontFamily: fontFamily.gothic.thin
         };
     })
-   
+
     return { ...regularFonts, ...mediumFonts, ...semiBoldFonts, ...boldFonts, ...thinFonts }
 }
 export default {

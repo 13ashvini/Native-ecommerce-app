@@ -150,7 +150,11 @@ const AllRestrauntsList = ({ navigation }: any) => {
                 renderItem={({ item }: any) => {
                     return (
                         <AllRestaurantsCard
-                            onPress={() => { navigation.navigate(Routes.RestaurantDetail) }}
+                            onPress={() => {
+                                navigation.navigate(Routes.RestaurantDetail, {
+                                    restaurantId: item?.id
+                                })
+                            }}
                             ratingNumber={item?.ratingNumber}
                             availableFoodType={item?.availableFoodType}
                             image={item?.image}
