@@ -48,8 +48,6 @@ const PasswordSetting = ({ navigation }: any) => {
     })
     return (
         <View style={{ flex: 1, }}>
-
-            {/* <FlashMessage position={"top"} /> */}
             < View style={styles.mainView} >
 
                 <Formik
