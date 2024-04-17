@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, ScrollView, Switch } from 'react-native'
+import { View, Text, StyleSheet, ScrollView, Switch, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import Fonts from '../../core/contstants/Fonts'
 import * as Icon from "../../core/svg"
 import Color from '../../core/contstants/Color'
+import { Routes } from '../../core/navigation/type'
 
-const AccountSetting = () => {
+const AccountSetting = ({ navigation }: any) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const [enableSms, setEnableSms] = useState(false)
     const [enablePromotionalNotification, setEnablePromotionalNotification] = useState(false)
@@ -29,7 +30,11 @@ const AccountSetting = () => {
                             </View>
                         </View>
                         <View>
-                            <Icon.BackIcon />
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate(Routes.ChangeProfileSetting)
+                            }}>
+                                <Icon.BackIcon />
+                            </TouchableOpacity>
                         </View>
                     </View>
 
@@ -42,7 +47,11 @@ const AccountSetting = () => {
                             </View>
                         </View>
                         <View>
-                            <Icon.BackIcon />
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate(Routes.ChangePasswordSetting)
+                            }}>
+                                <Icon.BackIcon />
+                            </TouchableOpacity>
                         </View>
 
 
@@ -56,7 +65,11 @@ const AccountSetting = () => {
                             </View>
                         </View>
                         <View>
-                            <Icon.BackIcon />
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate(Routes.AddPaymentMethods)
+                            }}>
+                                <Icon.BackIcon />
+                            </TouchableOpacity>
                         </View>
                     </View>
 

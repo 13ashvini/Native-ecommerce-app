@@ -24,5 +24,10 @@ export enum Routes {
     RestaurantsSearch = "Restaurants Search",
     RestaurantCategorySearch = "Restaurants Categories Search",
     searchFoodItems = "Search Food Items",
-    AccountSettings = "Account Settings"
+    AccountSettings = "Account Settings",
+    ChangeProfileSetting = "Change Profile Settings",
+    ChangePasswordSetting = "Change Password Settings",
+    AddPaymentMethods = "Add Payment Methods",
+    PaymentMethod = "Payment Method",
+    AddSocialAccount = "Add Social Account",
 }

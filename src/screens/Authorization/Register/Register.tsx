@@ -26,7 +26,6 @@ const Register = ({ navigation }: any) => {
   const FacebookIcon = Icon.FacebookIcon
   const GoogleIcon = Icon.FacebookIcon
   const PasswordVisibleIcon = Icon.PasswordVisibleIcon
-  const [mobileNumberVAlues, setMobileNumberValues] = useState("")
   const FormInitialValue: LoginFormProps = {
     fullName: "",
     email: "",
@@ -42,7 +41,7 @@ const Register = ({ navigation }: any) => {
       formRef.current.setFieldValue('mobileNumber', '');
       // let result = phoneInputRef?.current?.cle
       // result = null
-      
+
       // phoneInputRef.current?.state.number ='';
       showMessage({
         message: "Login Success",

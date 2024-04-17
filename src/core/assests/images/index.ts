@@ -106,6 +106,10 @@ const images = {
     categoryImage4: require("./categoryImage4.png"),
     categoryImage5: require("./categoryImage5.png"),
     categoryImage6: require("./categoryImage6.png"),
+    PaymentCardImage: require("./Icon-CreditCard.png"),
+    PaypalImage: require("./paypalImage.png"),
+    MasterCardImage: require("./masterCard.png"),
+    VisaCardImage: require("./VisaCardImage.png"),
 }
 
 export default images
