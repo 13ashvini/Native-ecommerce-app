@@ -30,4 +30,5 @@ export enum Routes {
     AddPaymentMethods = "Add Payment Methods",
     PaymentMethod = "Payment Method",
     AddSocialAccount = "Add Social Account",
+    ReferToFriend = "Refer To Friend"
 }

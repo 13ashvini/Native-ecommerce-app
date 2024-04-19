@@ -92,6 +92,7 @@ export const fontHeadings = {
     },
     medium: {
         fontSize: fontSize.medium,
+        // color: Color.mds_global_black_color,
     },
     subText: {
         fontSize: fontSize.subText,

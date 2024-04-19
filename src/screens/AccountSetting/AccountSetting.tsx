@@ -89,6 +89,7 @@ const AccountSetting = ({ navigation }: any) => {
                     </View>
                     <View style={styles.BackIconView}>
                         <View style={styles.iconStyle}>
+
                             <Icon.FacebookIcon size={22} color={Color.mds_global_gray_color} />
                             <View>
                                 <Text style={styles.titleTextStyle}>Add Social Account</Text>
@@ -96,7 +97,11 @@ const AccountSetting = ({ navigation }: any) => {
                             </View>
                         </View>
                         <View>
-                            <Icon.BackIcon />
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate(Routes.AddSocialAccount)
+                            }}>
+                                <Icon.BackIcon />
+                            </TouchableOpacity>
                         </View>
 
 
@@ -110,7 +115,11 @@ const AccountSetting = ({ navigation }: any) => {
                             </View>
                         </View>
                         <View>
-                            <Icon.BackIcon />
+                            <TouchableOpacity onPress={() => {
+                                navigation.navigate(Routes.ReferToFriend)
+                            }}>
+                                <Icon.BackIcon />
+                            </TouchableOpacity>
                         </View>
 
 

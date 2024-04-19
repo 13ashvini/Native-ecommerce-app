@@ -9,40 +9,83 @@ import React from 'react';
 import type { PropsWithChildren } from 'react';
 import {
   StyleSheet,
-  useColorScheme,
+  Text,
   View,
+  useColorScheme,
+  // useColorScheme
 } from 'react-native';
 import Navigation from './src/core/navigation/Navigation';
 import FlashMessage from 'react-native-flash-message';
+import { NativeBaseProvider, extendTheme } from 'native-base';
+import theme from './src/core/utils/theme';
+import { DefaultTheme, } from 'react-native-paper';
+import SplashScreen from 'react-native-splash-screen';
+// import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
 
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
-function Section({ children, title }: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+
+const CustomThemeProvider = ({ children }: any) => {
+  const colorScheme: 'light' | 'dark' | null | undefined = useColorScheme();
+
+  // Define custom colors for light and dark modes
+  const customColors = {
+    light: {
+      textColor: 'black',
+      backgroundColor: 'white',
+    },
+    dark: {
+      textColor: 'white',
+      backgroundColor: 'black',
+    },
+  };
+
+  // Get the custom colors based on the color scheme or default to light mode
+  const selectedColors = customColors[colorScheme || 'light'];
+
+  // Extend the default theme with the selected colors
+  const extendedTheme = extendTheme({
+    colors: {
+      ...selectedColors,
+      backgroundColor: "green"
+    },
+  });
 
   return (
-    <View >
-
-    </View>
+    <NativeBaseProvider theme={extendedTheme}>
+      {children}
+    </NativeBaseProvider>
   );
-}
+};
 
-function App(): React.JSX.Element {
+
+
+const App = () => {
+
+  // Wrap the NativeBaseProvider withDefaultProps to apply the extended theme
+
+
   const isDarkMode = useColorScheme() === 'dark';
-
+  SplashScreen.hide()
   const [text, setText] = React.useState("");
   return (
-    <View
-      style={{ flex: 1 }}>
+    // <View
+    //   style={{ flex: 1 }}>
 
+    //   <Navigation />
+    //   <FlashMessage position="top" />
+
+    // </View>
+    <NativeBaseProvider theme={theme}>
       <Navigation />
       <FlashMessage position="top" />
-
-    </View>
-
+    </NativeBaseProvider>
+    // <AppearanceProvider>
+    // <CustomThemeProvider>
+    //   <Navigation />
+    //   <FlashMessage position="top" />
+    // </CustomThemeProvider>
+    // </AppearanceProvider>
   )
 }
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Routes } from '../../../core/navigation/type'
 import * as Icons from "../../../core/svg"
 import { AuthenticationScreenHeader } from '../../../core/component/ui/AuthenticationScreenHeader'
@@ -45,14 +45,18 @@ const Login: React.FC<Props> = ({ navigation }) => {
                         secureTextEntry={true}
                     />
                 </View>
-                <Text
+                <TouchableOpacity
                     onPress={() => {
                         navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
                             screen: Routes.FORGOTPASSWORD
                         })
-                    }}
-                    style={styles.forgetText}
-                > Forget Password ?</Text>
+                    }}>
+                    <Text
+
+                        style={styles.forgetText}
+                    > Forget Password ?</Text>
+                </TouchableOpacity>
+
                 <Button
                     // textStyle={styles.buttonStyle}
                     onPress={() => {
@@ -65,7 +69,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
                 ></Button>
                 <View style={styles.createAccountView}>
                     <Text
-                    // style={styles.forgetText}
+                        style={styles.forgetText}
                     >Don,t Have Account ?</Text>
                     <Text
                         onPress={() => {
@@ -112,8 +116,9 @@ const styles = StyleSheet.create({
         gap: 12
     },
     forgetText: {
-        textAlign: "center",
         ...Fonts.style.mds_ui_gothic_fonts_footnote_thin,
+        textAlign: "center",
+
 
     },
     buttonStyle: {

@@ -7,6 +7,7 @@ import ProfileSetting from '../../../screens/AccountSetting/ProfileSetting';
 import AddPaymentMethod from '../../../screens/AccountSetting/PaymentMethods/AddPaymentMethod';
 import PaymentMethods from '../../../screens/AccountSetting/PaymentMethods/PaymentMethods';
 import AddSocialAccount from '../../../screens/AccountSetting/AddSocialAccount/AddSocialAccount';
+import ReferToFriend from '../../../screens/AccountSetting/ReferToFriend/ReferToFriend';
 const AccountStack = createStackNavigator()
 const AccountSettingNavigation = () => {
 
@@ -45,6 +46,10 @@ const AccountSettingNavigation = () => {
             <AccountStack.Screen
                 component={AddSocialAccount}
                 name={Routes.AddSocialAccount}
+            />
+            <AccountStack.Screen
+                component={ReferToFriend}
+                name={Routes.ReferToFriend}
             />
 
         </AccountStack.Navigator>

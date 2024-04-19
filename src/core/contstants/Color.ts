@@ -8,9 +8,10 @@ const colorPlatee = {
     mds_global_main_Blue_color: "#4285F4",
     mds_global_main_Green_color: "#22A45D",
     mds_global_main_Red_color: "#FF0000",
+    mds_global_main_Red_100_color: "#FF0000",
     mds_global_main_Purple_color: "#800080",
     mds_global_light_yellow_color: "#F8EDDC",
-    
+
 }
 function withOpacity(color: string, opacity: number): string {
     if (!opacity || opacity > 1 || opacity < 0) {
@@ -28,5 +29,5 @@ function withOpacity(color: string, opacity: number): string {
 export default {
     ...colorPlatee,
     withOpacity,
-  
+
 }

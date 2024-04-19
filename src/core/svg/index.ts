@@ -19,3 +19,6 @@ export { default as ShareIcon } from "../svg/Icon/ShareIcon"
 export { default as LogoutIcon } from "../svg/Icon/LogoutIcon"
 export { default as NotificationIcon } from "../svg/Icon/NotificationIcon"
 export { default as NoteBook } from "../svg/Icon/NoteBook"
+export { default as ShareArrowIcon } from "../svg/Icon/ShareArrowIcon"
+
+

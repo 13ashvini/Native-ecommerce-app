@@ -33,7 +33,7 @@ const IntroSliderComponent = ({ navigation, text, title, image }: Props) => {
         <FastImage
           resizeMode={"contain"} source={image} style={styles.HeadingImage} />
       </View>
-      <View style={{marginBottom:8}}>
+      <View style={{ marginBottom: 8 }}>
         <Text style={styles.welcomeStyle}>
           {title}
         </Text>
@@ -64,7 +64,8 @@ const styles = StyleSheet.create({
     ...Fonts.style.mds_ui_font_heading2_bold,
     padding: 2,
     textAlign: "center",
-    lineHeight: 47
+    lineHeight: 47,
+
   },
   headingSetup: {
     flexDirection: "row",
