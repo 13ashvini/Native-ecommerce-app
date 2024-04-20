@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Routes } from '../../../core/navigation/type'
 import * as Icons from "../../../core/svg"
@@ -8,14 +8,84 @@ import Color from '../../../core/contstants/Color'
 import Fonts from '../../../core/contstants/Fonts'
 import Button from '../../../core/component/Buttons/Button'
 import { CommonActions } from '@react-navigation/native'
+import { showMessage } from 'react-native-flash-message'
+import { useLoginUserMutation } from '../../../service/authService'
+import { Formik, FormikHelpers } from 'formik'
+import * as yup from "yup"
 
 type Props = {
     navigation: any
 }
+type LoginFormProps = {
+    email: string
+    password: string
+
+}
+
 const Login: React.FC<Props> = ({ navigation }) => {
     const FacebookIcon = Icons.FacebookIcon
     const PasswordVisibleIcon = Icons.PasswordVisibleIcon
-    const [email, setEmail] = useState("")
+    const [loginUser] = useLoginUserMutation()
+    const formRef = useRef<any | null>(null)
+
+    const FormInitialValue: LoginFormProps = {
+        email: "",
+        password: "",
+
+    }
+    const SubmitLoginForm = (values: LoginFormProps, { setSubmitting }: FormikHelpers<LoginFormProps>
+    ) => {
+        const formattedValue = values
+        loginUser(formattedValue).then((res: any) => {
+            if (res?.error) {
+                setSubmitting(false)
+                if (res?.error?.data?.message) {
+                    setSubmitting(false)
+                    showMessage({
+                        message: (res?.error?.data?.message),
+                        type: "danger",
+                    });
+                } else if (res?.error?.data?.error) (
+                    showMessage({
+                        message: (res?.error?.data?.error),
+                        type: "danger",
+                    })
+                )
+            } else if (res?.data) {
+                setSubmitting(false)
+                if (res?.data?.message) {
+                    showMessage({
+                        message: (res?.data?.message),
+                        type: "success",
+                        backgroundColor: Color.mds_global_main_Yellow_color,
+                        color: Color.mds_global_white_color,
+                    });
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [
+                                {
+                                    name: Routes.MAIN,
+                                    state: {
+                                        routes: [{ name: Routes.HomeNavigation }],
+                                    },
+                                },
+                            ],
+                        }),
+                    )
+                    formRef.current.resetForm()
+
+                }
+            }
+        }).catch(() => {
+
+        })
+    }
+    const ValidationSchema = yup.object({
+        email: yup.string().required("Email is required").email("Enter Valid Email"),
+        password: yup.string().required("Password is required"),
+
+    })
     return (
         <ScrollView>
             <View style={styles.mainView}>
@@ -23,81 +93,97 @@ const Login: React.FC<Props> = ({ navigation }) => {
                     title='Welcome to Tamang Food Services'
                     text="Enter your Phone number or Email address for sign in. Enjoy your food :)"
                 />
-                <View style={styles.viewStyle}>
-                    <Input
-                        name=""
-                        value={email}
-                        onChangeText={(e) => { setEmail(e) }}
-                        label='EMAIL ADDRESS'
-                        activeUnderlineColor={Color.mds_global_gray_color}
-                        underlineColor={Color.mds_global_gray_color}
-                        textColor={Color.mds_global_black_color}
-                    />
-                    <Input
-                        name=""
-                        value={email}
-                        onChangeText={(e) => { setEmail(e) }}
-                        label='PASSWORD'
-                        activeUnderlineColor={Color.mds_global_gray_color}
-                        underlineColor={Color.mds_global_gray_color}
-                        textColor={Color.mds_global_black_color}
-                        rightIcon={PasswordVisibleIcon}
-                        secureTextEntry={true}
-                    />
-                </View>
-                <TouchableOpacity
-                    onPress={() => {
-                        navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
-                            screen: Routes.FORGOTPASSWORD
-                        })
-                    }}>
-                    <Text
+                <Formik
+                    validationSchema={ValidationSchema}
+                    innerRef={formRef}
+                    initialValues={FormInitialValue}
+                    onSubmit={SubmitLoginForm}
+                >
+                    {({ handleChange, handleSubmit, values, isSubmitting }) => (
 
-                        style={styles.forgetText}
-                    > Forget Password ?</Text>
-                </TouchableOpacity>
+                        <View style={styles.mainView}>
+                            <View style={styles.viewStyle}>
+                                <Input
+                                    value={values?.email}
+                                    onChangeText={handleChange('email')}
+                                    label='Email Address'
+                                    activeUnderlineColor={Color.mds_global_gray_color}
+                                    underlineColor={Color.mds_global_gray_color}
+                                    textColor={Color.mds_global_black_color}
+                                    name={'email'}
+                                />
+                                <Input
+                                    value={values?.password}
+                                    onChangeText={handleChange('password')}
+                                    label='Password'
+                                    activeUnderlineColor={Color.mds_global_gray_color}
+                                    underlineColor={Color.mds_global_gray_color}
+                                    textColor={Color.mds_global_black_color}
+                                    rightIcon={PasswordVisibleIcon}
+                                    secureTextEntry={true}
+                                    name={'password'}
+                                />
+                            </View>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
+                                        screen: Routes.FORGOTPASSWORD
+                                    })
+                                }}>
+                                <Text
 
-                <Button
-                    // textStyle={styles.buttonStyle}
-                    onPress={() => {
-                        navigation.navigate(Routes.MAIN, {
-                            screen: Routes.HomeNavigation
-                        })
+                                    style={styles.forgetText}
+                                > Forget Password ?</Text>
+                            </TouchableOpacity>
 
-                    }}
-                    title={<Text style={styles.buttonStyle}>SIGN IN</Text>}
-                ></Button>
-                <View style={styles.createAccountView}>
-                    <Text
-                        style={styles.forgetText}
-                    >Don,t Have Account ?</Text>
-                    <Text
-                        onPress={() => {
-                            navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
-                                screen: Routes.REGISTER
-                            })
-                        }}
-                        style={{
-                            color: Color.mds_global_main_Yellow_color
-                        }}
-                    >Create New Account</Text>
-                </View>
-                <Button
-                    textStyle={styles.facebookButton}
-                    onPress={() => { }}
-                    title={<View style={styles.facebookIconView}>
-                        <View style={styles.iconStyle}><FacebookIcon /></View>
-                        <Text style={styles.buttonStyle}> Connect With Facebook</Text>
-                    </View>}
-                ></Button>
-                <Button
-                    textStyle={styles.googleButton}
-                    onPress={() => { }}
-                    title={<View style={styles.facebookIconView}>
-                        <View style={styles.iconStyle}><FacebookIcon /></View>
-                        <Text style={styles.buttonStyle}> Connect With Google</Text>
-                    </View>}
-                ></Button>
+                            <Button
+                                textStyle={{ marginTop: 5 }}
+                                loader={isSubmitting}
+                                loaderColor={Color.mds_global_main_Yellow_color}
+                                onPress={handleSubmit}
+                                title={<Text style={styles.buttonStyle}>SIGN IN</Text>}
+                            ></Button>
+                            <View style={styles.createAccountView}>
+                                <Text
+                                    style={styles.forgetText}
+                                >Don,t Have Account ?</Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
+                                            screen: Routes.REGISTER
+                                        })
+                                    }}
+                                >
+                                    <Text
+
+                                        style={{
+                                            color: Color.mds_global_main_Yellow_color
+                                        }}
+                                    >Create New Account</Text>
+                                </TouchableOpacity>
+                            </View>
+                            <Button
+                                textStyle={styles.facebookButton}
+                                onPress={() => { }}
+                                title={<View style={styles.facebookIconView}>
+                                    <View style={styles.iconStyle}><FacebookIcon /></View>
+                                    <Text style={styles.buttonStyle}> Connect With Facebook</Text>
+                                </View>}
+                            ></Button>
+                            <Button
+                                textStyle={styles.googleButton}
+                                onPress={() => { }}
+                                title={<View style={styles.facebookIconView}>
+                                    <View style={styles.iconStyle}><FacebookIcon /></View>
+                                    <Text style={styles.buttonStyle}> Connect With Google</Text>
+                                </View>}
+                            ></Button>
+                        </View>
+                    )}
+
+
+                </Formik>
+
             </View>
         </ScrollView>
     )

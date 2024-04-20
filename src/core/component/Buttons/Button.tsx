@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react'
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Color from '../../contstants/Color';
 import Fonts from '../../contstants/Fonts';
 
@@ -15,9 +15,10 @@ type Props = {
 const Button = ({ onPress, title, textStyle, loader, small, loaderColor }: Props) => {
     return (
         <View>
-            <Pressable
+            <TouchableOpacity
                 onPress={onPress}
-                style={({ pressed }) => [
+                // style
+                style={[
                     textStyle,
                     styles.container
                 ]}>
@@ -36,7 +37,7 @@ const Button = ({ onPress, title, textStyle, loader, small, loaderColor }: Props
                     
                  
                 )} */}
-            </Pressable>
+            </TouchableOpacity>
         </View>
     )
 }

@@ -11,15 +11,18 @@ import images from '../../core/assests/images'
 import AllRestaurantsCard from '../../core/component/ui/AllRestaurantsCard'
 import { Routes } from '../../core/navigation/type'
 import { allRestaurantsListData } from './AllRestrauntsList'
-
+import { DEV_URL } from "../../core/env/env"
 type Props = {}
 
 const HomeScreen = ({ navigation }: any) => {
+    const BASE_URL = DEV_URL
+    console.log("Dev_BaseUrl------------", BASE_URL)
     const FeaturedPartners = FeaturedPartnerData
     const allRestrauntsList = allRestaurantsListData
     const renderItem = () => {
         return (
             <View style={style.homeMainView}>
+
                 <HomePageSliderComponent />
                 <View style={{ display: 'flex', gap: 8 }}>
                     <View style={style.featuredPartnerView}>

@@ -11,56 +11,92 @@ import PhoneInput from "react-native-phone-number-input";
 import { ErrorMessage, Formik, FormikHelpers } from 'formik'
 import * as yup from "yup"
 import FlashMessage, { showMessage } from 'react-native-flash-message'
+import { useRegisterUserMutation } from '../../../service/authService'
+import { CommonActions } from '@react-navigation/native'
 
 type LoginFormProps = {
-  fullName: string
+  name: string
   email: string
   password: string
-  mobileNumber: string
+  phoneNo: string
 }
 const Register = ({ navigation }: any) => {
   const formRef = useRef<any | null>(null)
-  console.log("formRed", formRef)
   const phoneInputRef = useRef<PhoneInput>(null); // Ref for PhoneInput component
-  console.log("phoneInputRef", phoneInputRef.current?.state.number)
   const FacebookIcon = Icon.FacebookIcon
   const GoogleIcon = Icon.FacebookIcon
   const PasswordVisibleIcon = Icon.PasswordVisibleIcon
+  const [registerUser] = useRegisterUserMutation()
+
   const FormInitialValue: LoginFormProps = {
-    fullName: "",
+    name: "",
     email: "",
     password: "",
-    mobileNumber: ""
+    phoneNo: ""
   }
   const SubmitLoginForm = (values: LoginFormProps, { setSubmitting }: FormikHelpers<LoginFormProps>
   ) => {
+    const formattedValue = values
+    registerUser(formattedValue).then((res: any) => {
+      console.log("res", res)
+      if (res?.error) {
+        setSubmitting(false)
+        if (res?.error?.data?.message) {
+          setSubmitting(false)
+          showMessage({
+            message: (res?.error?.data?.message),
+            type: "danger",
+          });
+        } else if (res?.error?.data?.error) (
+          showMessage({
+            message: (res?.error?.data?.error),
+            type: "danger",
+          })
+        )
+      } else if (res?.data) {
+        setSubmitting(false)
+        if (res?.data?.message) {
+          showMessage({
+            message: (res?.data?.message),
+            type: "success",
+            backgroundColor: Color.mds_global_main_Yellow_color,
+            color: Color.mds_global_white_color,
+          });
+          formRef.current.resetForm()
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [
+                {
+                  name: Routes.AUTHORIZATIONNAVIGATION,
+                  state: {
+                    routes: [{ name: Routes.VERIFYNUMBER }],
+                  },
+                },
+              ],
+            }),
+          )
+          // navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
+          //   screen: Routes.VERIFYNUMBER
+          // })
+        }
+      }
+    }).catch(() => {
 
-    setTimeout(() => {
-      setSubmitting(false)
-      formRef.current.resetForm()
-      formRef.current.setFieldValue('mobileNumber', '');
-      // let result = phoneInputRef?.current?.cle
-      // result = null
-
-      // phoneInputRef.current?.state.number ='';
-      showMessage({
-        message: "Login Success",
-        type: "default",
-        backgroundColor: Color.mds_global_main_Yellow_color,
-        color: Color.mds_global_white_color,
-      });
-      navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
-        screen: Routes.VERIFYNUMBER
-      })
-    }, 2000)
+    })
   }
   const ValidationSchema = yup.object({
-    fullName: yup.string().required("Full Name is required"),
+    name: yup.string().required("Full Name is required"),
     email: yup.string().required("Email is required").email("Enter Valid Email"),
     password: yup.string().required("Password is required"),
-    mobileNumber: yup.string().required("Mobile Number is required")
+    phoneNo: yup.number()
+      .typeError("That doesn't look like a phone number")
+      .positive("A phone number can't start with a minus")
+      .integer("A phone number can't include a decimal point")
+      .min(10)
+      // .max(10)
+      .required('A phone number is required'),
   })
-  // console.log(formRef.current)
   return (
     <ScrollView>
       <FlashMessage position={"top"} />
@@ -76,15 +112,15 @@ const Register = ({ navigation }: any) => {
           initialValues={FormInitialValue}
           onSubmit={SubmitLoginForm}
         >
-          {({ handleChange, resetForm, handleSubmit, values, isSubmitting }) => (
+          {({ handleChange, handleSubmit, values, isSubmitting }) => (
 
             <View>
               <View style={styles.viewStyle}>
                 <Input
-                  value={values?.fullName}
-                  onChangeText={handleChange('fullName')}
+                  value={values?.name}
+                  onChangeText={handleChange('name')}
                   label='Full Name'
-                  name={'fullName'}
+                  name={'name'}
                   activeUnderlineColor={Color.mds_global_gray_color}
                   underlineColor={Color.mds_global_gray_color}
                   textColor={Color.mds_global_black_color}
@@ -121,11 +157,11 @@ const Register = ({ navigation }: any) => {
                   // defaultValue={""}
                   defaultCode="IN"
                   layout='first'
-                  value={values?.mobileNumber}
-                  onChangeText={handleChange('mobileNumber')}
+                  value={values?.phoneNo}
+                  onChangeText={handleChange('phoneNo')}
 
                 />
-                <ErrorMessage name={'mobileNumber'}>
+                <ErrorMessage name={'phoneNo'}>
                   {(errMsg: string) => (
                     <Text style={styles.errorMessage}>
                       {errMsg}
@@ -138,10 +174,7 @@ const Register = ({ navigation }: any) => {
                 textStyle={{ marginTop: 5 }}
                 loader={isSubmitting}
                 loaderColor={Color.mds_global_main_Yellow_color}
-                onPress={() => {
-
-                  handleSubmit()
-                }}
+                onPress={handleSubmit}
                 title={<Text style={styles.buttonStyle}>SIGN UP</Text>}
               ></Button>
             </View>

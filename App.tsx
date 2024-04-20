@@ -20,6 +20,9 @@ import { NativeBaseProvider, extendTheme } from 'native-base';
 import theme from './src/core/utils/theme';
 import { DefaultTheme, } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Provider } from 'react-redux';
+import store from './src/store/Store';
 // import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
 
 
@@ -70,22 +73,22 @@ const App = () => {
   const [text, setText] = React.useState("");
   return (
     // <View
-    //   style={{ flex: 1 }}>
+    // style={{ flex: 1 }}>
 
-    //   <Navigation />
-    //   <FlashMessage position="top" />
+    /* <Navigation />
+    <FlashMessage position="top" /> */
 
-    // </View>
-    <NativeBaseProvider theme={theme}>
-      <Navigation />
-      <FlashMessage position="top" />
-    </NativeBaseProvider>
-    // <AppearanceProvider>
-    // <CustomThemeProvider>
-    //   <Navigation />
-    //   <FlashMessage position="top" />
-    // </CustomThemeProvider>
-    // </AppearanceProvider>
+    /* </View> */
+    <Provider store={store}>
+      {/* <SafeAreaView> */}
+      <NativeBaseProvider theme={theme}>
+        <Navigation />
+        <FlashMessage position="top" />
+      </NativeBaseProvider>
+      {/* </SafeAreaView> */}
+    </Provider>
+
+
   )
 }
 
