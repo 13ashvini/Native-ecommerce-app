@@ -4,16 +4,29 @@ import Fonts from '../../core/contstants/Fonts'
 import * as Icon from "../../core/svg"
 import Color from '../../core/contstants/Color'
 import { Routes } from '../../core/navigation/type'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import Modal from '../../core/component/Modal'
 
 const AccountSetting = ({ navigation }: any) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const [enableSms, setEnableSms] = useState(false)
     const [enablePromotionalNotification, setEnablePromotionalNotification] = useState(false)
+    const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false)
 
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+
+    const handleLogoutFunction: any = async () => {
+        console.log("AsSSS-----------------------")
+        try {
+            await AsyncStorage.removeItem('access_token')
+        } catch (e) {
+            // remove error
+        }
+    }
     return (
         <ScrollView>
             <View style={{ flex: 1, padding: 10, gap: 10 }}>
+
                 <View style={{ gap: 5, alignItems: "center" }}>
                     <Text style={styles.AccountSettingText}>Account Setting</Text>
                     <Text style={styles.descriptionText}>
@@ -231,22 +244,35 @@ const AccountSetting = ({ navigation }: any) => {
 
 
                         </View>
-                        <View style={styles.BackIconView}>
-                            <View style={styles.iconStyle}>
-                                <Icon.LogoutIcon size={30} />
+                        <Modal
+                            visible={isOpenLogoutModal}
+                        >
+
+                        </Modal>
+                        <TouchableOpacity
+                            onPress={() => {
+                                setIsOpenLogoutModal(true)
+                            }}
+                        >
+                            <View style={styles.BackIconView}>
+                                <View style={styles.iconStyle}>
+                                    <Icon.LogoutIcon size={30} />
+                                    <View>
+                                        <Text style={styles.titleTextStyle}>Logout</Text>
+                                    </View>
+                                </View>
                                 <View>
-                                    <Text style={styles.titleTextStyle}>Logout</Text>
+                                    <Icon.BackIcon />
                                 </View>
                             </View>
-                            <View>
-                                <Icon.BackIcon />
-                            </View>
-                        </View>
+                        </TouchableOpacity>
+
 
 
                     </View>
                 </View>
             </View >
+
         </ScrollView>
     )
 }

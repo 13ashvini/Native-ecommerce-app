@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import HomePageSliderComponent from '../../core/component/ui/HomePageSliderComponent'
 import Fonts from '../../core/contstants/Fonts'
@@ -7,23 +7,29 @@ import Color from '../../core/contstants/Color'
 import { FeaturedPartnerData } from './FeaturedPartnersList'
 import FastImage from 'react-native-fast-image'
 import images from '../../core/assests/images'
-
 import AllRestaurantsCard from '../../core/component/ui/AllRestaurantsCard'
 import { Routes } from '../../core/navigation/type'
 import { allRestaurantsListData } from './AllRestrauntsList'
-import { DEV_URL } from "../../core/env/env"
-type Props = {}
+import { useSelector } from 'react-redux'
+import { RootState } from '../../store/Store'
+import { useGetAllFeaturePartnerListQuery } from '../../service/featuredPartnerService'
+import { DEV_URL } from '../../core/env/env'
 
-const HomeScreen = ({ navigation }: any) => {
-    const BASE_URL = DEV_URL
-    console.log("Dev_BaseUrl------------", BASE_URL)
-    const FeaturedPartners = FeaturedPartnerData
+type Props = {
+    featuredPartners: any[]
+}
+
+const HomeScreen = ({ navigation, featuredPartners }: any) => {
+
     const allRestrauntsList = allRestaurantsListData
+    const BASE_URL = DEV_URL
+    console.log("featuredPartners----------------", featuredPartners)
+
     const renderItem = () => {
         return (
             <View style={style.homeMainView}>
-
                 <HomePageSliderComponent />
+
                 <View style={{ display: 'flex', gap: 8 }}>
                     <View style={style.featuredPartnerView}>
                         <Text style={style.featuredPartnertext}>Featured Partners</Text>
@@ -33,28 +39,13 @@ const HomeScreen = ({ navigation }: any) => {
                             }}
                         >See All</Text>
                     </View>
-                    {/* <View style={style.FeaturedPartnerDataView}>
-                    {FeaturedPartners?.slice(0, 2)?.map((partner) => {
-                        return <View>
-                            <FeaturedPartnerCard
-                                image={partner?.image}
-                                partnerName={partner?.partnerName}
-                                location={partner?.location}
-                                rating={partner?.rating}
-                                time={partner?.time}
-                                delivery={partner?.delivery}
-                            />
-                        </View>
-                    })}
-                </View> */}
+
                     <FlatList
+                        data={featuredPartners} renderItem={({ item }: any) => {
 
-                        data={FeaturedPartners}
-
-                        renderItem={({ item }: any) => {
                             return (
                                 <FeaturedPartnerCard
-                                    image={item?.image}
+                                    image={`${BASE_URL}/${item?.image}`}
                                     partnerName={item?.partnerName}
                                     location={item?.location}
                                     rating={item?.rating}
@@ -81,12 +72,12 @@ const HomeScreen = ({ navigation }: any) => {
                     </View>
                     <FlatList
 
-                        data={FeaturedPartners}
+                        data={featuredPartners}
 
                         renderItem={({ item }: any) => {
                             return (
                                 <FeaturedPartnerCard
-                                    image={item?.image}
+                                    image={`${BASE_URL}/${item?.image}`}
                                     partnerName={item?.partnerName}
                                     location={item?.location}
                                     rating={item?.rating}

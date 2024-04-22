@@ -13,7 +13,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { DEV_URL } from "../core/env/env"
 const BASE_URL = DEV_URL
 
-export const apiSlice = createApi({
+export const apiAuthService = createApi({
     reducerPath: 'apiAuthService',
     // @ts-ignore
     tagTypes: ["archd"],
@@ -34,4 +34,4 @@ export const apiSlice = createApi({
     endpoints: () => ({}),
 });
 
-export default apiSlice;
+export default apiAuthService;

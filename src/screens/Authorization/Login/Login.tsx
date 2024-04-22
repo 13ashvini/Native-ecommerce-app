@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Routes } from '../../../core/navigation/type'
 import * as Icons from "../../../core/svg"
@@ -12,7 +12,7 @@ import { showMessage } from 'react-native-flash-message'
 import { useLoginUserMutation } from '../../../service/authService'
 import { Formik, FormikHelpers } from 'formik'
 import * as yup from "yup"
-
+import AsyncStorage from '@react-native-async-storage/async-storage'
 type Props = {
     navigation: any
 }
@@ -33,10 +33,25 @@ const Login: React.FC<Props> = ({ navigation }) => {
         password: "",
 
     }
+    const storeToken = async (value: string) => {
+        try {
+            // const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('access_token', value);
+        } catch (e) {
+        }
+    };
+
+    const getToken = async () => {
+        const token = await AsyncStorage.getItem("access_token");
+        return token;
+    };
+    
+    
     const SubmitLoginForm = (values: LoginFormProps, { setSubmitting }: FormikHelpers<LoginFormProps>
     ) => {
         const formattedValue = values
         loginUser(formattedValue).then((res: any) => {
+            console.log("res", res)
             if (res?.error) {
                 setSubmitting(false)
                 if (res?.error?.data?.message) {
@@ -53,7 +68,9 @@ const Login: React.FC<Props> = ({ navigation }) => {
                 )
             } else if (res?.data) {
                 setSubmitting(false)
+                // AsyncStorage.setItem("access_token", res?.data?.token)
                 if (res?.data?.message) {
+                    storeToken(res?.data?.token)
                     showMessage({
                         message: (res?.data?.message),
                         type: "success",
@@ -85,6 +102,9 @@ const Login: React.FC<Props> = ({ navigation }) => {
         email: yup.string().required("Email is required").email("Enter Valid Email"),
         password: yup.string().required("Password is required"),
 
+    })
+    useEffect(() => {
+        getToken()
     })
     return (
         <ScrollView>

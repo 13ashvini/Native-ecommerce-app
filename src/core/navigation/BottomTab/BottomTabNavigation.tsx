@@ -8,7 +8,6 @@ import ForgotPassword from '../../../screens/Authorization/ForgotPassword/Forgot
 import VerifyNumber from '../../../screens/Authorization/VerifyEmail/VerifyNumber'
 import ResetEmail from '../../../screens/Authorization/ResetEmail/ResetEmail'
 import BottomBar from './BottomBar'
-import HomeScreen from '../../../screens/Home/HomeScreen'
 import HomeNavigation from '../stack/HomeNavigation'
 import SearchNavigation from '../stack/SearchNavigation'
 import AccountSettingNavigation from '../stack/AccountSettingNavigation'

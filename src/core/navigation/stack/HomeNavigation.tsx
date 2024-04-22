@@ -1,12 +1,11 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import { Routes } from '../type';
-import HomeScreen from '../../../screens/Home/HomeScreen';
 import FeaturedPartnersList from '../../../screens/Home/FeaturedPartnersList';
 import AllRestrauntsList from '../../../screens/Home/AllRestrauntsList';
-import RestrauntsDetail from '../../../screens/Home/RestrauntsDetail/RestrauntsDetail';
 import RestaurantWrapper from '../../../screens/Home/RestrauntsDetail/RestaurantWrapper';
 import AddToOrder from '../../../screens/Home/AddToOrder/AddToOrder';
+import HomeScreenWrapper from '../../../screens/Home/HomeScreenWrapper';
 const DashboardStack = createStackNavigator()
 const HomeNavigation = () => {
 
@@ -14,12 +13,24 @@ const HomeNavigation = () => {
 
         <DashboardStack.Navigator
             screenOptions={() => ({
-                headerShown: true,
+                headerShown: false,
             })}
         >
             <DashboardStack.Screen
                 name={Routes.HomeScreen}
-                component={HomeScreen} />
+                component={HomeScreenWrapper}
+                options={{
+                    headerShown: true,
+                    title: "Home",
+                    // header: () => (
+                    //     <Button
+                    //         onPress={() => { }}
+                    //         title="Info"
+                    //         color="#fff"
+                    //     />
+                    // ),
+                }}
+            />
 
             <DashboardStack.Screen
                 name={Routes.FeaturePartner}

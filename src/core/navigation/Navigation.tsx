@@ -1,6 +1,6 @@
-import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native'
+import { NavigationContainer, DefaultTheme, DarkTheme, CommonActions } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useEffect } from 'react';
 import { View, useColorScheme } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { navigationRef } from './RootNavigation'
@@ -11,6 +11,9 @@ import { BottomNavigation } from 'react-native-paper'
 import BottomTabNavigation from './BottomTab/BottomTabNavigation'
 import WelcomeScreenSlide from '../../screens/WelcomeScreen/WelcomeScreenSlide'
 import Color from '../contstants/Color'
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/Store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 
@@ -18,15 +21,8 @@ const RootStack = createStackNavigator()
 
 
 const Navigation = () => {
-    // const AppTheme = {
-    //     ...DefaultTheme,
-    //     colors: {
-    //         ...DefaultTheme.colors,
-    //         background: Color.mds_global_white_color,
-    //         // Set the default text color to red
-    //         text: "green"
-    //     }
-    // }
+    const { tokenData } = useSelector((state: RootState) => state.auth)
+
     const colorScheme = useColorScheme();
     const ThemeContext = createContext(DefaultTheme);
 
@@ -49,23 +45,52 @@ const Navigation = () => {
 
     // Determine the theme based on the color scheme
     const AppTheme = colorScheme === 'dark' ? darkTheme : lightTheme;
+    const getAccessToken = async () => {
+        // Check for the presence of the access token
+        const accessToken = await AsyncStorage.getItem('access_token');
+
+        // Navigate based on the presence of the access token
+        if (accessToken !== null) {
+            // navigationRef.current?.navigate(Routes.Main);
+            navigationRef.current?.dispatch(
+                CommonActions.reset({
+                    index: 1,
+                    routes: [
+                        {
+                            name: Routes.MAIN,
+                            state: {
+                                routes: [{ name: Routes.HOME }],
+                            },
+                        },
+                    ],
+                }),
+            )
+        } else {
+            navigationRef.current?.navigate(Routes.ONBOARDING);
+        }
+    }
+    useEffect(() => {
+        getAccessToken()
+    }, []);
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
-
-
             <NavigationContainer
                 theme={lightTheme}
                 ref={navigationRef}
             >
-
                 <RootStack.Navigator
                     screenOptions={{
                         headerShown: false,
                         // animation: 'slide_from_right',
                     }}
                 >
-                    <RootStack.Screen name={Routes?.ONBOARDING} component={WelcomeScreenSlide} />
-                    <RootStack.Screen name={Routes?.AUTHORIZATIONNAVIGATION} component={AuthorizationNavigation} />
+                    {tokenData === null &&
+                        <RootStack.Screen name={Routes?.ONBOARDING} component={WelcomeScreenSlide} />
+                    }
+                    {tokenData === null &&
+                        <RootStack.Screen name={Routes?.AUTHORIZATIONNAVIGATION} component={AuthorizationNavigation} />
+                    }
+
                     <RootStack.Screen name={Routes?.MAIN} component={BottomTabNavigation} />
                 </RootStack.Navigator>
             </NavigationContainer>

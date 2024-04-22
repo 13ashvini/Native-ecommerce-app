@@ -1,9 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import images from '../../assests/images';
 import Color from '../../contstants/Color';
 import Fonts from '../../contstants/Fonts';
+
 type Props = {
     image: any
     partnerName: string
@@ -23,11 +23,13 @@ const FeaturedPartnerCard = ({
     return (
         <View>
             <View style={styles.FeaturedPartnerMainView}>
-                <FastImage source={image} style={styles?.image} resizeMode="cover"/>
+                <FastImage source={{
+                    uri: image
+                }} style={styles?.image} resizeMode="cover" />
                 <Text style={styles.partnerNameStyle}>{partnerName}</Text>
                 <Text>{location}</Text>
                 <View style={styles.deliveryView}>
-                   {rating && <Text style={styles.ratingStyle}>{rating || 1} </Text> } 
+                    {rating && <Text style={styles.ratingStyle}>{rating || 1} </Text>}
                     <Text>{time}</Text>
                     <Text>{delivery}</Text>
                 </View>
@@ -54,23 +56,24 @@ const styles = StyleSheet.create({
         gap: 10
     },
     image: {
-        width: "100%",
+        width: 200,
         height: 160,
+        borderWidth: 1,
         borderRadius: 10,
     },
-    ratingStyle:{
-        backgroundColor:Color.mds_global_main_Yellow_color
-        ,paddingVertical:2,
-        paddingHorizontal:10 ,
-        borderRadius:10,
-        color:Color.mds_global_white_color,
-        
+    ratingStyle: {
+        backgroundColor: Color.mds_global_main_Yellow_color
+        , paddingVertical: 2,
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        color: Color.mds_global_white_color,
+
     },
-    partnerNameStyle :{
-        fontSize:Fonts.fontSize.body,
+    partnerNameStyle: {
+        fontSize: Fonts.fontSize.body,
         fontWeight: "normal",
         color: Color.mds_global_black_color,
-        
+
         // ...Fonts.style.mds_ui_gothic_font_heading6_thin,
     }
 
