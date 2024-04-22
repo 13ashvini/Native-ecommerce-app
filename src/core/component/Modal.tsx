@@ -1,54 +1,75 @@
 import React from 'react'
 import {
-    Alert, Modal as RNModal,
-    StyleSheet, Text, Pressable, View,
+    Modal as RNModal,
+    StyleSheet, Text, View,
 
 } from 'react-native';
 import Button from './Buttons/Button';
 import Color from '../contstants/Color';
+import Fonts from '../contstants/Fonts';
 type Props = {
-    visible: boolean
+    visible: boolean,
+    onClickCancel: () => void,
+    modalTitle: string,
+    modalMessage: string,
+    modalButtonTitle: string,
+    modalCancelButtonTitle: string
+    modalButtonAction: () => void,
+    onRequestClose: () => void
 }
-const Modal = ({ visible }: Props) => {
+const Modal = ({
+    visible,
+    onClickCancel,
+    modalTitle,
+    modalMessage,
+    modalButtonTitle,
+    modalCancelButtonTitle,
+    modalButtonAction,
+    onRequestClose
+}: Props) => {
     return (
-        // <View >
-        <RNModal
-            animationType="slide"
-            transparent={true}
-            visible={visible}
-        // onRequestClose={() => {
-        //     Alert.alert('Modal has been closed.');
-        //     setModalVisible(!modalVisible);
-        // }}
-        >
-            <View style={styles.mainView}>
-                <Text>
-                    Log Out
-                </Text>
-                <Text>
-                    Are You Sure You Want To Logout
-                </Text>
-                <View style={styles.buttonView}>
-                    <Button
-                        textStyle={styles.cancelButton}
-                        onPress={() => { }}
-                        title={<Text >Cancel</Text>}
-                    >
+        <View style={styles.centeredView} >
+            <RNModal
+                animationType="slide"
+                transparent={true}
+                visible={visible}
+                onRequestClose={onRequestClose}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.mainView}>
+                        <Text style={styles?.titleStyle}>
+                            {modalTitle}
+                        </Text>
+                        <Text style={styles.textStyle}>
+                            {modalMessage}
 
-                    </Button>
-                    <Button
-                        textStyle={{
-                            paddingVertical: 5
-                        }}
-                        onPress={() => { }}
-                        title={<Text style={styles.confirmButton}>Log Out</Text>}
-                    >
+                        </Text>
+                        <View style={styles.buttonView}>
+                            <Button
+                                textStyle={styles.cancelButton}
+                                onPress={onClickCancel}
+                                title={<Text >
+                                    {modalCancelButtonTitle}
+                                </Text>}
+                            >
 
-                    </Button>
+                            </Button>
+                            <Button
+                                textStyle={{
+                                    paddingVertical: 5
+                                }}
+                                onPress={() => { }}
+                                title={<Text style={styles.confirmButton}
+                                    onPress={modalButtonAction}
+                                >{modalButtonTitle}</Text>}
+                            >
+
+                            </Button>
+                        </View>
+                    </View>
                 </View>
-            </View>
-        </RNModal>
-        // </View >
+            </RNModal>
+        </View >
     )
 }
 const styles = StyleSheet.create({
@@ -64,15 +85,11 @@ const styles = StyleSheet.create({
         paddingVertical: 5
     },
     mainView: {
+        display: "flex",
+        gap: 6,
         backgroundColor: "white",
-        flex: 1,
-        // alignItems: 'center',
-        justifyContent: 'center',
-        paddingHorizontal: 16,
-        margin: 20,
         borderRadius: 20,
-        padding: 35,
-        alignItems: 'center',
+        padding: 13,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -81,7 +98,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-        borderWidth: 1
+
     },
     buttonView: {
         display: "flex",
@@ -91,11 +108,21 @@ const styles = StyleSheet.create({
         gap: 12
     },
     textStyle: {
-        // fontSize:
-    }
-    // confirmButton: {
-    //     backgroundColor: Color.mds_global_gray_10_color,
-    //     color: Color.mds_global_black_color
-    // }
+        ...Fonts.style.mds_ui_gothic_font_medium_bold,
+        color: Color.mds_global_gray_color,
+
+    },
+    titleStyle: {
+        ...Fonts.style.mds_ui_gothic_font_heading6_bold,
+        color: Color.mds_global_black_color,
+
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        // marginTop: 22,
+    },
 })
 export default Modal

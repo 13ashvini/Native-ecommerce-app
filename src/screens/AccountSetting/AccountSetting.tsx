@@ -6,23 +6,84 @@ import Color from '../../core/contstants/Color'
 import { Routes } from '../../core/navigation/type'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Modal from '../../core/component/Modal'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeAccessToken, setAccessToken } from '../../Slice/authslice'
+import { RootState } from '../../store/Store'
+import { CommonActions } from '@react-navigation/native'
 
 const AccountSetting = ({ navigation }: any) => {
     const [isEnabled, setIsEnabled] = useState(false);
     const [enableSms, setEnableSms] = useState(false)
     const [enablePromotionalNotification, setEnablePromotionalNotification] = useState(false)
     const [isOpenLogoutModal, setIsOpenLogoutModal] = useState(false)
-
+    const dispatch = useDispatch()
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const { tokenData } = useSelector((state: RootState) => state.auth)
+    console.log("tokenData", tokenData)
+    // const handleLogoutFunction = async () => {
+    //     try {
+    //         await AsyncStorage.removeItem('access_token')
+    //         dispatch(removeAccessToken(null))
+    //         console.log("Mission Passed Sucess !")
+    //         navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
+    //             screen: Routes.LOGIN
+    //         })
+    //         setIsOpenLogoutModal(false)
+    //         console.log("Mission Passed Sucess !")
+    //         // setEnablePromotionalNotification(false)
 
-    const handleLogoutFunction: any = async () => {
-        console.log("AsSSS-----------------------")
+    //     } catch (e) {
+    //         console.log("Mission Failed")
+    //     }
+    // }
+    const handleLogoutFunction = async () => {
         try {
-            await AsyncStorage.removeItem('access_token')
-        } catch (e) {
-            // remove error
+            // Remove token from AsyncStorage
+            await AsyncStorage.removeItem('access_token');
+            // @ts-ignore
+            dispatch(setAccessToken(null));
+            // Clear token from Redux store
+            // dispatch(removeAccessToken(null));
+
+            // Reset navigation stack to prevent going back to account settings
+            // navigation.reset({
+            //     index: 0,
+            //     routes: [{ name: Routes.AUTHORIZATIONNAVIGATION, params: { screen: Routes.LOGIN } }],
+            // });
+
+            navigation.dispatch(
+                CommonActions.reset({
+                    index: 0,
+                    routes: [
+                        {
+                            name: Routes.AUTHORIZATIONNAVIGATION,
+                            state: {
+                                routes: [{ name: Routes.LOGIN }],
+                            },
+                        },
+                    ],
+                }),
+            )
+            // Close logout modal
+            setIsOpenLogoutModal(false);
+
+            console.log("Logout Successful!");
+        } catch (error) {
+            console.error("Logout Error:", error);
         }
-    }
+    };
+    const renderLogoutConfirmModal = () => (
+        <Modal
+            onClickCancel={() => { setIsOpenLogoutModal(false) }}
+            visible={isOpenLogoutModal}
+            modalTitle={"Log Out"}
+            modalMessage=' Are You Sure You Want To Logout'
+            modalButtonTitle={"Log Out"}
+            modalButtonAction={handleLogoutFunction}
+            modalCancelButtonTitle='Cancel'
+            onRequestClose={handleLogoutFunction}
+        />
+    )
     return (
         <ScrollView>
             <View style={{ flex: 1, padding: 10, gap: 10 }}>
@@ -244,11 +305,7 @@ const AccountSetting = ({ navigation }: any) => {
 
 
                         </View>
-                        <Modal
-                            visible={isOpenLogoutModal}
-                        >
 
-                        </Modal>
                         <TouchableOpacity
                             onPress={() => {
                                 setIsOpenLogoutModal(true)
@@ -265,6 +322,7 @@ const AccountSetting = ({ navigation }: any) => {
                                     <Icon.BackIcon />
                                 </View>
                             </View>
+                            {renderLogoutConfirmModal()}
                         </TouchableOpacity>
 
 

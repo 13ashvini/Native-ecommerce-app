@@ -18,8 +18,6 @@ const HomeScreenWrapper = () => {
     useEffect(() => {
         if (!isFeaturedPartnerDataLoading || !isFeaturedPartnerFetching || featuredPartnerData) {
             dispatch(setItems(featuredPartnerData))
-            console.log("featuredPartnerData", featuredPartnerData)
-            console.log("items", items)
             dispatch(setIsLoading(false))
         } else {
             dispatch(setIsLoading(true))

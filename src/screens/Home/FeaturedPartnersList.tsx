@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import images from "../../core/assests/images"
 import AllPartnercCard from '../../core/component/ui/AllPartnercCard';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../store/Store';
+import { setIsLoading, setItems } from '../../Slice/featurePartnerSlice';
+import { useGetAllFeaturePartnerListQuery } from '../../service/featuredPartnerService';
 
 export const FeaturedPartnerData = [
   {
@@ -71,10 +75,26 @@ export const FeaturedPartnerData = [
 ];
 
 const FeaturedPartnersList = () => {
+  const { items } = useSelector((state: RootState) => state.featurePartner)
+  const dispatch = useDispatch()
+  const { data: featuredPartnerData, isLoading: isFeaturedPartnerDataLoading, isFetching: isFeaturedPartnerFetching } = useGetAllFeaturePartnerListQuery(
+    {
+      limit: 20
+    }
+  )
+
+  useEffect(() => {
+    if (!isFeaturedPartnerDataLoading || !isFeaturedPartnerFetching || featuredPartnerData) {
+      dispatch(setItems(featuredPartnerData))
+      dispatch(setIsLoading(false))
+    } else {
+      dispatch(setIsLoading(true))
+    }
+  })
   return (
     <View style={styles.mainView}>
       <FlatList
-        data={FeaturedPartnerData}
+        data={items?.data}
 
         renderItem={({ item }: any) => {
           return (

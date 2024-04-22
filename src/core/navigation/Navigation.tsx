@@ -48,7 +48,7 @@ const Navigation = () => {
     const getAccessToken = async () => {
         // Check for the presence of the access token
         const accessToken = await AsyncStorage.getItem('access_token');
-
+        console.log("accessToken---------", accessToken)
         // Navigate based on the presence of the access token
         if (accessToken !== null) {
             // navigationRef.current?.navigate(Routes.Main);

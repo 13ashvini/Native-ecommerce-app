@@ -13,6 +13,8 @@ import { useLoginUserMutation } from '../../../service/authService'
 import { Formik, FormikHelpers } from 'formik'
 import * as yup from "yup"
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useDispatch } from 'react-redux'
+import { setAccessToken } from '../../../Slice/authslice'
 type Props = {
     navigation: any
 }
@@ -27,7 +29,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
     const PasswordVisibleIcon = Icons.PasswordVisibleIcon
     const [loginUser] = useLoginUserMutation()
     const formRef = useRef<any | null>(null)
-
+    const dispatch = useDispatch()
     const FormInitialValue: LoginFormProps = {
         email: "",
         password: "",
@@ -35,18 +37,25 @@ const Login: React.FC<Props> = ({ navigation }) => {
     }
     const storeToken = async (value: string) => {
         try {
-            // const jsonValue = JSON.stringify(value);
-            await AsyncStorage.setItem('access_token', value);
+            const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('access_token', jsonValue);
         } catch (e) {
         }
     };
 
+    // const getToken = async () => {
+    //     const token = await AsyncStorage.getItem("access_token");
+    //     return token;
+    // };
     const getToken = async () => {
-        const token = await AsyncStorage.getItem("access_token");
-        return token;
+        try {
+            const jsonValue = await AsyncStorage.getItem('access_token');
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch (e) {
+            // error reading value
+        }
     };
-    
-    
+
     const SubmitLoginForm = (values: LoginFormProps, { setSubmitting }: FormikHelpers<LoginFormProps>
     ) => {
         const formattedValue = values
@@ -71,6 +80,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
                 // AsyncStorage.setItem("access_token", res?.data?.token)
                 if (res?.data?.message) {
                     storeToken(res?.data?.token)
+                    dispatch(setAccessToken(res?.data?.token))
                     showMessage({
                         message: (res?.data?.message),
                         type: "success",

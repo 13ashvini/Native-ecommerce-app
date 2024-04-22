@@ -1,42 +1,110 @@
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { createSlice } from '@reduxjs/toolkit'
+// import type { PayloadAction } from '@reduxjs/toolkit'
+
+
+// type AuthState = {
+//     tokenData: string | null
+// }
+// const getToken: any = async () => {
+//     try {
+//         const jsonValue = await AsyncStorage.getItem('access_token');
+//         return jsonValue != null ? JSON.parse(jsonValue) : null;
+//     } catch (e) {
+//         // error reading value
+//     }
+// };
+// const removeToken: any = async () => {
+//     try {
+//         await AsyncStorage.removeItem('access_token')
+//     } catch (e) {
+//         // remove error
+//     }
+// }
+// const initialState = {
+//     tokenData: AsyncStorage.getItem('access_token') || null
+// }
+// const Authslice = createSlice({
+//     name: 'auth',
+//     initialState: initialState,
+//     reducers: {
+//         setAccessToken: (state, action) => (
+//             state.tokenData = action.payload,
+//             getToken()
+//         ),
+//         removeAccessToken: (state, action) => (
+//             state.tokenData = action.payload,
+//             removeToken()
+//         ),
+//     },
+// })
+
+// export const { setAccessToken, removeAccessToken } = Authslice.actions
+// export default Authslice.reducer
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit';
 
 
 type AuthState = {
-    tokenData: string | null
-}
-const getToken: any = async () => {
+    tokenData: string | null;
+};
+
+const initialState: AuthState = {
+    tokenData: null,
+};
+
+const getToken = async () => {
     try {
-        return await AsyncStorage.getItem('access_token')
+        const jsonValue = await AsyncStorage.getItem('access_token');
+        return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
-        // read error
+        console.error('Error reading token:', e);
+        return null;
     }
 };
-const removeToken: any = async () => {
+
+const removeToken = async () => {
     try {
-        await AsyncStorage.removeItem('access_token')
+        await AsyncStorage.removeItem('access_token');
     } catch (e) {
-        // remove error
+        console.error('Error removing token:', e);
     }
-}
-const initialState = {
-    tokenData: AsyncStorage.getItem('access_token')
-}
+};
+
 const Authslice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
-        setAccessToken: (state, action) => (
-            state.tokenData = action.payload,
-            getToken()
-        ),
-        removeAccessToken: (state, action) => (
-            state.tokenData = action.payload,
-            removeToken()
-        ),
+        setAccessToken: (state, action: any) => {
+            state.tokenData = action.payload;
+        },
+        removeAccessToken: (state) => {
+            state.tokenData = null;
+        },
     },
-})
+});
 
-export const { setAccessToken, removeAccessToken } = Authslice.actions
-export default Authslice.reducer
+export const { setAccessToken, removeAccessToken } = Authslice.actions;
+
+// Async action creators
+export const setAccessTokenAsync = () => async (dispatch: Function) => {
+    try {
+        const token = await getToken();
+        if (token) {
+            dispatch(setAccessToken(token));
+        }
+    } catch (error) {
+        console.error('Error setting access token:', error);
+    }
+};
+
+export const removeAccessTokenAsync = () => async (dispatch: Function) => {
+    try {
+        await removeToken();
+        dispatch(removeAccessToken());
+    } catch (error) {
+        console.error('Error removing access token:', error);
+    }
+};
+
+export default Authslice.reducer;

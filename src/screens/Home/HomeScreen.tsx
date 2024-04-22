@@ -23,7 +23,7 @@ const HomeScreen = ({ navigation, featuredPartners }: any) => {
 
     const allRestrauntsList = allRestaurantsListData
     const BASE_URL = DEV_URL
-    console.log("featuredPartners----------------", featuredPartners)
+
 
     const renderItem = () => {
         return (

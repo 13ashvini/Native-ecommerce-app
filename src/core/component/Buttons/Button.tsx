@@ -15,7 +15,7 @@ type Props = {
 const Button = ({ onPress, title, textStyle, loader, small, loaderColor }: Props) => {
     return (
         <View>
-            <TouchableOpacity
+            <Pressable
                 onPress={onPress}
                 // style
                 style={[
@@ -32,12 +32,7 @@ const Button = ({ onPress, title, textStyle, loader, small, loaderColor }: Props
                 {!loader && (
                     <View style={[styles.button, textStyle,]}>{title}</View>
                 )}
-
-                {/* {({ pressed }) => (
-                    
-                 
-                )} */}
-            </TouchableOpacity>
+            </Pressable>
         </View>
     )
 }
