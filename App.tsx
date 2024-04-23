@@ -81,10 +81,10 @@ const App = () => {
     /* </View> */
     <Provider store={store}>
       {/* <SafeAreaView> */}
-      <NativeBaseProvider theme={theme}>
-        <Navigation />
-        <FlashMessage position="top" />
-      </NativeBaseProvider>
+      {/* <NativeBaseProvider theme={theme}> */}
+      <Navigation />
+      <FlashMessage position="top" />
+      {/* </NativeBaseProvider> */}
       {/* </SafeAreaView> */}
     </Provider>
 

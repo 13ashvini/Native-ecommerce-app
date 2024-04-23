@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import images from "../../core/assests/images"
 import AllPartnercCard from '../../core/component/ui/AllPartnercCard';
@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
 import { setIsLoading, setItems } from '../../Slice/featurePartnerSlice';
 import { useGetAllFeaturePartnerListQuery } from '../../service/featuredPartnerService';
+import { DEV_URL } from "../../core/env/env"
 
 export const FeaturedPartnerData = [
   {
@@ -76,10 +77,15 @@ export const FeaturedPartnerData = [
 
 const FeaturedPartnersList = () => {
   const { items } = useSelector((state: RootState) => state.featurePartner)
+  const [page, setPage] = useState(1)
+  const [offset, setOffset] = useState(0)
+  const limit = 4
+  const BASE_URL = DEV_URL
   const dispatch = useDispatch()
   const { data: featuredPartnerData, isLoading: isFeaturedPartnerDataLoading, isFetching: isFeaturedPartnerFetching } = useGetAllFeaturePartnerListQuery(
     {
-      limit: 20
+      limit: limit,
+      offset: (page - 1) * limit,
     }
   )
 
@@ -91,6 +97,12 @@ const FeaturedPartnersList = () => {
       dispatch(setIsLoading(true))
     }
   })
+  const handleLoadMore = () => {
+    if (!isFeaturedPartnerFetching && !isFeaturedPartnerDataLoading) {
+      // setOffset(prevOffset => prevOffset + limit); // Increase offset for next page
+      setPage(prevPage => prevPage + 1); // Increase page number
+    }
+  };
   return (
     <View style={styles.mainView}>
       <FlatList
@@ -99,19 +111,23 @@ const FeaturedPartnersList = () => {
         renderItem={({ item }: any) => {
           return (
             <AllPartnercCard
-              image={item?.image}
+              image={`${BASE_URL}/${item?.image}`}
               partnerName={item?.partnerName}
               location={item?.location}
               rating={item?.rating}
               time={item?.time}
               delivery={item?.delivery}
 
+
             />
           )
         }}
         contentContainerStyle={styles.contentContainer}
         numColumns={2}
-        keyExtractor={(item: any) => item.id}
+        keyExtractor={(item: any) => item?._id.toString()}
+        maxToRenderPerBatch={4}
+        updateCellsBatchingPeriod={4 / 2}
+        onEndReached={handleLoadMore}
         ItemSeparatorComponent={() => <View style={{ width: 10, height: 15 }} />}
       />
     </View>

@@ -1,8 +1,14 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { FlatList, StyleSheet, View } from 'react-native'
 import images from '../../core/assests/images';
 import AllRestaurantsCard from '../../core/component/ui/AllRestaurantsCard';
 import { Routes } from '../../core/navigation/type';
+import { useDispatch, useSelector } from 'react-redux';
+import { useGetAllRestaurantListQuery } from '../../service/RestaurantService';
+import { setIsLoading, setItems } from '../../Slice/restaurantListSlice';
+import { RootState } from '../../store/Store';
+import { DEV_URL } from '../../core/env/env';
+
 export const allRestaurantsListData = [
     {
         id: 1,
@@ -142,11 +148,29 @@ export const allRestaurantsListData = [
 ];
 
 const AllRestrauntsList = ({ navigation }: any) => {
+    const { items } = useSelector((state: RootState) => state?.restaurantList)
+    const BASE_URL = DEV_URL
+    const dispatch = useDispatch()
+    const { data: restaurantlistData, isLoading: isrestaurantlistDataLoading, isFetching: isrestaurantlistDataFetching } = useGetAllRestaurantListQuery(
+        {
+            limit: 20,
+            offset: 0
+        }
+    )
+
+    useEffect(() => {
+        if (!isrestaurantlistDataLoading || !isrestaurantlistDataFetching || restaurantlistData) {
+            dispatch(setItems(restaurantlistData))
+            dispatch(setIsLoading(false))
+        } else {
+            dispatch(setIsLoading(true))
+        }
+    })
     return (
         <View style={styles.mainView}>
             <FlatList
 
-                data={allRestaurantsListData}
+                data={items?.data}
                 renderItem={({ item }: any) => {
                     return (
                         <AllRestaurantsCard
@@ -157,7 +181,7 @@ const AllRestrauntsList = ({ navigation }: any) => {
                             }}
                             ratingNumber={item?.ratingNumber}
                             availableFoodType={item?.availableFoodType}
-                            image={item?.image}
+                            image={`${BASE_URL}/${item?.images}`}
                             partnerName={item?.partnerName}
                             location={item?.location}
                             rating={item?.rating}

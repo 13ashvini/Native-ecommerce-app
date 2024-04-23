@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import HomePageSliderComponent from '../../core/component/ui/HomePageSliderComponent'
 import Fonts from '../../core/contstants/Fonts'
 import FeaturedPartnerCard from '../../core/component/ui/FeaturedPartnerCard'
@@ -33,11 +33,16 @@ const HomeScreen = ({ navigation, featuredPartners }: any) => {
                 <View style={{ display: 'flex', gap: 8 }}>
                     <View style={style.featuredPartnerView}>
                         <Text style={style.featuredPartnertext}>Featured Partners</Text>
-                        <Text style={style.seeAllText}
+                        <TouchableOpacity
                             onPress={() => {
                                 navigation.navigate(Routes.FeaturePartner)
                             }}
-                        >See All</Text>
+                        >
+                            <Text style={style.seeAllText}
+
+                            >See All</Text>
+                        </TouchableOpacity>
+
                     </View>
 
                     <FlatList
@@ -59,6 +64,8 @@ const HomeScreen = ({ navigation, featuredPartners }: any) => {
                         showsHorizontalScrollIndicator={false}
                         removeClippedSubviews={true}
                         keyExtractor={(item: any) => item.id}
+                        maxToRenderPerBatch={4}
+                        updateCellsBatchingPeriod={4 / 2}
                         ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                     />
                 </View>
@@ -112,7 +119,7 @@ const HomeScreen = ({ navigation, featuredPartners }: any) => {
                                     onPress={() => { }}
                                     ratingNumber={item?.ratingNumber}
                                     availableFoodType={item?.availableFoodType}
-                                    image={item?.image}
+                                    image={`${BASE_URL}/${item?.image}`}
                                     partnerName={item?.partnerName}
                                     location={item?.location}
                                     rating={item?.rating}

@@ -39,7 +39,9 @@ const AllRestaurantsCard = ({
                 // width: '100%'
 
             }}>
-                <FastImage source={item} style={styles?.image} resizeMode="cover" />
+                <FastImage source={{
+                    uri: item
+                }} style={styles?.image} resizeMode="cover" />
             </View>
         );
     }

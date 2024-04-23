@@ -23,7 +23,9 @@ const AllPartnercCard = ({
     return (
         <View style={{ marginHorizontal: 7, flex: 1 }}>
             <View style={styles.FeaturedPartnerMainView}>
-                <FastImage source={image} style={styles?.image} resizeMode="cover" />
+                <FastImage source={{
+                    uri: image
+                }} style={styles?.image} resizeMode="cover" />
                 <View style={styles.timeView}>
                     <View style={styles.iconStyle}>
                         <Icons.ClockIcon />

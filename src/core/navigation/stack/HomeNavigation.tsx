@@ -34,7 +34,18 @@ const HomeNavigation = () => {
 
             <DashboardStack.Screen
                 name={Routes.FeaturePartner}
-                component={FeaturedPartnersList} />
+                component={FeaturedPartnersList}
+                options={{
+                    headerShown: true,
+                    title: "Home",
+                    // header: () => (
+                    //     <Button
+                    //         onPress={() => { }}
+                    //         title="Info"
+                    //         color="#fff"
+                    //     />
+                    // ),
+                }} />
 
             <DashboardStack.Screen
                 name={Routes.AllRestaurants}

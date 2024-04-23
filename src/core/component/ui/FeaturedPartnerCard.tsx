@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     image: {
         width: 200,
         height: 160,
-        borderWidth: 1,
+        // borderWidth: 1,  
         borderRadius: 10,
     },
     ratingStyle: {
