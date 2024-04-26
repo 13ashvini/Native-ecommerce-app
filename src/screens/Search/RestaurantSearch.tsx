@@ -8,6 +8,12 @@ import Fonts from '../../core/contstants/Fonts'
 import FastImage from 'react-native-fast-image'
 import { allRestaurantsListData } from '../Home/AllRestrauntsList'
 import { Routes } from '../../core/navigation/type'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../store/Store'
+import { useGetAllRestaurantListQuery } from '../../service/RestaurantService'
+import { useDisclose } from 'native-base'
+import { setIsLoading } from '../../Slice/restaurantListSlice'
+import { DEV_URL } from '../../core/env/env'
 const TopRastarants = [{
     id: 12,
     image: [images?.TopRestaurants1],
@@ -87,12 +93,54 @@ const TopRastarants = [{
 },
 ]
 const RestaurantSearch = ({ navigation }: any) => {
+    const BASE_URL = DEV_URL
     const screenWidth = Dimensions.get('window').width;
     const numColumns = 2;
     const [searchRestaurants, setSearchRestaurants] = useState("")
     const allRestaurants = allRestaurantsListData
     const concatedRestaurtData = allRestaurants.concat(TopRastarants)
     const [searchRestaurantsData, setSearchRestaurantsData] = useState<any[]>([])
+    const { isLoading: isRestaurantLoading } = useSelector((state: RootState) => state.restaurantList)
+    const [hasMoreData, setHasMoreData] = useState(true);
+    const [restaurantList, setRestaurantList] = useState<any[]>([])
+    const [currentPage, setCurrentPage] = useState(1);
+    const restaurantlimit = 4
+    const dispatch = useDispatch()
+    const { data: restaurantlistData, isLoading: isrestaurantlistDataLoading, isFetching: isrestaurantlistDataFetching } = useGetAllRestaurantListQuery(
+        {
+            search: searchRestaurants,
+            limit: restaurantlimit,
+            offset: (currentPage - 1) * restaurantlimit
+        }
+    )
+
+    // useEffect(() => {
+    //     if (!isrestaurantlistDataLoading || !isFeaturedPartnerFetching || restaurantlistData) {
+    //         dispatch(restaurantSlice(restaurantlistData))
+    //         dispatch(restauranLoading(false))
+    //     } else {
+    //         dispatch(setIsLoading(true))
+    //     }
+    // }, [isrestaurantlistDataLoading, isFeaturedPartnerFetching, restaurantlistData])
+    useEffect(() => {
+        if (restaurantlistData) {
+            // @ts-ignore
+            setRestaurantList(prevData => [...prevData, ...restaurantlistData?.data]);
+            // @ts-ignore
+            setHasMoreData(restaurantlistData?.totalCount > currentPage * restaurantlimit);
+
+            dispatch(setIsLoading(false));
+        } else {
+            dispatch(setIsLoading(true));
+        }
+    }, [isrestaurantlistDataLoading, isrestaurantlistDataFetching, restaurantlistData]);
+
+    const handleLoadMore = () => {
+        if (!isrestaurantlistDataLoading && !isrestaurantlistDataFetching && hasMoreData) {
+            setCurrentPage(prevPage => prevPage + 1);
+            console.log("ashviiidfsdf--")
+        }
+    }; ``
     useEffect(() => {
         if (searchRestaurants) {
             const filteredData = concatedRestaurtData?.filter((item) => {
@@ -128,7 +176,7 @@ const RestaurantSearch = ({ navigation }: any) => {
 
                     <View style={[styles.topRestaurantsView]}>
                         <FlatList
-                            data={searchRestaurants?.length ? searchRestaurantsData : TopRastarants}
+                            data={searchRestaurants?.length ? restaurantList : TopRastarants}
                             renderItem={({ item }: any) => {
                                 return (
                                     <View style={[{ marginHorizontal: 5, flex: 1 }, ((searchRestaurantsData.length % 2 === 0 && TopRastarants?.length % 2 === 0)) && { width: cardWidth }]}>
@@ -137,7 +185,10 @@ const RestaurantSearch = ({ navigation }: any) => {
                                                 navigation.navigate(Routes.RestaurantCategorySearch)
                                             }}
                                         >
-                                            <FastImage source={item?.image[0]} style={styles?.featureImageStyle} resizeMode="cover" />
+                                            <FastImage source={{
+                                                uri: `${BASE_URL}/${item?.images[0]}`
+
+                                            }} style={styles?.featureImageStyle} resizeMode="cover" />
                                         </TouchableOpacity>
                                         <Text style={styles.featureFoodText}>{item?.partnerName}</Text>
                                         <View style={styles.iconStyle}>

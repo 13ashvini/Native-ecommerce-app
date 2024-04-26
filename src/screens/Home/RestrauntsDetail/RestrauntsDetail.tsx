@@ -45,7 +45,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
     const BASE_URL = DEV_URL
     const isCarousel = React.useRef(null)
 
-    const [selectedFoodType, setSelectedFoodType] = useState(restaurantsDetailData?.foodtype[0]); // State to keep track of selected food type
+    const [selectedFoodType, setSelectedFoodType] = useState(restaurantsDetailData?.foodtype[0] || ""); // State to keep track of selected food type
     const [foodList, setFoodList] = useState<any | null>(null)
     const [foodListLoading, setFoodListLoading] = useState(false)
 
@@ -73,7 +73,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
             </View>
         );
     }
-    const { data: foodListlData, isLoading: isfoodListlDataLoading, isFetching: isfoodListlDataFetching } = useGetAllFoodListQuery()
+    const { data: foodListlData, isLoading: isfoodListlDataLoading, isFetching: isfoodListlDataFetching } = useGetAllFoodListQuery("")
 
     useEffect(() => {
         if (!isfoodListlDataLoading || !isfoodListlDataFetching || foodListlData) {
@@ -82,9 +82,8 @@ const RestrauntsDetail = ({ featuredFoodItems,
         } else {
             setFoodListLoading(true)
         }
-    })
-    console.log("foodLisydata-----", foodList?.data)
-    console.log("foodLisy-----", foodList?.data)
+    }, [isfoodListlDataLoading, isfoodListlDataFetching, foodListlData,])
+
 
     const mainRenderItem = () => {
         return (
@@ -270,27 +269,29 @@ const RestrauntsDetail = ({ featuredFoodItems,
                         <Text style={styles.MostPopularText}>
                             Most Popular Soups
                         </Text>
-                        <FlatList
-                            data={foodList?.data}
-                            renderItem={({ item }: any) => {
-                                return (
-                                    <MostPopularFoodCard
-                                        onPress={() => {
-                                            navigation.navigate(Routes.AddToOrder, {
-                                                id: item?.id
-                                            })
-                                        }}
-                                        image={`${BASE_URL}/${item.image}`}
-                                        foodName={item.name}
-                                        foodType={item.foodType}
-                                        price={item.price}
-                                        description={item.description}
-                                    />
-                                )
-                            }}
-                            keyExtractor={(item: any) => item.id}
-                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                        ></FlatList>
+                        <View style={{ paddingHorizontal: 10 }}>
+                            <FlatList
+                                data={foodList?.data}
+                                renderItem={({ item }: any) => {
+                                    return (
+                                        <MostPopularFoodCard
+                                            onPress={() => {
+                                                navigation.navigate(Routes.AddToOrder, {
+                                                    id: item?.id
+                                                })
+                                            }}
+                                            image={`${BASE_URL}/${item.image}`}
+                                            foodName={item.name}
+                                            foodType={item.foodType}
+                                            price={item.price}
+                                            description={item.description}
+                                        />
+                                    )
+                                }}
+                                keyExtractor={(item: any) => item.id}
+                                ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                            ></FlatList>
+                        </View>
 
 
                     </View>

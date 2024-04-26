@@ -30,7 +30,9 @@ const MostPopularFoodCard = (
                     onPress={onPress}>
                     <FastImage
 
-                        source={image}
+                        source={{
+                            uri: image
+                        }}
                         style={styles.imageStyle}
                         resizeMode='cover'
                     />

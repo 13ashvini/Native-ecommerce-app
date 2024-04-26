@@ -14,9 +14,7 @@ const HomeScreenWrapper = ({ navigation }: any) => {
     const [hasMoreData, setHasMoreData] = useState(true);
     const [restaurantList, setRestaurantList] = useState<any[]>([])
     const [currentPage, setCurrentPage] = useState(1);
-    console.log("currentPage", currentPage)
-    console.log("restaurantList-----", restaurantList)
-    console.log("restaurantListlength-----", restaurantList?.length)
+
 
     const dispatch = useDispatch()
     const restaurantlimit = 4
@@ -64,7 +62,7 @@ const HomeScreenWrapper = ({ navigation }: any) => {
     }, [isrestaurantlistDataLoading, isFeaturedPartnerFetching, restaurantlistData]);
 
     const handleLoadMore = () => {
-        if (!isFeaturedPartnerFetching && !isFeaturedPartnerDataLoading && hasMoreData) {
+        if (!isrestaurantlistDataLoading && !isrestaurantlistDataFetching && hasMoreData) {
             setCurrentPage(prevPage => prevPage + 1);
             console.log("ashviiidfsdf--")
         }
