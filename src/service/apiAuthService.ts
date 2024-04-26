@@ -1,16 +1,6 @@
-// import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-// L
-// console.log("Dev_BaseUrl", DEV_URL)
-// const apiAuthService = createApi({
-//     // tagTypes: ['Tamang Food Service'],
-//     baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
-//     endpoints: () => ({}),
-
-// })
-
-// export default apiAuthService
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { DEV_URL } from "../core/env/env"
+import { RootState } from "../store/Store";
 const BASE_URL = DEV_URL
 
 export const apiAuthService = createApi({
@@ -20,16 +10,17 @@ export const apiAuthService = createApi({
 
     baseQuery: fetchBaseQuery({
         baseUrl: BASE_URL,
-        // prepareHeaders: async (headers, { getState }) => {
-        //     const user = (getState() as RootState)?.authSlice?.token;
-        //     if (user) {
-        //         headers.set("Authorization", `Bearer ${user}`);
-        //         // headers.set("Content-Type", "application/json");
-        //     } else {
-        //         console.warn("Token is missing or empty");
-        //     }
-        //     return headers;
-        // },
+        prepareHeaders: async (headers, { getState }) => {
+            const user = (getState() as RootState)?.auth.tokenData;
+            console.log("user", user)
+            if (user) {
+                headers.set("Authorization", `Bearer ${user}`);
+                // headers.set("Content-Type", "application/json");
+            } else {
+                console.warn("Token is missing or empty");
+            }
+            return headers;
+        },
     }),
     endpoints: () => ({}),
 });

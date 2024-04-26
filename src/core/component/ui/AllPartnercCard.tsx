@@ -96,8 +96,8 @@ const styles = StyleSheet.create({
     },
     timeView: {
         position: 'absolute',
-        bottom: 60,
-        display: 'flex',
+        bottom: 70,
+        // display: 'flex',
         gap: 5
     }
 })

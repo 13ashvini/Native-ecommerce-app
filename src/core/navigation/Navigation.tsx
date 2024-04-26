@@ -4,16 +4,16 @@ import React, { createContext, useContext, useEffect } from 'react';
 import { View, useColorScheme } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { navigationRef } from './RootNavigation'
-import IntroSliderComponent from '../component/ui/IntroSliderComponent'
+
 import { Routes } from './type'
 import AuthorizationNavigation from './stack/AuthorizationNavigation'
-import { BottomNavigation } from 'react-native-paper'
 import BottomTabNavigation from './BottomTab/BottomTabNavigation'
 import WelcomeScreenSlide from '../../screens/WelcomeScreen/WelcomeScreenSlide'
 import Color from '../contstants/Color'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setAccessToken } from '../../Slice/authslice';
 
 
 
@@ -22,6 +22,8 @@ const RootStack = createStackNavigator()
 
 const Navigation = () => {
     const { tokenData } = useSelector((state: RootState) => state.auth)
+    console.log("tokenData", tokenData)
+    const dispatch = useDispatch()
 
     const colorScheme = useColorScheme();
     const ThemeContext = createContext(DefaultTheme);
@@ -48,6 +50,8 @@ const Navigation = () => {
     const getAccessToken = async () => {
         // Check for the presence of the access token
         const accessToken = await AsyncStorage.getItem('access_token');
+        dispatch(setAccessToken(accessToken))
+
         console.log("accessToken---------", accessToken)
         // Navigate based on the presence of the access token
         if (accessToken !== null) {

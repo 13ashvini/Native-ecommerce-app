@@ -5,8 +5,8 @@
  * @format
  */
 
-import React from 'react';
-import type { PropsWithChildren } from 'react';
+import React, { useEffect } from 'react';
+
 import {
   StyleSheet,
   Text,
@@ -18,20 +18,18 @@ import Navigation from './src/core/navigation/Navigation';
 import FlashMessage from 'react-native-flash-message';
 import { NativeBaseProvider, extendTheme } from 'native-base';
 import theme from './src/core/utils/theme';
-import { DefaultTheme, } from 'react-native-paper';
 import SplashScreen from 'react-native-splash-screen';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { Provider } from 'react-redux';
 import store from './src/store/Store';
-// import { AppearanceProvider, useColorScheme } from 'react-native-appearance';
+import { PersistGate } from 'redux-persist/integration/react';
+import persistor from './src/store/persistor';
+
 
 
 
 
 const CustomThemeProvider = ({ children }: any) => {
   const colorScheme: 'light' | 'dark' | null | undefined = useColorScheme();
-
-  // Define custom colors for light and dark modes
   const customColors = {
     light: {
       textColor: 'black',
@@ -43,10 +41,8 @@ const CustomThemeProvider = ({ children }: any) => {
     },
   };
 
-  // Get the custom colors based on the color scheme or default to light mode
   const selectedColors = customColors[colorScheme || 'light'];
 
-  // Extend the default theme with the selected colors
   const extendedTheme = extendTheme({
     colors: {
       ...selectedColors,
@@ -64,13 +60,10 @@ const CustomThemeProvider = ({ children }: any) => {
 
 
 const App = () => {
+  useEffect(() => {
+    SplashScreen.hide()
+  }, []);
 
-  // Wrap the NativeBaseProvider withDefaultProps to apply the extended theme
-
-
-  const isDarkMode = useColorScheme() === 'dark';
-  SplashScreen.hide()
-  const [text, setText] = React.useState("");
   return (
     // <View
     // style={{ flex: 1 }}>
@@ -80,12 +73,12 @@ const App = () => {
 
     /* </View> */
     <Provider store={store}>
-      {/* <SafeAreaView> */}
-      {/* <NativeBaseProvider theme={theme}> */}
-      <Navigation />
-      <FlashMessage position="top" />
-      {/* </NativeBaseProvider> */}
-      {/* </SafeAreaView> */}
+      <PersistGate loading={null} persistor={persistor}>
+        <NativeBaseProvider theme={theme}>
+          <Navigation />
+          <FlashMessage position="top" />
+        </NativeBaseProvider>
+      </PersistGate>
     </Provider>
 
 

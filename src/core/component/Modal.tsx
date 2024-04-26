@@ -48,7 +48,8 @@ const Modal = ({
                             <Button
                                 textStyle={styles.cancelButton}
                                 onPress={onClickCancel}
-                                title={<Text >
+                                title={<Text
+                                    style={{ color: Color.mds_global_white_color }}>
                                     {modalCancelButtonTitle}
                                 </Text>}
                             >
@@ -56,7 +57,7 @@ const Modal = ({
                             </Button>
                             <Button
                                 textStyle={{
-                                    paddingVertical: 5
+                                    paddingVertical: 9
                                 }}
                                 onPress={() => { }}
                                 title={<Text style={styles.confirmButton}
@@ -77,19 +78,22 @@ const styles = StyleSheet.create({
         backgroundColor: Color.mds_global_gray_color,
         color: Color.mds_global_black_color,
         borderRadius: 10,
-        paddingVertical: 5
+        paddingVertical: 10
+
+
     },
     confirmButton: {
         color: Color.mds_global_white_color,
         borderRadius: 10,
-        paddingVertical: 5
+        // paddingVertical: 6
     },
     mainView: {
         display: "flex",
-        gap: 6,
+        gap: 10,
         backgroundColor: "white",
         borderRadius: 20,
-        padding: 13,
+        paddingHorizontal: 8,
+        paddingVertical: 18,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -105,7 +109,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "center",
         alignItems: "center",
-        gap: 12
+
     },
     textStyle: {
         ...Fonts.style.mds_ui_gothic_font_medium_bold,

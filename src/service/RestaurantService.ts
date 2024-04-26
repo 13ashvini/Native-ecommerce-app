@@ -3,7 +3,7 @@
 import apiAuthService from "./apiAuthService";
 const restaurantService = apiAuthService.injectEndpoints({
     endpoints: (builder: any) => ({
-        // GET ALL FEATURE PARTNER  LIST
+        // GET ALL RESTAURANTS  LIST
         getAllRestaurantList: builder.query({
             providesTags: ["restaurant"],
             query: (body: any) => ({
@@ -12,7 +12,15 @@ const restaurantService = apiAuthService.injectEndpoints({
                 body,
             }),
         }),
+        // GET RESTAURANT BY ID
+        getRestaurantById: builder.query({
+            providesTags: ["restaurant"],
+            query: (id: string) => ({
+                url: `/res/api/detail-restaurantItem/${id}`,
+                method: "GET",
 
+            }),
+        }),
 
     }),
 });
@@ -20,5 +28,6 @@ const restaurantService = apiAuthService.injectEndpoints({
 // Corrected export
 export const {
     useGetAllRestaurantListQuery,
+    useGetRestaurantByIdQuery,
 
 } = restaurantService;

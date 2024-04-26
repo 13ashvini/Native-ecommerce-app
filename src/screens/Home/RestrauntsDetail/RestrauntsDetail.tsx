@@ -10,6 +10,9 @@ import Fonts from '../../../core/contstants/Fonts';
 import MostPopularFoodCard from '../../../core/component/ui/MostPopularFoodCard';
 import { Routes } from '../../../core/navigation/type';
 import { useRoute } from '@react-navigation/native';
+import { DEV_URL } from '../../../core/env/env';
+import { Pagination } from 'react-native-snap-carousel'
+import { useGetAllFoodListQuery } from '../../../service/foodListService';
 
 const restrauntsDetail = allRestaurantsListData
 
@@ -22,6 +25,8 @@ type Props = {
     desserts: any[]
     soups: any[]
     navigation: any
+    restaurantsDetailData: any
+
 }
 const RestrauntsDetail = ({ featuredFoodItems,
     mostPopularFoodData,
@@ -30,12 +35,31 @@ const RestrauntsDetail = ({ featuredFoodItems,
     mainCourceData,
     desserts,
     soups,
-    navigation }: Props) => {
+    navigation,
+    restaurantsDetailData,
+    // foodList
+}: Props) => {
     const width = Dimensions.get('window').width;
-    const routes = useRoute()
+    const [index, setIndex] = React.useState(0)
     const [showPropertyStatusTab, setShowPropertyStatusTab] = useState("Seafood" || "Appetizers" || "Desserts" || "main course" || "Soup")
-    const { restaurantId }: any = routes.params
-    const [restaurantsDetailData, setRestaurantsDetailData] = useState<any | null>(null)
+    const BASE_URL = DEV_URL
+    const isCarousel = React.useRef(null)
+
+    const [selectedFoodType, setSelectedFoodType] = useState(restaurantsDetailData?.foodtype[0]); // State to keep track of selected food type
+    const [foodList, setFoodList] = useState<any | null>(null)
+    const [foodListLoading, setFoodListLoading] = useState(false)
+
+    // Function to handle food type selection
+    const handleFoodTypeSelection = (foodType: string) => {
+        setSelectedFoodType(foodType === selectedFoodType ? "" : foodType);
+    };
+
+    // Function to determine if a food type is selected
+    const isFoodTypeSelected = (foodType: string) => {
+        return foodType === selectedFoodType;
+    };
+
+    console.log("selectedFoodType", selectedFoodType)
     const renderItem = ({ item }: { item: any }) => {
         return (
             <View style={{
@@ -43,16 +67,24 @@ const RestrauntsDetail = ({ featuredFoodItems,
                 alignItems: 'center',
 
             }}>
-                <FastImage source={item} style={styles?.image} resizeMode="cover" />
+                <FastImage source={{
+                    uri: `${BASE_URL}/${item}`
+                }} style={styles?.image} resizeMode="cover" />
             </View>
         );
     }
+    const { data: foodListlData, isLoading: isfoodListlDataLoading, isFetching: isfoodListlDataFetching } = useGetAllFoodListQuery()
+
     useEffect(() => {
-        const restaurantData = restrauntsDetail?.filter((item) => {
-            return item?.id == restaurantId
-        })
-        setRestaurantsDetailData(restaurantData[0])
+        if (!isfoodListlDataLoading || !isfoodListlDataFetching || foodListlData) {
+            setFoodList(foodListlData)
+            setFoodListLoading(false)
+        } else {
+            setFoodListLoading(true)
+        }
     })
+    console.log("foodLisydata-----", foodList?.data)
+    console.log("foodLisy-----", foodList?.data)
 
     const mainRenderItem = () => {
         return (
@@ -61,7 +93,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
                     <Carousel
                         layout={'stack'} layoutCardOffset={`18`}
                         paginationDot={true}
-                        data={restaurantsDetailData?.image}
+                        data={restaurantsDetailData?.images}
                         renderItem={renderItem}
                         sliderWidth={width}
                         itemWidth={width}
@@ -69,18 +101,28 @@ const RestrauntsDetail = ({ featuredFoodItems,
                         onItemClick={() => {
 
                         }}
-                    // autoplay={true}
-                    // autoplayInterval={3000}
-
+                        autoplay={true}
+                        autoplayInterval={3000}
+                        onSnapToItem={(index: any) => setIndex(index)}
+                        useScrollView={true}
                     />
-
+                    < Pagination
+                        carouselRef={isCarousel}
+                        dotsLength={restaurantsDetailData?.images?.length}
+                        activeDotIndex={index}
+                        dotStyle={styles.dotStyle
+                        }
+                        inactiveDotOpacity={0.4}
+                        inactiveDotScale={0.6}
+                        tappableDots={true}
+                        containerStyle={styles.paginationContainer} />
                 </View>
                 <View style={{ display: "flex", gap: 6, padding: 10 }}>
                     <Text style={styles.partnerNameStyle}
-                    >{restaurantsDetailData?.partnerName}</Text>
+                    >{restaurantsDetailData?.restaurantPartnerName}</Text>
                     <View style={styles.deliveryView}>
                         <FlatList
-                            data={restaurantsDetailData?.availableFoodType}
+                            data={restaurantsDetailData?.foodtype}
                             horizontal={true}
                             renderItem={({ item }: any) => {
                                 return (
@@ -110,7 +152,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
 
                             <View style={styles.iconStyle}>
                                 <Icon.DollarIcon color={Color.mds_global_main_Yellow_color} />
-                                <Text>{restaurantsDetailData?.delivery}</Text>
+                                <Text>{restaurantsDetailData?.deliveryType}</Text>
                             </View>
                         </View>
                         <Button
@@ -160,20 +202,27 @@ const RestrauntsDetail = ({ featuredFoodItems,
                 <View style={{ display: "flex", gap: 8 }}>
                     <ScrollView horizontal={true} >
                         <View style={styles.foodCategoriesMainView}>
-                            <View>
-                                <View>
-                                    <Text style={[styles.categoryTypeTex,
-                                    showPropertyStatusTab === "Seafood" && styles.activecategoryTypeText
-                                    ]}
-                                        onPress={() => {
-                                            setShowPropertyStatusTab("Seafood")
-                                        }}
-                                    >
-                                        Seafood
-                                    </Text>
-                                </View>
-                            </View>
-                            <View>
+                            {restaurantsDetailData?.foodtype?.map((food: any) => {
+                                return (
+                                    <View>
+                                        <View>
+                                            <TouchableOpacity
+                                                onPress={() => handleFoodTypeSelection(food)}>
+                                                <Text style={[styles.categoryTypeTex,
+                                                // showPropertyStatusTab === "Seafood" && styles.activecategoryTypeText
+                                                isFoodTypeSelected(food) && styles.activecategoryTypeText
+                                                ]}
+
+                                                >
+                                                    {food}
+                                                </Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                )
+                            })}
+
+                            {/* <View>
                                 <Text style={[styles.categoryTypeTex,
                                 showPropertyStatusTab === "Appetizers" && styles.activecategoryTypeText
                                 ]}
@@ -214,10 +263,38 @@ const RestrauntsDetail = ({ featuredFoodItems,
                                     }}>
                                     Soup
                                 </Text>
-                            </View>
+                            </View> */}
                         </View>
                     </ScrollView>
-                    <View style={{ paddingHorizontal: 10 }}>
+                    <View style={{ flex: 1, gap: 5 }}>
+                        <Text style={styles.MostPopularText}>
+                            Most Popular Soups
+                        </Text>
+                        <FlatList
+                            data={foodList?.data}
+                            renderItem={({ item }: any) => {
+                                return (
+                                    <MostPopularFoodCard
+                                        onPress={() => {
+                                            navigation.navigate(Routes.AddToOrder, {
+                                                id: item?.id
+                                            })
+                                        }}
+                                        image={`${BASE_URL}/${item.image}`}
+                                        foodName={item.name}
+                                        foodType={item.foodType}
+                                        price={item.price}
+                                        description={item.description}
+                                    />
+                                )
+                            }}
+                            keyExtractor={(item: any) => item.id}
+                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                        ></FlatList>
+
+
+                    </View>
+                    {/* <View style={{ paddingHorizontal: 10 }}>
                         {showPropertyStatusTab === "Seafood" && <>
                             <View style={{ flex: 1, gap: 8 }}>
                                 <View style={{ flex: 1, gap: 5 }}>
@@ -418,7 +495,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
                         </>
 
                         }
-                    </View>
+                    </View> */}
                 </View>
             </View>
         )
@@ -512,6 +589,19 @@ const styles = StyleSheet.create({
     MostPopularText: {
         fontSize: Fonts.fontSize.body,
         color: Color.mds_global_black_color
-    }
+    },
+    dotStyle: {
+        width: 13,
+        height: 8,
+        borderRadius: 5,
+        backgroundColor: 'white',
+
+    },
+    paginationContainer: {
+        position: 'absolute',
+        // alignSelf: 'center',
+        bottom: 0,
+        right: 0
+    },
 })
 export default RestrauntsDetail

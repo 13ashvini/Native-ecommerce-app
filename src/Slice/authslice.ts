@@ -44,38 +44,29 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createSlice } from '@reduxjs/toolkit';
 
-
 type AuthState = {
     tokenData: string | null;
 };
 
-const initialState: AuthState = {
-    tokenData: null,
-};
-
 const getToken = async () => {
     try {
-        const jsonValue = await AsyncStorage.getItem('access_token');
-        return jsonValue != null ? JSON.parse(jsonValue) : null;
+        const token = await AsyncStorage.getItem('access_token');
+        return token || null;
     } catch (e) {
         console.error('Error reading token:', e);
         return null;
     }
 };
 
-const removeToken = async () => {
-    try {
-        await AsyncStorage.removeItem('access_token');
-    } catch (e) {
-        console.error('Error removing token:', e);
-    }
+const initialState: AuthState = {
+    tokenData: null,
 };
 
 const Authslice = createSlice({
     name: 'auth',
     initialState: initialState,
     reducers: {
-        setAccessToken: (state, action: any) => {
+        setAccessToken: (state, action) => {
             state.tokenData = action.payload;
         },
         removeAccessToken: (state) => {
@@ -84,27 +75,17 @@ const Authslice = createSlice({
     },
 });
 
-export const { setAccessToken, removeAccessToken } = Authslice.actions;
-
-// Async action creators
-export const setAccessTokenAsync = () => async (dispatch: Function) => {
+// Asynchronous action creator to initialize the token
+export const initializeToken = () => async (dispatch: any) => {
     try {
         const token = await getToken();
-        if (token) {
-            dispatch(setAccessToken(token));
-        }
+        dispatch(setAccessToken(token));
     } catch (error) {
-        console.error('Error setting access token:', error);
+        console.error('Error initializing token:', error);
     }
 };
 
-export const removeAccessTokenAsync = () => async (dispatch: Function) => {
-    try {
-        await removeToken();
-        dispatch(removeAccessToken());
-    } catch (error) {
-        console.error('Error removing access token:', error);
-    }
-};
+export const { setAccessToken, removeAccessToken } = Authslice.actions;
 
 export default Authslice.reducer;
+

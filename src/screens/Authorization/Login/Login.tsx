@@ -37,8 +37,8 @@ const Login: React.FC<Props> = ({ navigation }) => {
     }
     const storeToken = async (value: string) => {
         try {
-            const jsonValue = JSON.stringify(value);
-            await AsyncStorage.setItem('access_token', jsonValue);
+            // const jsonValue = JSON.stringify(value);
+            await AsyncStorage.setItem('access_token', value);
         } catch (e) {
         }
     };
@@ -50,6 +50,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
     const getToken = async () => {
         try {
             const jsonValue = await AsyncStorage.getItem('access_token');
+
             return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch (e) {
             // error reading value
@@ -60,7 +61,6 @@ const Login: React.FC<Props> = ({ navigation }) => {
     ) => {
         const formattedValue = values
         loginUser(formattedValue).then((res: any) => {
-            console.log("res", res)
             if (res?.error) {
                 setSubmitting(false)
                 if (res?.error?.data?.message) {
@@ -81,6 +81,7 @@ const Login: React.FC<Props> = ({ navigation }) => {
                 if (res?.data?.message) {
                     storeToken(res?.data?.token)
                     dispatch(setAccessToken(res?.data?.token))
+
                     showMessage({
                         message: (res?.data?.message),
                         type: "success",
@@ -250,13 +251,13 @@ const styles = StyleSheet.create({
     facebookButton: {
         backgroundColor: Color.mds_global_darkblue_color,
         borderRadius: 8,
-        padding: 5
+        padding: 13
 
     },
     googleButton: {
         backgroundColor: Color.mds_global_main_Blue_color,
         borderRadius: 8,
-        padding: 5
+        padding: 13
     },
     facebookIconView: {
         display: "flex",

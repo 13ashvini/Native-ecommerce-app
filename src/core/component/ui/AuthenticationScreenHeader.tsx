@@ -3,21 +3,21 @@ import { StyleSheet, Text, View } from 'react-native'
 import Fonts from '../../contstants/Fonts'
 import Color from '../../contstants/Color'
 
-type Props ={
-    title:string ,
-    text:string,
-    extraText?:string
+type Props = {
+    title: string,
+    text: string,
+    extraText?: string
 }
-export const AuthenticationScreenHeader = ({text,title,extraText}:Props) => {
+export const AuthenticationScreenHeader = ({ text, title, extraText }: Props) => {
     return (
         <View style={styles?.mainView}>
             <Text style={styles.titlestyle}>
                 {title}
-               
+
             </Text>
             <Text style={styles.textStyle}>
                 {text}
-              <Text style={{color:Color.mds_global_main_Yellow_color,paddingHorizontal:1}}>{extraText}</Text>
+                <Text style={{ color: Color.mds_global_main_Yellow_color, paddingHorizontal: 1 }}>{extraText}</Text>
             </Text>
         </View>
     )

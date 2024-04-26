@@ -1,30 +1,36 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import HomePageSliderComponent from '../../core/component/ui/HomePageSliderComponent'
 import Fonts from '../../core/contstants/Fonts'
 import FeaturedPartnerCard from '../../core/component/ui/FeaturedPartnerCard'
 import Color from '../../core/contstants/Color'
-import { FeaturedPartnerData } from './FeaturedPartnersList'
 import FastImage from 'react-native-fast-image'
 import images from '../../core/assests/images'
 import AllRestaurantsCard from '../../core/component/ui/AllRestaurantsCard'
 import { Routes } from '../../core/navigation/type'
 import { allRestaurantsListData } from './AllRestrauntsList'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../store/Store'
-import { useGetAllFeaturePartnerListQuery } from '../../service/featuredPartnerService'
 import { DEV_URL } from '../../core/env/env'
+import RestaurantsSkeleton from '../../core/component/ui/RestaurantsSkeleton'
+import FeaturedCardSkeleton from '../../core/component/ui/FeaturedCardSkeleton'
 
 type Props = {
     featuredPartners: any[]
+    allRestrauntsList: any[]
+    navigation: any
+    isRestaurantLoading: boolean
+    featuredPartnersLoading: boolean
+    handleMoreRestaurant: () => void
+    hasMoreData: boolean
 }
 
-const HomeScreen = ({ navigation, featuredPartners }: any) => {
-
-    const allRestrauntsList = allRestaurantsListData
+const HomeScreen = ({ navigation,
+    featuredPartners,
+    allRestrauntsList,
+    isRestaurantLoading,
+    featuredPartnersLoading,
+    handleMoreRestaurant,
+    hasMoreData }: Props) => {
     const BASE_URL = DEV_URL
-
-
     const renderItem = () => {
         return (
             <View style={style.homeMainView}>
@@ -45,29 +51,32 @@ const HomeScreen = ({ navigation, featuredPartners }: any) => {
 
                     </View>
 
-                    <FlatList
-                        data={featuredPartners} renderItem={({ item }: any) => {
+                    {
+                        featuredPartnersLoading ? <FeaturedCardSkeleton /> : <FlatList
+                            data={featuredPartners} renderItem={({ item }: any) => {
 
-                            return (
-                                <FeaturedPartnerCard
-                                    image={`${BASE_URL}/${item?.image}`}
-                                    partnerName={item?.partnerName}
-                                    location={item?.location}
-                                    rating={item?.rating}
-                                    time={item?.time}
-                                    delivery={item?.delivery}
+                                return (
+                                    <FeaturedPartnerCard
+                                        image={`${BASE_URL}/${item?.image}`}
+                                        partnerName={item?.partnerName}
+                                        location={item?.location}
+                                        rating={item?.rating}
+                                        time={item?.time}
+                                        delivery={item?.delivery}
 
-                                />
-                            )
-                        }}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        removeClippedSubviews={true}
-                        keyExtractor={(item: any) => item.id}
-                        maxToRenderPerBatch={4}
-                        updateCellsBatchingPeriod={4 / 2}
-                        ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-                    />
+                                    />
+                                )
+                            }}
+                            horizontal={true}
+                            showsHorizontalScrollIndicator={false}
+                            removeClippedSubviews={true}
+                            keyExtractor={(item: any) => item.id}
+                            maxToRenderPerBatch={4}
+                            updateCellsBatchingPeriod={4 / 2}
+                            ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
+                        />
+                    }
+
                 </View>
                 <View style={{ marginVertical: 10 }}>
                     <FastImage source={images?.homeScreenBanner} style={style?.bannerImageStyle} resizeMode="cover" />
@@ -104,35 +113,60 @@ const HomeScreen = ({ navigation, featuredPartners }: any) => {
                 <View style={{ display: 'flex', gap: 8 }}>
                     <View style={style.featuredPartnerView}>
                         <Text style={style.featuredPartnertext}>All Restaurants</Text>
-                        <Text style={style.seeAllText}
+                        <TouchableOpacity
                             onPress={() => {
                                 navigation.navigate(Routes.AllRestaurants)
-                            }}
-                        >See All</Text>
+                            }}>
+                            <Text style={style.seeAllText}
+
+                            >See All</Text>
+                        </TouchableOpacity>
                     </View>
-                    <FlatList
+                    {
+                        isRestaurantLoading ?
+                            <View style={{ display: "flex", gap: 5 }}>
+                                {
+                                    Array(5)
+                                        .fill(0)
+                                        .map((el, index) => {
+                                            return (
+                                                <RestaurantsSkeleton />
+                                            );
+                                        })
+                                }
+                            </View>
+                            :
+                            <FlatList
 
-                        data={allRestrauntsList}
-                        renderItem={({ item }: any) => {
-                            return (
-                                <AllRestaurantsCard
-                                    onPress={() => { }}
-                                    ratingNumber={item?.ratingNumber}
-                                    availableFoodType={item?.availableFoodType}
-                                    image={`${BASE_URL}/${item?.image}`}
-                                    partnerName={item?.partnerName}
-                                    location={item?.location}
-                                    rating={item?.rating}
-                                    time={item?.time}
-                                    delivery={item?.delivery}
+                                data={allRestrauntsList}
+                                renderItem={({ item }: any) => {
 
-                                />
-                            )
-                        }}
-                        // horizontal={true}
-                        keyExtractor={(item: any) => item.id}
-                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                    />
+                                    return (
+                                        <AllRestaurantsCard
+                                            onPress={() => {
+                                                navigation.navigate(Routes.RestaurantDetail, {
+                                                    restaurantId: item?._id
+                                                })
+                                            }}
+                                            ratingNumber={item?.ratingNumber}
+                                            availableFoodType={item?.foodtype}
+                                            image={item?.images}
+                                            partnerName={item?.restaurantPartnerName}
+                                            location={item?.location}
+                                            rating={item?.rating}
+                                            time={item?.time}
+                                            delivery={item?.deliveryType}
+
+                                        />
+                                    )
+                                }}
+                                // horizontal={true}
+                                keyExtractor={(item: any) => item.id}
+                                onEndReached={hasMoreData ? handleMoreRestaurant : null}
+                                ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                            />
+                    }
+
                 </View>
             </View>
         )
@@ -188,6 +222,7 @@ const style = StyleSheet.create({
         height: 170,
 
     },
+
 
 })
 

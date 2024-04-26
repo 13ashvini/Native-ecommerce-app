@@ -1,5 +1,3 @@
-
-
 import apiAuthService from "./apiAuthService";
 const featuredPartnerService = apiAuthService.injectEndpoints({
     endpoints: (builder: any) => ({

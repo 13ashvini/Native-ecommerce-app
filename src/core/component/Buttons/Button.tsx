@@ -15,11 +15,11 @@ type Props = {
 const Button = ({ onPress, title, textStyle, loader, small, loaderColor }: Props) => {
     return (
         <View>
-            <Pressable
+            <TouchableOpacity
                 onPress={onPress}
                 // style
                 style={[
-                    textStyle,
+                    // textStyle,
                     styles.container
                 ]}>
                 {loader && (
@@ -32,7 +32,7 @@ const Button = ({ onPress, title, textStyle, loader, small, loaderColor }: Props
                 {!loader && (
                     <View style={[styles.button, textStyle,]}>{title}</View>
                 )}
-            </Pressable>
+            </TouchableOpacity>
         </View>
     )
 }
@@ -42,6 +42,7 @@ export default Button
 const styles = StyleSheet.create({
     container: {
         marginHorizontal: 10
+
     },
     button: {
         alignItems: 'center',

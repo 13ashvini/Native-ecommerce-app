@@ -14,7 +14,7 @@ const VerifyNumber = ({ navigation }: any) => {
         <Text style={styles.titlestyle}>Verify Phone Number</Text>
         <Text style={styles.textStyle}>Enter the 4-Digit code sent to you at +610489632578</Text>
       </View>
-      <View style={{ marginTop: 20 ,marginBottom:10}}>
+      <View style={{ marginTop: 20, marginBottom: 10 }}>
         <OTPTextInput
           defaultValue=''
           handleTextChange={(text) => { setVerifyNumber(text) }}
@@ -27,8 +27,9 @@ const VerifyNumber = ({ navigation }: any) => {
         // textStyle={styles.buttonStyle}
         onPress={() => {
           navigation.navigate(Routes.MAIN, {
-            screen: Routes.HOME
-          })
+            screen: Routes.StoreLocation
+          });
+          console.log("assssss------------")
         }}
         title={<Text style={styles.buttonStyle}>VERIFY</Text>}
       ></Button>

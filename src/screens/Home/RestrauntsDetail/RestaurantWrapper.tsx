@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import RestrauntsDetail from './RestrauntsDetail'
 import images from '../../../core/assests/images'
+import { DEV_URL } from '../../../core/env/env';
+import { useGetRestaurantByIdQuery } from '../../../service/RestaurantService';
+import { useRoute } from '@react-navigation/native';
+import { useGetAllFoodListQuery } from '../../../service/foodListService';
 
 export const RestaurantsFeaturedItem = [{
     image: images.FeatureFoodImage1,
@@ -591,9 +595,28 @@ export const soups = [
 ];
 
 const RestaurantWrapper = ({ navigation }: any) => {
+    const [restaurantDetail, setRestaurantDetail] = useState<any | null>(null)
+
+    console.log("restaurantDetail", restaurantDetail)
+    const [loading, setLoading] = useState(false)
+    const routes = useRoute()
+    const { restaurantId }: any = routes.params
+    const { data: restaurantDetailData, isLoading: isRestaurantDetailDataLoading, isFetching: isRestaurantDetailDataFetching } = useGetRestaurantByIdQuery(restaurantId)
+
+    useEffect(() => {
+        if (!isRestaurantDetailDataLoading || !isRestaurantDetailDataFetching || restaurantDetailData) {
+            setRestaurantDetail(restaurantDetailData)
+            setLoading(false)
+        } else {
+            setLoading(true)
+        }
+    })
+
     return (
         <View>
             <RestrauntsDetail
+
+                restaurantsDetailData={restaurantDetail?.data}
                 navigation={navigation}
                 soups={soups}
                 desserts={desserts}

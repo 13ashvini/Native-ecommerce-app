@@ -1,11 +1,15 @@
 import React from 'react'
-import { Dimensions, FlatList, StyleSheet, Text, View } from 'react-native'
+import { Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import images from '../../assests/images';
 import Color from '../../contstants/Color';
 import Fonts from '../../contstants/Fonts';
 import Carousel from 'react-native-snap-carousel';
 import * as Icon from "../../svg/"
+import { DEV_URL } from '../../env/env';
+import { Pagination } from 'react-native-snap-carousel'
+import { Pressable } from 'native-base';
+
 type Props = {
     image: any
     partnerName: string
@@ -29,19 +33,37 @@ const AllRestaurantsCard = ({
     onPress
 }: Props) => {
     const width = Dimensions.get('window').width;
+    const BASE_URL = DEV_URL
     const DotIcon = Icon.dotIcon
     const DollarIcon = Icon?.DollarIcon
+    const [index, setIndex] = React.useState(0)
+    const isCarousel = React.useRef(null)
+
+
     const renderItem = ({ item }: { item: any }) => {
         return (
             <View style={{
-                justifyContent: 'center',
-                alignItems: 'center',
+                // justifyContent: 'center',
+                // alignItems: 'center',
+                flex: 1,
+                width: '100%',
+
+
                 // width: '100%'
 
             }}>
-                <FastImage source={{
-                    uri: item
-                }} style={styles?.image} resizeMode="cover" />
+                <FastImage
+                    source={{
+                        uri: `${BASE_URL}/${item}`,
+                        priority: FastImage.priority.normal,
+
+                    }
+
+                    }
+                    style={[styles?.image]}
+
+                    resizeMode={FastImage.resizeMode.cover}
+                />
             </View>
         );
     }
@@ -49,26 +71,46 @@ const AllRestaurantsCard = ({
         <View>
             <View style={styles.FeaturedPartnerMainView}>
 
-                <Carousel
-                    layout={'stack'} layoutCardOffset={`18`}
-                    paginationDot={true}
-                    data={image}
-                    renderItem={renderItem}
-                    sliderWidth={width - 30}
-                    itemWidth={width - 30}
-                    loop={true}
-                    onItemClick={onPress}
+                <Pressable
 
-                // autoplay={true}
-                // autoplayInterval={3000}
+                    onPress={onPress}>
+                    <View
+                        style={{
+                            position: "relative"
+                        }}>
+                        <Carousel
+                            layout={'stack'} layoutCardOffset={`18`}
+                            paginationDot={true}
+                            data={image}
+                            renderItem={renderItem}
+                            sliderWidth={width - 30}
+                            itemWidth={width - 30}
+                            loop={true}
+                            onSnapToItem={(index: any) => setIndex(index)}
+                            useScrollView={true}
+                        />
+                        < Pagination
+                            carouselRef={isCarousel}
+                            dotsLength={image?.length}
+                            activeDotIndex={index}
+                            dotStyle={styles.dotStyle
+                            }
+                            inactiveDotOpacity={0.4}
+                            inactiveDotScale={0.6}
+                            tappableDots={true}
+                            containerStyle={styles.paginationContainer} />
+                    </View>
+                </Pressable>
 
-                />
-                <Text style={styles.partnerNameStyle}
+                <TouchableOpacity
                     onPress={onPress}
-                >{partnerName}</Text>
+                >
+                    <Text style={styles.partnerNameStyle}
+
+                    >{partnerName}</Text>
+                </TouchableOpacity>
                 <Text>{location}</Text>
                 <View style={styles.deliveryView}>
-                    {/* <Text>$$</Text> */}
                     <FlatList
                         data={availableFoodType}
                         horizontal={true}
@@ -115,6 +157,7 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 2, height: 3 },
         shadowOpacity: 0.8,
         shadowRadius: 1,
+        position: "relative"
 
     },
     deliveryView: {
@@ -124,9 +167,11 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     image: {
-        width: "100%",
-        height: 185,
+        flex: 1,
         borderRadius: 10,
+        width: '100%',
+        height: 185,
+
     },
     ratingStyle: {
         backgroundColor: Color.mds_global_main_Yellow_color
@@ -148,6 +193,20 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         gap: 4
-    }
+    },
+    dotStyle: {
+        width: 13,
+        height: 8,
+        borderRadius: 5,
+        backgroundColor: 'white',
+
+    },
+    paginationContainer: {
+        position: 'absolute',
+        // alignSelf: 'center',
+        bottom: 0,
+        right: 0
+    },
+
 })
 export default AllRestaurantsCard

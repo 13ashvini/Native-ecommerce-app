@@ -4,7 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 type FlagsType = {
     items: any | null;
     totalItems: number;
-    currentPage: number; // Added currentPage
+    currentPage: any; // Added currentPage
     rowsPerPage: number;
     sortBy: string;
     filterBy: string[];
@@ -32,7 +32,7 @@ const restaurantListSlice = createSlice({
         setItems: (state, action: PayloadAction<any | null>) => {
             state.items = action.payload;
         },
-        setCurrentPage: (state, action: PayloadAction<number>) => {
+        setCurrentPage: (state, action: PayloadAction<any>) => {
             state.currentPage = action.payload;
         },
         setSearchValue: (state, action: PayloadAction<string>) => {

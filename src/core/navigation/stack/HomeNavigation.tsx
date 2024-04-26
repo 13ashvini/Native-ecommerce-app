@@ -6,6 +6,7 @@ import AllRestrauntsList from '../../../screens/Home/AllRestrauntsList';
 import RestaurantWrapper from '../../../screens/Home/RestrauntsDetail/RestaurantWrapper';
 import AddToOrder from '../../../screens/Home/AddToOrder/AddToOrder';
 import HomeScreenWrapper from '../../../screens/Home/HomeScreenWrapper';
+import StoreLocation from '../../../screens/Home/FindRestaurantLocation/StoreLocation';
 const DashboardStack = createStackNavigator()
 const HomeNavigation = () => {
 
@@ -16,6 +17,8 @@ const HomeNavigation = () => {
                 headerShown: false,
             })}
         >
+
+
             <DashboardStack.Screen
                 name={Routes.HomeScreen}
                 component={HomeScreenWrapper}
@@ -38,6 +41,14 @@ const HomeNavigation = () => {
                 options={{
                     headerShown: true,
                     title: "Home",
+
+                }} />
+            <DashboardStack.Screen
+                name={Routes.StoreLocation}
+                component={StoreLocation}
+                options={{
+                    headerShown: true,
+                    title: "Set Location ",
                     // header: () => (
                     //     <Button
                     //         onPress={() => { }}
@@ -45,11 +56,23 @@ const HomeNavigation = () => {
                     //         color="#fff"
                     //     />
                     // ),
-                }} />
-
+                }}
+            />
             <DashboardStack.Screen
                 name={Routes.AllRestaurants}
-                component={AllRestrauntsList} />
+                component={AllRestrauntsList}
+                options={{
+                    headerShown: true,
+                    title: "All Restaurants",
+                    // header: () => (
+                    //     <Button
+                    //         onPress={() => { }}
+                    //         title="Info"
+                    //         color="#fff"
+                    //     />
+                    // ),
+                }}
+            />
 
             <DashboardStack.Screen
                 name={Routes.RestaurantDetail}
@@ -57,6 +80,7 @@ const HomeNavigation = () => {
             <DashboardStack.Screen
                 name={Routes.AddToOrder}
                 component={AddToOrder} />
+
         </DashboardStack.Navigator>
 
     )

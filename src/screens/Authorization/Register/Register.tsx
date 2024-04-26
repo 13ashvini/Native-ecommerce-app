@@ -107,7 +107,7 @@ const Register = ({ navigation }: any) => {
           extraText='Already have account?'
         />
         <Formik
-          validationSchema={ValidationSchema}
+          // validationSchema={ValidationSchema}
           innerRef={formRef}
           initialValues={FormInitialValue}
           onSubmit={SubmitLoginForm}
@@ -243,13 +243,13 @@ const styles = StyleSheet.create({
   facebookButton: {
     backgroundColor: Color.mds_global_darkblue_color,
     borderRadius: 8,
-    padding: 5
+    padding: 10
 
   },
   googleButton: {
     backgroundColor: Color.mds_global_main_Blue_color,
     borderRadius: 8,
-    padding: 5
+    padding: 10
   },
   facebookIconView: {
     display: "flex",

@@ -176,13 +176,13 @@ const AllRestrauntsList = ({ navigation }: any) => {
                         <AllRestaurantsCard
                             onPress={() => {
                                 navigation.navigate(Routes.RestaurantDetail, {
-                                    restaurantId: item?.id
+                                    restaurantId: item?._id
                                 })
                             }}
                             ratingNumber={item?.ratingNumber}
-                            availableFoodType={item?.availableFoodType}
-                            image={`${BASE_URL}/${item?.images}`}
-                            partnerName={item?.partnerName}
+                            availableFoodType={item?.foodtype}
+                            image={item?.images}
+                            partnerName={item?.restaurantPartnerName}
                             location={item?.location}
                             rating={item?.rating}
                             time={item?.time}
