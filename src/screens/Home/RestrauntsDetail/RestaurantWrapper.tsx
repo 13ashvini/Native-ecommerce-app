@@ -597,7 +597,6 @@ export const soups = [
 const RestaurantWrapper = ({ navigation }: any) => {
     const [restaurantDetail, setRestaurantDetail] = useState<any | null>(null)
 
-    console.log("restaurantDetail", restaurantDetail)
     const [loading, setLoading] = useState(false)
     const routes = useRoute()
     const { restaurantId }: any = routes.params

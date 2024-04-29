@@ -41,14 +41,13 @@ const RestrauntsDetail = ({ featuredFoodItems,
 }: Props) => {
     const width = Dimensions.get('window').width;
     const [index, setIndex] = React.useState(0)
-    const [showPropertyStatusTab, setShowPropertyStatusTab] = useState("Seafood" || "Appetizers" || "Desserts" || "main course" || "Soup")
     const BASE_URL = DEV_URL
     const isCarousel = React.useRef(null)
-
-    const [selectedFoodType, setSelectedFoodType] = useState(restaurantsDetailData?.foodtype[0] || ""); // State to keep track of selected food type
+    const routes = useRoute()
+    const { restaurantId }: any = routes.params
+    const [selectedFoodType, setSelectedFoodType] = useState(restaurantsDetailData?.foodtype[0]); // State to keep track of selected food type
     const [foodList, setFoodList] = useState<any | null>(null)
     const [foodListLoading, setFoodListLoading] = useState(false)
-
     // Function to handle food type selection
     const handleFoodTypeSelection = (foodType: string) => {
         setSelectedFoodType(foodType === selectedFoodType ? "" : foodType);
@@ -58,8 +57,8 @@ const RestrauntsDetail = ({ featuredFoodItems,
     const isFoodTypeSelected = (foodType: string) => {
         return foodType === selectedFoodType;
     };
-
     console.log("selectedFoodType", selectedFoodType)
+
     const renderItem = ({ item }: { item: any }) => {
         return (
             <View style={{
@@ -73,7 +72,10 @@ const RestrauntsDetail = ({ featuredFoodItems,
             </View>
         );
     }
-    const { data: foodListlData, isLoading: isfoodListlDataLoading, isFetching: isfoodListlDataFetching } = useGetAllFoodListQuery("")
+    const { data: foodListlData, isLoading: isfoodListlDataLoading, isFetching: isfoodListlDataFetching } = useGetAllFoodListQuery({
+        id: restaurantId,
+        foodName: selectedFoodType
+    })
 
     useEffect(() => {
         if (!isfoodListlDataLoading || !isfoodListlDataFetching || foodListlData) {
@@ -82,9 +84,13 @@ const RestrauntsDetail = ({ featuredFoodItems,
         } else {
             setFoodListLoading(true)
         }
-    }, [isfoodListlDataLoading, isfoodListlDataFetching, foodListlData,])
+    }, [foodListlData, selectedFoodType])
 
-
+    useEffect(() => {
+        if (restaurantsDetailData?.foodtype && restaurantsDetailData.foodtype.length > 0) {
+            setSelectedFoodType(restaurantsDetailData.foodtype[0]);
+        }
+    }, [restaurantsDetailData]);
     const mainRenderItem = () => {
         return (
             <View style={{ display: "flex", gap: 5 }}>
@@ -131,7 +137,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
                                     </View>
                                 )
                             }}
-                            keyExtractor={(item: any) => item.id}
+                            keyExtractor={(item: any, index) => item._id?.toString() + index}
                             ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                         ></FlatList>
                     </View>
@@ -193,7 +199,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             removeClippedSubviews={true}
-                            keyExtractor={(item: any, index: any) => index}
+                            keyExtractor={(item: any, index: any) => index?.toString()}
                             ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                         ></FlatList>
                     </View>
@@ -267,11 +273,11 @@ const RestrauntsDetail = ({ featuredFoodItems,
                     </ScrollView>
                     <View style={{ flex: 1, gap: 5 }}>
                         <Text style={styles.MostPopularText}>
-                            Most Popular Soups
+                            Most Popular {selectedFoodType || ""} Food
                         </Text>
                         <View style={{ paddingHorizontal: 10 }}>
                             <FlatList
-                                data={foodList?.data}
+                                data={foodList}
                                 renderItem={({ item }: any) => {
                                     return (
                                         <MostPopularFoodCard
@@ -288,7 +294,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
                                         />
                                     )
                                 }}
-                                keyExtractor={(item: any) => item.id}
+                                keyExtractor={(item: any,) => item._id?.toString()}
                                 ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                             ></FlatList>
                         </View>

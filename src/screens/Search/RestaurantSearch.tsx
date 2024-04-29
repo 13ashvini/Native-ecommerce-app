@@ -1,4 +1,4 @@
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import Input from '../../core/component/Input/Input'
 import Color from '../../core/contstants/Color'
@@ -14,6 +14,7 @@ import { useGetAllRestaurantListQuery } from '../../service/RestaurantService'
 import { useDisclose } from 'native-base'
 import { setIsLoading } from '../../Slice/restaurantListSlice'
 import { DEV_URL } from '../../core/env/env'
+import FeaturedCardSkeleton from '../../core/component/ui/FeaturedCardSkeleton'
 const TopRastarants = [{
     id: 12,
     image: [images?.TopRestaurants1],
@@ -98,13 +99,12 @@ const RestaurantSearch = ({ navigation }: any) => {
     const numColumns = 2;
     const [searchRestaurants, setSearchRestaurants] = useState("")
     const allRestaurants = allRestaurantsListData
-    const concatedRestaurtData = allRestaurants.concat(TopRastarants)
-    const [searchRestaurantsData, setSearchRestaurantsData] = useState<any[]>([])
     const { isLoading: isRestaurantLoading } = useSelector((state: RootState) => state.restaurantList)
     const [hasMoreData, setHasMoreData] = useState(true);
     const [restaurantList, setRestaurantList] = useState<any[]>([])
     const [currentPage, setCurrentPage] = useState(1);
-    const restaurantlimit = 4
+    const [isLoadingMore, setIsLoadingMore] = useState(false); // Add state to track loading more
+    const restaurantlimit = 6
     const dispatch = useDispatch()
     const { data: restaurantlistData, isLoading: isrestaurantlistDataLoading, isFetching: isrestaurantlistDataFetching } = useGetAllRestaurantListQuery(
         {
@@ -113,53 +113,47 @@ const RestaurantSearch = ({ navigation }: any) => {
             offset: (currentPage - 1) * restaurantlimit
         }
     )
-
-    // useEffect(() => {
-    //     if (!isrestaurantlistDataLoading || !isFeaturedPartnerFetching || restaurantlistData) {
-    //         dispatch(restaurantSlice(restaurantlistData))
-    //         dispatch(restauranLoading(false))
-    //     } else {
-    //         dispatch(setIsLoading(true))
-    //     }
-    // }, [isrestaurantlistDataLoading, isFeaturedPartnerFetching, restaurantlistData])
     useEffect(() => {
+        // @ts-ignore
+        let restaurantList = restaurantlistData?.data || []
+        let restaurantlimit = 6
         if (restaurantlistData) {
+            if (currentPage === 1) {
+                // @ts-ignore
+                setRestaurantList(restaurantList || []);
+            } else {
+                // @ts-ignore
+                setRestaurantList(prevData => [...prevData, ...restaurantList]);
+            }
             // @ts-ignore
-            setRestaurantList(prevData => [...prevData, ...restaurantlistData?.data]);
-            // @ts-ignore
-            setHasMoreData(restaurantlistData?.totalCount > currentPage * restaurantlimit);
-
+            setHasMoreData(restaurantList && restaurantList?.length === restaurantlimit);
             dispatch(setIsLoading(false));
+            setIsLoadingMore(false);
         } else {
             dispatch(setIsLoading(true));
         }
-    }, [isrestaurantlistDataLoading, isrestaurantlistDataFetching, restaurantlistData]);
+    }, [restaurantlistData, searchRestaurants,]);
 
     const handleLoadMore = () => {
-        if (!isrestaurantlistDataLoading && !isrestaurantlistDataFetching && hasMoreData) {
+        if (!isrestaurantlistDataLoading && !isrestaurantlistDataFetching && hasMoreData && !isLoadingMore) {
+            setIsLoadingMore(true);
             setCurrentPage(prevPage => prevPage + 1);
-            console.log("ashviiidfsdf--")
         }
-    }; ``
-    useEffect(() => {
-        if (searchRestaurants) {
-            const filteredData = concatedRestaurtData?.filter((item) => {
-                return item?.partnerName?.toUpperCase().includes(searchRestaurants?.toUpperCase())
-            })
-            setSearchRestaurantsData(filteredData)
-        }
-
-    }, [searchRestaurants])
+    };
     const SearchIcon = Icons.SearchTabIcon
     const renderItemData = (() => {
         const cardWidth = (screenWidth);
+
         return (
             <View style={[{ display: "flex", gap: 5, paddingHorizontal: 10, paddingVertical: 5, }]}>
                 <View>
                     <Input
                         name=""
                         value={searchRestaurants}
-                        onChangeText={(e) => { setSearchRestaurants(e) }}
+                        onChangeText={(e) => {
+                            setSearchRestaurants(e);
+                            setCurrentPage(1)
+                        }}
                         placeholder='Search Restaurants'
                         activeUnderlineColor={Color.mds_global_gray_10_color}
                         underlineColor={Color.mds_global_gray_10_color}
@@ -173,40 +167,64 @@ const RestaurantSearch = ({ navigation }: any) => {
                     {!searchRestaurants?.length ? <View >
                         <Text style={styles.TopRastaurants}>Top Restaurants</Text>
                     </View> : null}
+                    {isRestaurantLoading ? <FeaturedCardSkeleton
+                        data={[1, 2, 3, 4, 5, 6]}
+                    />
+                        :
+                        <View style={[styles.topRestaurantsView]}>
+                            <FlatList
+                                data={restaurantList}
+                                renderItem={({ item }: any) => {
+                                    return (
+                                        <View style={[{ marginHorizontal: 5, flex: 1 },]}>
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    navigation.navigate(Routes.RestaurantCategorySearch)
+                                                }}
+                                            >
+                                                <FastImage source={{
+                                                    uri: `${BASE_URL}/${item?.images[0]}`
 
-                    <View style={[styles.topRestaurantsView]}>
-                        <FlatList
-                            data={searchRestaurants?.length ? restaurantList : TopRastarants}
-                            renderItem={({ item }: any) => {
-                                return (
-                                    <View style={[{ marginHorizontal: 5, flex: 1 }, ((searchRestaurantsData.length % 2 === 0 && TopRastarants?.length % 2 === 0)) && { width: cardWidth }]}>
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                navigation.navigate(Routes.RestaurantCategorySearch)
-                                            }}
-                                        >
-                                            <FastImage source={{
-                                                uri: `${BASE_URL}/${item?.images[0]}`
+                                                }} style={styles?.featureImageStyle} resizeMode="cover" />
+                                            </TouchableOpacity>
+                                            <Text style={styles.featureFoodText}>{item?.restaurantPartnerName}</Text>
 
-                                            }} style={styles?.featureImageStyle} resizeMode="cover" />
-                                        </TouchableOpacity>
-                                        <Text style={styles.featureFoodText}>{item?.partnerName}</Text>
-                                        <View style={styles.iconStyle}>
-                                            <Icons.dotIcon />
-                                            <Text>  {item?.availableFoodType[0]}</Text>
+                                            <View style={styles.iconStyle}>
+
+                                                {item?.foodtype?.map((foodtype: any) => {
+                                                    return <View style={styles.iconStyle}>
+                                                        <Icons.dotIcon />
+                                                        <Text>  {foodtype}</Text>
+
+                                                    </View>
+                                                })}
+                                            </View>
                                         </View>
-                                    </View>
-                                )
-                            }}
-                            removeClippedSubviews={true}
-                            keyExtractor={(item: any, index: any) => index}
-                            numColumns={numColumns}
-                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                            ListEmptyComponent={() => (
-                                <View style={{ flex: 1, width: "100%", marginHorizontal: 5 }} />
-                            )}
-                        ></FlatList>
-                    </View>
+                                    )
+                                }}
+                                onEndReached={() => { hasMoreData ? handleLoadMore() : null }}
+                                removeClippedSubviews={true}
+                                keyExtractor={(item: any, index: any) => item?._id.toString() + index?.toString()}
+                                numColumns={numColumns}
+                                ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                                ListEmptyComponent={() => (
+                                    <View style={{ flex: 1, width: "100%", marginHorizontal: 5 }} />
+                                )}
+                                ListFooterComponent={() => {
+                                    return (
+                                        <View>
+                                            {hasMoreData ?
+                                                <ActivityIndicator /> : <View>
+                                                    <Text
+                                                        style={styles.noMoreFoodData}
+                                                    >No More Data Found</Text></View>}
+                                        </View>
+                                    )
+                                }}
+                            />
+                        </View>
+                    }
+
                 </View >
             </View >
         )
@@ -233,6 +251,7 @@ const styles = StyleSheet.create({
         ...Fonts.style.mds_ui_gothic_font_medium_thin,
         color: Color.mds_global_black_color
     },
+
     foodCategoriesMainView: {
         display: "flex",
         flexDirection: "row",
@@ -243,7 +262,8 @@ const styles = StyleSheet.create({
     iconStyle: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 4
+        gap: 4,
+        flexWrap: "wrap"
     },
     topRestaurantsView: {
         display: "flex",
@@ -260,6 +280,11 @@ const styles = StyleSheet.create({
         fontSize: Fonts.fontSize.body,
         fontWeight: "normal",
         marginTop: 10
+    },
+    noMoreFoodData: {
+        color: Color.mds_global_black_color,
+        padding: 5,
+        textAlign: "center"
     }
 })
 export default RestaurantSearch

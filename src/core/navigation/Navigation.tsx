@@ -22,9 +22,7 @@ const RootStack = createStackNavigator()
 
 const Navigation = () => {
     const { tokenData } = useSelector((state: RootState) => state.auth)
-    console.log("tokenData", tokenData)
     const dispatch = useDispatch()
-
     const colorScheme = useColorScheme();
     const ThemeContext = createContext(DefaultTheme);
 
@@ -51,8 +49,6 @@ const Navigation = () => {
         // Check for the presence of the access token
         const accessToken = await AsyncStorage.getItem('access_token');
         dispatch(setAccessToken(accessToken))
-
-        console.log("accessToken---------", accessToken)
         // Navigate based on the presence of the access token
         if (accessToken !== null) {
             // navigationRef.current?.navigate(Routes.Main);

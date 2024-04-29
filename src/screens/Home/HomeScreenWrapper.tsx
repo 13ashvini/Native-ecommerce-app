@@ -64,7 +64,7 @@ const HomeScreenWrapper = ({ navigation }: any) => {
     const handleLoadMore = () => {
         if (!isrestaurantlistDataLoading && !isrestaurantlistDataFetching && hasMoreData) {
             setCurrentPage(prevPage => prevPage + 1);
-            console.log("ashviiidfsdf--")
+
         }
     };
     return (

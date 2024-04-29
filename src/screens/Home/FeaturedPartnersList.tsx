@@ -79,7 +79,7 @@ const FeaturedPartnersList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [featuredPartner, setFeaturedPartner] = useState<any[]>([])
-  const limit = 4
+  const limit = 6
   const BASE_URL = DEV_URL
   const dispatch = useDispatch()
   const { data: featuredPartnerData, isLoading: isFeaturedPartnerDataLoading, isFetching: isFeaturedPartnerFetching } = useGetAllFeaturePartnerListQuery(
@@ -150,7 +150,7 @@ const FeaturedPartnersList = () => {
         }}
         contentContainerStyle={styles.contentContainer}
         numColumns={2}
-        keyExtractor={(item: any) => item?._id.toString()}
+        keyExtractor={(item: any, index: any) => item?._id.toString() + index}
         // maxToRenderPerBatch={4}
         // updateCellsBatchingPeriod={4 / 2}
         onEndReached={hasMoreData ? handleLoadMore : null}
@@ -168,6 +168,7 @@ const styles = StyleSheet.create({
     width: "100%",
     // borderWidth: 2,
     paddingHorizontal: 5,
+    // paddingVertical: 15,
     justifyContent: "center"
   },
   contentContainer: {

@@ -6,13 +6,12 @@ const BASE_URL = DEV_URL
 export const apiAuthService = createApi({
     reducerPath: 'apiAuthService',
     // @ts-ignore
-    tagTypes: ["archd"],
+    tagTypes: ["restaurant", "featurePartner", "foodlist"],
 
     baseQuery: fetchBaseQuery({
         baseUrl: BASE_URL,
         prepareHeaders: async (headers, { getState }) => {
             const user = (getState() as RootState)?.auth.tokenData;
-            console.log("user", user)
             if (user) {
                 headers.set("Authorization", `Bearer ${user}`);
                 // headers.set("Content-Type", "application/json");

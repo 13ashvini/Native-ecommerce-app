@@ -52,7 +52,9 @@ const HomeScreen = ({ navigation,
                     </View>
 
                     {
-                        featuredPartnersLoading ? <FeaturedCardSkeleton /> : <FlatList
+                        featuredPartnersLoading ? <FeaturedCardSkeleton
+                            data={[1, 2]}
+                        /> : <FlatList
                             data={featuredPartners} renderItem={({ item }: any) => {
 
                                 return (
@@ -70,7 +72,7 @@ const HomeScreen = ({ navigation,
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             removeClippedSubviews={true}
-                            keyExtractor={(item: any) => item.id}
+                            keyExtractor={(item: any, index: any) => item?._id.toString() + index}
                             maxToRenderPerBatch={4}
                             updateCellsBatchingPeriod={4 / 2}
                             ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
@@ -105,7 +107,7 @@ const HomeScreen = ({ navigation,
                         }}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item: any) => item.id}
+                        keyExtractor={(item: any, index: any) => item?._id.toString() + index}
                         ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                     />
                 </View>
@@ -161,7 +163,7 @@ const HomeScreen = ({ navigation,
                                     )
                                 }}
                                 // horizontal={true}
-                                keyExtractor={(item: any) => item.id}
+                                keyExtractor={(item: any, index: any) => item?._id.toString() + index}
                                 onEndReached={hasMoreData ? handleMoreRestaurant : null}
                                 ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                             />

@@ -5,7 +5,10 @@ import type { PropsWithChildren } from 'react';
 import type { ViewStyle } from 'react-native';
 
 type FadeInViewProps = PropsWithChildren<{ style: ViewStyle }>;
-const FeaturedCardSkeleton = () => {
+type Props = {
+    data: any[]
+}
+const FeaturedCardSkeleton = ({ data }: Props) => {
     const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
 
     useEffect(() => {
@@ -19,7 +22,7 @@ const FeaturedCardSkeleton = () => {
         <View style={{ flex: 1, }}>
             {Array(2)}
             <FlatList
-                data={[1, 2,]}
+                data={data}
                 renderItem={() => {
                     return (
                         <View style={{ display: "flex", gap: 4, flex: 1, marginHorizontal: 4 }}>
@@ -43,7 +46,7 @@ const FeaturedCardSkeleton = () => {
 }
 const style = StyleSheet.create({
     skeletonImage: {
-        backgroundColor: "#F6F6F6",
+        backgroundColor: "#cccccc",
         // animationStyle: "Wave",
         flex: 1,
         borderRadius: 10,
@@ -51,7 +54,7 @@ const style = StyleSheet.create({
         height: 185,
     },
     container: {
-        backgroundColor: '#F6F6F6',
+        backgroundColor: "#cccccc",
         borderRadius: 13,
         padding: 16,
         marginBottom: 16,
@@ -64,14 +67,14 @@ const style = StyleSheet.create({
     //     animationTimingFunction: 'linear',
     // },
     placeholder: {
-        backgroundColor: '#ccc',
+        backgroundColor: "#cccccc",
         height: 16,
         borderRadius: 4,
         marginBottom: 8,
     },
 
     card: {
-        backgroundColor: '#FFFFFF',
+        backgroundColor: "#cccccc",
         borderRadius: 8,
         padding: 16,
         marginHorizontal: 16,

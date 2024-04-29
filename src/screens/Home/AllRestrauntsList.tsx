@@ -192,7 +192,7 @@ const AllRestrauntsList = ({ navigation }: any) => {
                     )
                 }}
                 // horizontal={true}
-                keyExtractor={(item: any) => item.id}
+                keyExtractor={(item: any, index: any) => item._id?.toString() + index}
                 ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
             />
         </View>
