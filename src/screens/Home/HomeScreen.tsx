@@ -8,7 +8,6 @@ import FastImage from 'react-native-fast-image'
 import images from '../../core/assests/images'
 import AllRestaurantsCard from '../../core/component/ui/AllRestaurantsCard'
 import { Routes } from '../../core/navigation/type'
-import { allRestaurantsListData } from './AllRestrauntsList'
 import { DEV_URL } from '../../core/env/env'
 import RestaurantsSkeleton from '../../core/component/ui/RestaurantsSkeleton'
 import FeaturedCardSkeleton from '../../core/component/ui/FeaturedCardSkeleton'
@@ -33,6 +32,7 @@ const HomeScreen = ({ navigation,
     const BASE_URL = DEV_URL
     const renderItem = () => {
         return (
+
             <View style={style.homeMainView}>
                 <HomePageSliderComponent />
 
@@ -72,7 +72,7 @@ const HomeScreen = ({ navigation,
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             removeClippedSubviews={true}
-                            keyExtractor={(item: any, index: any) => item?._id.toString() + index}
+                            keyExtractor={(item: any, index: any) => item?._id.toString()}
                             maxToRenderPerBatch={4}
                             updateCellsBatchingPeriod={4 / 2}
                             ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
@@ -107,7 +107,7 @@ const HomeScreen = ({ navigation,
                         }}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item: any, index: any) => item?._id.toString() + index}
+                        keyExtractor={(item: any, index: any) => item?._id.toString()}
                         ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                     />
                 </View>
@@ -150,6 +150,7 @@ const HomeScreen = ({ navigation,
                                                     restaurantId: item?._id
                                                 })
                                             }}
+
                                             ratingNumber={item?.ratingNumber}
                                             availableFoodType={item?.foodtype}
                                             image={item?.images}
@@ -163,7 +164,7 @@ const HomeScreen = ({ navigation,
                                     )
                                 }}
                                 // horizontal={true}
-                                keyExtractor={(item: any, index: any) => item?._id.toString() + index}
+                                keyExtractor={(item: any, index: any) => item?._id.toString()}
                                 onEndReached={hasMoreData ? handleMoreRestaurant : null}
                                 ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                             />

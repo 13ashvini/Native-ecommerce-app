@@ -8,13 +8,15 @@ import FastImage from 'react-native-fast-image'
 import Button from '../../../core/component/Buttons/Button'
 import { useRoute } from '@react-navigation/native';
 import { MostPopularFood, RestaurantsFeaturedItem, Seafood, appetizers, desiMainCourses, desserts, soups } from '../RestrauntsDetail/RestaurantWrapper'
+import { useGetFoodDetailByIdQuery } from '../../../service/foodListService'
 type Props = {
     id: string
 }
 const AddToOrder = () => {
     // const restrauntsDetail = allRestaurantsListData[0]
     const [quantityCounnt, setQountityCount] = useState(1)
-    const [foodDetailData, setFoodDetailData] = useState<any | null>(null)
+    const [foodDetail, setFoodDetail] = useState<any | null>(null)
+    const [loading, setLoading] = useState(false)
     const MostPopularFoodData = MostPopularFood
     const SeafoodData = Seafood
     const appetizersFood = appetizers
@@ -28,13 +30,25 @@ const AddToOrder = () => {
     const ConcatedData = MostPopularFoodData.concat(SeafoodData).concat(appetizersFood).concat(desiMainCoursesData).concat(dessertsData).concat(soupsData).concat(RestaurantsFeaturedItemData)
 
 
-    useEffect(() => {
-        const data = ConcatedData.filter((item: any) => {
-            return item?.id == id
-        });
-        setFoodDetailData(data[0])
+    // useEffect(() => {
+    //     const data = ConcatedData.filter((item: any) => {
+    //         return item?.id == id
+    //     });
+    //     setFoodDetailData(data[0])
 
-    }, [id, ConcatedData]);
+    // }, [id, ConcatedData]);
+    const { data: foodDetailData, isLoading: isfoodDetailDataLoading, isFetching: isfoodDetailDataFetching } = useGetFoodDetailByIdQuery(id)
+
+    useEffect(() => {
+        if (!isfoodDetailDataLoading || !isfoodDetailDataFetching || foodDetailData) {
+            // @ts-ignore
+            setFoodDetail(foodDetailData?.data)
+            console.log("foodDetailData--9900", foodDetailData)
+            setLoading(false)
+        } else {
+            setLoading(true)
+        }
+    }, [foodDetailData])
     return (
         <View>
 
@@ -43,25 +57,25 @@ const AddToOrder = () => {
                 alignItems: 'center',
 
             }}>
-                <FastImage source={foodDetailData?.image} style={styles?.image} resizeMode="cover" />
+                <FastImage source={foodDetail?.image} style={styles?.image} resizeMode="cover" />
             </View>
             <View style={styles.textContentView}>
                 <Text style={styles.partnerNameStyle}
-                >{foodDetailData?.foodName}</Text>
+                >{foodDetail?.foodName}</Text>
                 <Text style={styles.descriptionText}>
-                    {foodDetailData?.description}
+                    {foodDetail?.description}
                 </Text>
                 <View style={styles?.iconStyle}>
                     <Text>$$</Text>
                     <Icon.dotIcon />
-                    <Text >  {foodDetailData?.foodType}</Text>
+                    <Text >  {foodDetail?.foodType}</Text>
                 </View>
                 <Text style={styles.priceTextStyle}>
-                    Aud $ {foodDetailData?.price}
+                    Aud $ {foodDetail?.price}
                 </Text>
                 {/* <View style={styles.deliveryView}>
                     <FlatList
-                        data={foodDetailData?.availableFoodType}
+                        data={foodDetail?.availableFoodType}
                         horizontal={true}
                         renderItem={({ item }: any) => {
                             return (
@@ -101,7 +115,7 @@ const AddToOrder = () => {
                     <View style={{ marginVertical: 10 }}>
                         <Button
                             onPress={() => { }}
-                            title={<Text style={styles.buttonTextStyle}>ADD TO ORDER (Aud $ {foodDetailData?.price})</Text>}
+                            title={<Text style={styles.buttonTextStyle}>ADD TO ORDER (Aud $ {foodDetail?.price})</Text>}
                         >
 
                         </Button>

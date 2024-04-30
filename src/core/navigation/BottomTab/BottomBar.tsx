@@ -1,3 +1,4 @@
+
 import React, { FC } from 'react'
 import { StyleSheet, View, Platform, Keyboard } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -8,7 +9,7 @@ import Color from '../../contstants/Color'
 
 
 const TabBar: FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
-    
+
 
     const currentRoute = state.routes[state.index]
     const focusedOptions = descriptors[currentRoute.key].options as {
@@ -85,7 +86,7 @@ const TabBar: FC<BottomTabBarProps> = ({ state, descriptors, navigation }) => {
                         title={route.name}
                         onPress={onPress}
                         focused={isFocused}
-                        
+
                     />
                 )
             })}
