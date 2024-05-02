@@ -179,7 +179,9 @@ const RestaurantSearch = ({ navigation }: any) => {
                                         <View style={[{ marginHorizontal: 5, flex: 1 },]}>
                                             <TouchableOpacity
                                                 onPress={() => {
-                                                    navigation.navigate(Routes.RestaurantCategorySearch)
+                                                    navigation.navigate(Routes.RestaurantCategorySearch, {
+                                                        id: item?._id
+                                                    })
                                                 }}
                                             >
                                                 <FastImage source={{
@@ -191,8 +193,8 @@ const RestaurantSearch = ({ navigation }: any) => {
 
                                             <View style={styles.iconStyle}>
 
-                                                {item?.foodtype?.map((foodtype: any) => {
-                                                    return <View style={styles.iconStyle}>
+                                                {item?.foodtype?.map((foodtype: any, index: any) => {
+                                                    return <View style={styles.iconStyle} key={index}>
                                                         <Icons.dotIcon />
                                                         <Text>  {foodtype}</Text>
 
@@ -204,7 +206,7 @@ const RestaurantSearch = ({ navigation }: any) => {
                                 }}
                                 onEndReached={() => { hasMoreData ? handleLoadMore() : null }}
                                 removeClippedSubviews={true}
-                                keyExtractor={(item: any, index: any) => item?._id.toString() + index?.toString()}
+                                keyExtractor={(item: any, index: any) => item?._id.toString() + index}
                                 numColumns={numColumns}
                                 ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                                 ListEmptyComponent={() => (
@@ -214,7 +216,8 @@ const RestaurantSearch = ({ navigation }: any) => {
                                     return (
                                         <View>
                                             {hasMoreData ?
-                                                <ActivityIndicator /> : <View>
+                                                <ActivityIndicator
+                                                    color={Color.mds_global_main_Yellow_color} /> : <View>
                                                     <Text
                                                         style={styles.noMoreFoodData}
                                                     >No More Data Found</Text></View>}

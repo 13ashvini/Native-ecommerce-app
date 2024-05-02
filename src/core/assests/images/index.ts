@@ -110,6 +110,8 @@ const images = {
     PaypalImage: require("./paypalImage.png"),
     MasterCardImage: require("./masterCard.png"),
     VisaCardImage: require("./VisaCardImage.png"),
+    cameraImage: require("./cameraImage.png"),
+
 }
 
 export default images

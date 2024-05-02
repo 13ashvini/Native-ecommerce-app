@@ -7,6 +7,8 @@ import RestaurantWrapper from '../../../screens/Home/RestrauntsDetail/Restaurant
 import AddToOrder from '../../../screens/Home/AddToOrder/AddToOrder';
 import HomeScreenWrapper from '../../../screens/Home/HomeScreenWrapper';
 import StoreLocation from '../../../screens/Home/FindRestaurantLocation/StoreLocation';
+import AddRestaurant from '../../../screens/Home/AddRestaurant/AddRestaurant';
+import AddRestaurantWrapper from '../../../screens/Home/AddRestaurant/AddRestaurantWrapper';
 const DashboardStack = createStackNavigator()
 const HomeNavigation = () => {
 
@@ -80,7 +82,21 @@ const HomeNavigation = () => {
             <DashboardStack.Screen
                 name={Routes.AddToOrder}
                 component={AddToOrder} />
-
+            <DashboardStack.Screen
+                name={Routes.AddRestaurant}
+                component={AddRestaurantWrapper}
+                options={{
+                    headerShown: true,
+                    title: "Add Restaurants",
+                    // header: () => (
+                    //     <Button
+                    //         onPress={() => { }}
+                    //         title="Info"
+                    //         color="#fff"
+                    //     />
+                    // ),
+                }}
+            />
         </DashboardStack.Navigator>
 
     )

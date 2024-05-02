@@ -51,13 +51,17 @@ const styles = StyleSheet.create({
     facebookButton: {
         backgroundColor: Color.mds_global_darkblue_color,
         borderRadius: 8,
-        padding: 5
+        padding: 8
 
     },
     googleButton: {
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
         backgroundColor: Color.mds_global_main_Blue_color,
         borderRadius: 8,
-        padding: 5,
+        padding: 8,
 
     },
     facebookIconView: {

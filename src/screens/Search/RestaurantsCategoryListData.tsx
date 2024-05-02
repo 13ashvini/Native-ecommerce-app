@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Dimensions } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import images from '../../core/assests/images'
 import MostPopularFoodCard from '../../core/component/ui/MostPopularFoodCard'
 import FastImage from 'react-native-fast-image'
@@ -8,6 +8,9 @@ import Fonts from '../../core/contstants/Fonts'
 import * as Icon from "../../core/svg"
 import Input from '../../core/component/Input/Input'
 import { Routes } from '../../core/navigation/type'
+import { useGetRestaurantByIdQuery, useGetRestaurantCategoryByIdQuery } from '../../service/RestaurantService'
+import { useRoute } from '@react-navigation/native'
+import { DEV_URL } from '../../core/env/env'
 const categoryData = [{
     id: 1,
     name: "Chinese",
@@ -59,10 +62,55 @@ const categoryData = [{
 ]
 
 const RestaurantsCategoryListData = ({ navigation }: any) => {
+    const BASE_URL = DEV_URL
     const screenWidth = Dimensions.get('window').width;
     const cardImage = screenWidth / 2 - 15
-    console.log("cardImage", cardImage)
     const [searchCategory, setSearchCategory] = useState("")
+    const [currentPage, setCurrentPage] = useState(1)
+    const [loadingCategory, setLoadingCategory] = useState(false)
+    const [hasMoreData, setHasMoreData] = useState(true);
+    const [categoryListData, setCategoryListData] = useState<any[]>([])
+    console.log("categoryListdatattt", categoryListData)
+    const routes = useRoute()
+    // @ts-ignore
+    const { id } = routes?.params
+    console.log("id-----", id)
+    const categoryLimit = 4
+    const { data: categoryList, isLoading: isiscategoryListDataLoading, isFetching: isiscategoryListDataFetching } = useGetRestaurantCategoryByIdQuery
+        (
+            id
+        )
+    useEffect(() => {
+        // @ts-ignore
+        let categoryListById = categoryList
+        console.log("categoryList--------", categoryListById)
+        let Categorylimit = 6
+        if (categoryList) {
+            // @ts-ignore
+
+            setCategoryListData(categoryList?.data);
+
+            // if (currentPage === 1) {
+            //     // @ts-ignore
+            //     setCategoryListData(categoryListById || []);
+            // } else {
+            //     // @ts-ignore
+            //     setCategoryListData(prevData => [...prevData, ...categoryListById]);
+            // }
+            // // @ts-ignore
+            // setHasMoreData(categoryListById && categoryListById?.length === Categorylimit);
+            // setLoadingCategory(false);
+
+        } else {
+            setLoadingCategory(true);
+        }
+    }, [categoryList, searchCategory]);
+
+    const handleLoadMore = () => {
+        if (!isiscategoryListDataLoading && !isiscategoryListDataFetching && hasMoreData) {
+            setCurrentPage(prevPage => prevPage + 1);
+        }
+    };
     const renderItemData = (({ item }: any) => {
         return (
             <View>
@@ -76,7 +124,9 @@ const RestaurantsCategoryListData = ({ navigation }: any) => {
                         }}
                     >
                         <FastImage
-                            source={item?.image}
+                            source={{
+                                uri: `${BASE_URL}/${item?.image}`
+                            }}
                             style={[styles.imageStyle, { width: cardImage }]}
                             resizeMode='cover'
                         ></FastImage>
@@ -95,7 +145,10 @@ const RestaurantsCategoryListData = ({ navigation }: any) => {
                 <Input
                     name=""
                     value={searchCategory}
-                    onChangeText={(e) => { setSearchCategory(e) }}
+                    onChangeText={(e) => {
+                        setSearchCategory(e);
+                        setCurrentPage(1)
+                    }}
                     placeholder='Search Categories'
                     activeUnderlineColor={Color.mds_global_gray_10_color}
                     underlineColor={Color.mds_global_gray_10_color}
@@ -106,10 +159,10 @@ const RestaurantsCategoryListData = ({ navigation }: any) => {
                 />
             </View>
             {!searchCategory?.length ? <View >
-                <Text style={styles.TopRastaurants}>Top Restaurants</Text>
+                <Text style={styles.TopRastaurants}>Top Category</Text>
             </View> : null}
             <FlatList
-                data={categoryData}
+                data={categoryListData}
                 renderItem={renderItemData}
                 removeClippedSubviews={true}
                 keyExtractor={(item: any, index: any) => index}

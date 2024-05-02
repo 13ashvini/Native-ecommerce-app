@@ -23,6 +23,7 @@ const RootStack = createStackNavigator()
 
 const Navigation = () => {
     const { tokenData } = useSelector((state: RootState) => state.auth)
+    console.log("tokenData", tokenData)
     const dispatch = useDispatch()
     const colorScheme = useColorScheme();
     const ThemeContext = createContext(DefaultTheme);

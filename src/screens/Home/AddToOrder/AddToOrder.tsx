@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import * as Icon from "../../../core/svg"
-import { allRestaurantsListData } from '../AllRestrauntsList'
+
 import Color from '../../../core/contstants/Color'
 import Fonts from '../../../core/contstants/Fonts'
 import FastImage from 'react-native-fast-image'
@@ -9,10 +9,11 @@ import Button from '../../../core/component/Buttons/Button'
 import { useRoute } from '@react-navigation/native';
 import { MostPopularFood, RestaurantsFeaturedItem, Seafood, appetizers, desiMainCourses, desserts, soups } from '../RestrauntsDetail/RestaurantWrapper'
 import { useGetFoodDetailByIdQuery } from '../../../service/foodListService'
+import { DEV_URL } from '../../../core/env/env'
 type Props = {
     id: string
 }
-const AddToOrder = () => {
+const AddToOrder = ({ navigation }: any) => {
     // const restrauntsDetail = allRestaurantsListData[0]
     const [quantityCounnt, setQountityCount] = useState(1)
     const [foodDetail, setFoodDetail] = useState<any | null>(null)
@@ -25,6 +26,7 @@ const AddToOrder = () => {
     const soupsData = soups
     const RestaurantsFeaturedItemData = RestaurantsFeaturedItem
     const route = useRoute();
+    const BASE_URL = DEV_URL
     // @ts-ignore
     const { id } = route.params;
     const ConcatedData = MostPopularFoodData.concat(SeafoodData).concat(appetizersFood).concat(desiMainCoursesData).concat(dessertsData).concat(soupsData).concat(RestaurantsFeaturedItemData)
@@ -57,7 +59,30 @@ const AddToOrder = () => {
                 alignItems: 'center',
 
             }}>
-                <FastImage source={foodDetail?.image} style={styles?.image} resizeMode="cover" />
+                <FastImage source={{
+                    uri: `${BASE_URL}/${foodDetail?.image}`
+                }} style={styles?.image} resizeMode="stretch" />
+                <TouchableOpacity
+                    onPress={() => {
+                        navigation.goBack();
+                    }}
+                    style={{
+                        backgroundColor: "#4c5359",
+                        height: 34,
+                        width: 34,
+                        borderRadius: 20,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        position: "absolute",
+                        top: 15,
+                        left: 15
+                    }}
+                >
+                    <View>
+                        <Icon.CancelIcon />
+                    </View>
+                </TouchableOpacity>
             </View>
             <View style={styles.textContentView}>
                 <Text style={styles.partnerNameStyle}
@@ -73,7 +98,7 @@ const AddToOrder = () => {
                 <Text style={styles.priceTextStyle}>
                     Aud $ {foodDetail?.price}
                 </Text>
-                {/* <View style={styles.deliveryView}>
+                <View style={styles.deliveryView}>
                     <FlatList
                         data={foodDetail?.availableFoodType}
                         horizontal={true}
@@ -87,7 +112,7 @@ const AddToOrder = () => {
                         }}
                         ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                     ></FlatList>
-                </View> */}
+                </View>
                 <View >
                     <View style={styles.incrementItmeView} >
                         <TouchableOpacity
@@ -131,6 +156,7 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 300,
         borderRadius: 10,
+
 
     },
     deliveryView: {

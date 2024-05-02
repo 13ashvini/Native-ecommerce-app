@@ -21,7 +21,15 @@ const restaurantService = apiAuthService.injectEndpoints({
 
             }),
         }),
+        // GET RESTAURANT CATEGORY BY ID-
+        getRestaurantCategoryById: builder.query({
+            providesTags: ["restaurant"],
+            query: (id: string) => ({
+                url: `/v3/api/detail-Foodtype/${id}`,
+                method: "GET",
 
+            }),
+        }),
     }),
 });
 
@@ -29,5 +37,6 @@ const restaurantService = apiAuthService.injectEndpoints({
 export const {
     useGetAllRestaurantListQuery,
     useGetRestaurantByIdQuery,
+    useGetRestaurantCategoryByIdQuery
 
 } = restaurantService;

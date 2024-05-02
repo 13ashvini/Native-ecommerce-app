@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native'
 import images from "../../core/assests/images"
 import AllPartnercCard from '../../core/component/ui/AllPartnercCard';
 import { useDispatch, useSelector } from 'react-redux';
@@ -7,6 +7,8 @@ import { RootState } from '../../store/Store';
 import { setIsLoading, setItems } from '../../Slice/featurePartnerSlice';
 import { useGetAllFeaturePartnerListQuery } from '../../service/featuredPartnerService';
 import { DEV_URL } from "../../core/env/env"
+import Color from '../../core/contstants/Color';
+import FeaturedCardSkeleton from '../../core/component/ui/FeaturedCardSkeleton';
 
 // export const FeaturedPartnerData = [
 //   {
@@ -79,6 +81,7 @@ const FeaturedPartnersList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMoreData, setHasMoreData] = useState(true);
   const [featuredPartner, setFeaturedPartner] = useState<any[]>([])
+  const { isLoading } = useSelector((state: RootState) => (state.featurePartner))
   const limit = 6
   const BASE_URL = DEV_URL
   const dispatch = useDispatch()
@@ -131,32 +134,49 @@ const FeaturedPartnersList = () => {
   // };
   return (
     <View style={styles.mainView}>
-      <FlatList
-        data={featuredPartner}
+      {isLoading ? <FeaturedCardSkeleton
+        data={[1, 2, 3, 4, 5, 6]}
+      /> :
+        <FlatList
+          data={featuredPartner}
 
-        renderItem={({ item }: any) => {
-          return (
-            <AllPartnercCard
-              image={`${BASE_URL}/${item?.image}`}
-              partnerName={item?.partnerName}
-              location={item?.location}
-              rating={item?.rating}
-              time={item?.time}
-              delivery={item?.deliveryType}
+          renderItem={({ item }: any) => {
+            return (
+              <AllPartnercCard
+                image={`${BASE_URL}/${item?.image}`}
+                partnerName={item?.partnerName}
+                location={item?.location}
+                rating={item?.rating}
+                time={item?.time}
+                delivery={item?.deliveryType}
 
 
-            />
-          )
-        }}
-        contentContainerStyle={styles.contentContainer}
-        numColumns={2}
-        keyExtractor={(item: any, index: any) => item?._id.toString() + index}
-        // maxToRenderPerBatch={4}
-        // updateCellsBatchingPeriod={4 / 2}
-        onEndReached={hasMoreData ? handleLoadMore : null}
+              />
+            )
+          }}
+          contentContainerStyle={styles.contentContainer}
+          numColumns={2}
+          keyExtractor={(item: any, index: any) => item?._id.toString() + index}
+          // maxToRenderPerBatch={4}
+          // updateCellsBatchingPeriod={4 / 2}
+          onEndReached={hasMoreData ? handleLoadMore : null}
+          ListFooterComponent={() => {
+            return (
+              <View>
+                {hasMoreData ?
+                  <ActivityIndicator
+                    color={Color.mds_global_main_Yellow_color} /> : <View>
+                    <Text
+                      style={styles.noMoreFoodData}
+                    >No More Data Found</Text></View>}
+              </View>
+            )
+          }}
+          ItemSeparatorComponent={() => <View style={{ width: 10, height: 15 }} />}
+        />
 
-        ItemSeparatorComponent={() => <View style={{ width: 10, height: 15 }} />}
-      />
+      }
+
     </View>
   )
 }
@@ -173,6 +193,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
   },
+  noMoreFoodData: {
+    color: Color.mds_global_black_color,
+    padding: 5,
+    textAlign: "center"
+  }
 
 })
 export default FeaturedPartnersList

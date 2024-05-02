@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import HomePageSliderComponent from '../../core/component/ui/HomePageSliderComponent'
 import Fonts from '../../core/contstants/Fonts'
 import FeaturedPartnerCard from '../../core/component/ui/FeaturedPartnerCard'
@@ -72,7 +72,7 @@ const HomeScreen = ({ navigation,
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             removeClippedSubviews={true}
-                            keyExtractor={(item: any, index: any) => item?._id.toString()}
+                            keyExtractor={(item: any, index: any) => item?._id.toString() + index}
                             maxToRenderPerBatch={4}
                             updateCellsBatchingPeriod={4 / 2}
                             ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
@@ -107,7 +107,7 @@ const HomeScreen = ({ navigation,
                         }}
                         horizontal={true}
                         showsHorizontalScrollIndicator={false}
-                        keyExtractor={(item: any, index: any) => item?._id.toString()}
+                        keyExtractor={(item: any, index: any) => item?._id.toString() + index}
                         ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                     />
                 </View>
@@ -115,13 +115,21 @@ const HomeScreen = ({ navigation,
                 <View style={{ display: 'flex', gap: 8 }}>
                     <View style={style.featuredPartnerView}>
                         <Text style={style.featuredPartnertext}>All Restaurants</Text>
-                        <TouchableOpacity
+                        {/* <TouchableOpacity
                             onPress={() => {
                                 navigation.navigate(Routes.AllRestaurants)
                             }}>
                             <Text style={style.seeAllText}
 
                             >See All</Text>
+                        </TouchableOpacity> */}
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate(Routes.AddRestaurant)
+                            }}>
+                            <Text style={style.seeAllText}
+
+                            >Add Restaurant</Text>
                         </TouchableOpacity>
                     </View>
                     {
@@ -164,9 +172,23 @@ const HomeScreen = ({ navigation,
                                     )
                                 }}
                                 // horizontal={true}
-                                keyExtractor={(item: any, index: any) => item?._id.toString()}
+                                keyExtractor={(item: any, index: any) => item?._id.toString() + index}
                                 onEndReached={hasMoreData ? handleMoreRestaurant : null}
-                                ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                                ItemSeparatorComponent={() => <View style={{ height: 15 }}
+
+                                />}
+                                ListFooterComponent={() => {
+                                    return (
+                                        <View>
+                                            {hasMoreData ?
+                                                <ActivityIndicator
+                                                    color={Color.mds_global_main_Yellow_color} /> : <View>
+                                                    <Text
+                                                        style={style.noMoreFoodData}
+                                                    >No More Data Found</Text></View>}
+                                        </View>
+                                    )
+                                }}
                             />
                     }
 
@@ -225,7 +247,11 @@ const style = StyleSheet.create({
         height: 170,
 
     },
-
+    noMoreFoodData: {
+        color: Color.mds_global_black_color,
+        padding: 5,
+        textAlign: "center"
+    }
 
 })
 

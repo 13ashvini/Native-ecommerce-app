@@ -121,6 +121,24 @@ const RestrauntsDetail = ({ featuredFoodItems,
                         inactiveDotScale={0.6}
                         tappableDots={true}
                         containerStyle={styles.paginationContainer} />
+                    <TouchableOpacity
+                        style={{
+                            // backgroundColor: "#4c5359",
+                            height: 34,
+                            width: 34,
+                            borderRadius: 20,
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: "absolute",
+                            top: 15,
+                            left: 15
+                        }}
+                    >
+                        <View>
+                            <Icon.BackIcon color={"white"} />
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={{ display: "flex", gap: 6, padding: 10 }}>
                     <Text style={styles.partnerNameStyle}
@@ -283,7 +301,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
                                         <MostPopularFoodCard
                                             onPress={() => {
                                                 navigation.navigate(Routes.AddToOrder, {
-                                                    id: item?.id
+                                                    id: item?._id
                                                 })
                                             }}
                                             image={`${BASE_URL}/${item.image}`}

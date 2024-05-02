@@ -21,6 +21,7 @@ export { default as NotificationIcon } from "../svg/Icon/NotificationIcon"
 export { default as NoteBook } from "../svg/Icon/NoteBook"
 export { default as ShareArrowIcon } from "../svg/Icon/ShareArrowIcon"
 export { default as SendIcon } from "../svg/Icon/SendIcon"
+export { default as CancelIcon } from "../svg/Icon/CancelIcon"
 
 
 
