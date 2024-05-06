@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { ScrollView, StyleSheet, Text, View } from 'react-native'
 import Color from '../../../core/contstants/Color'
 import Fonts from '../../../core/contstants/Fonts'
@@ -22,7 +22,7 @@ type LoginFormProps = {
 }
 const Register = ({ navigation }: any) => {
   const formRef = useRef<any | null>(null)
-  const phoneInputRef = useRef<PhoneInput>(null); // Ref for PhoneInput component
+  const phoneInputRef = useRef<PhoneInput>(null);
   const FacebookIcon = Icon.FacebookIcon
   const GoogleIcon = Icon.FacebookIcon
   const PasswordVisibleIcon = Icon.PasswordVisibleIcon
@@ -38,7 +38,7 @@ const Register = ({ navigation }: any) => {
   ) => {
     const formattedValue = values
     registerUser(formattedValue).then((res: any) => {
-      console.log("res", res)
+      console.log("respopup", res)
       if (res?.error) {
         setSubmitting(false)
         if (res?.error?.data?.message) {
@@ -107,7 +107,7 @@ const Register = ({ navigation }: any) => {
           extraText='Already have account?'
         />
         <Formik
-          // validationSchema={ValidationSchema}
+          validationSchema={ValidationSchema}
           innerRef={formRef}
           initialValues={FormInitialValue}
           onSubmit={SubmitLoginForm}

@@ -5,6 +5,7 @@ import Fonts from '../../../core/contstants/Fonts'
 import OTPTextInput from "react-native-otp-textinput"
 import Button from '../../../core/component/Buttons/Button'
 import { Routes } from '../../../core/navigation/type'
+import { CommonActions } from '@react-navigation/native'
 const VerifyNumber = ({ navigation }: any) => {
   const [verifyNumber, setVerifyNumber] = useState<any>("")
 
@@ -25,11 +26,24 @@ const VerifyNumber = ({ navigation }: any) => {
       </View>
       <Button
         // textStyle={styles.buttonStyle}
+        // onPress={() => {
+        //   navigation.navigate(Routes.MAIN, {
+        //     screen: Routes.StoreLocation
+        //   });
+        //   console.log("assssss------------")
+        // }}
         onPress={() => {
-          navigation.navigate(Routes.MAIN, {
-            screen: Routes.StoreLocation
-          });
-          console.log("assssss------------")
+          navigation.dispatch(
+            CommonActions.navigate({
+              name: Routes.MAIN,
+              params: {
+                screen: Routes.HOME,
+                params: {
+                  screen: Routes.StoreLocation
+                }
+              }
+            })
+          );
         }}
         title={<Text style={styles.buttonStyle}>VERIFY</Text>}
       ></Button>

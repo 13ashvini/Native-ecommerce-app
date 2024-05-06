@@ -130,22 +130,27 @@ const AccountSetting = ({ navigation }: any) => {
 
 
                     </View>
-                    <View style={styles.BackIconView}>
-                        <View style={styles.iconStyle}>
-                            <Icon.PaymentIcon size={30} />
+                    <TouchableOpacity onPress={() => {
+                        navigation.navigate(Routes.AddPaymentMethods)
+                    }}>
+                        <View style={styles.BackIconView}>
+                            <View style={styles.iconStyle}>
+                                <Icon.PaymentIcon size={30} />
+                                <View>
+                                    <Text style={styles.titleTextStyle}>Payment Methods</Text>
+                                    <Text>Add your credit & debit cards</Text>
+                                </View>
+                            </View>
                             <View>
-                                <Text style={styles.titleTextStyle}>Payment Methods</Text>
-                                <Text>Add your credit & debit cards</Text>
+                                <TouchableOpacity onPress={() => {
+                                    navigation.navigate(Routes.AddPaymentMethods)
+                                }}>
+                                    <Icon.BackIcon />
+                                </TouchableOpacity>
                             </View>
                         </View>
-                        <View>
-                            <TouchableOpacity onPress={() => {
-                                navigation.navigate(Routes.AddPaymentMethods)
-                            }}>
-                                <Icon.BackIcon />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                    </TouchableOpacity>
+
 
                     <View style={styles.BackIconView}>
                         <View style={styles.iconStyle}>

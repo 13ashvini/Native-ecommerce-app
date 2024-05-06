@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   StyleSheet,
@@ -23,7 +23,7 @@ import { Provider } from 'react-redux';
 import store from './src/store/Store';
 import { PersistGate } from 'redux-persist/integration/react';
 import persistor from './src/store/persistor';
-
+import NetInfo from '@react-native-community/netinfo';
 
 
 
@@ -60,10 +60,45 @@ const CustomThemeProvider = ({ children }: any) => {
 
 
 const App = () => {
+  const [checkInternetState, setCheckInternetState] = useState(false)
+  console.log("checkInternetState-=-=-000", checkInternetState)
+  const goOnline = async () => {
+    // if ((await isOfflineFirst(apiPath)) && !isWeb()) {
+    //     return false;
+    // }
+    const isConnectionAvailable = await checkInternetConnectionForApp();
+    console.log("isConnectionAvailable", isConnectionAvailable)
+    return isConnectionAvailable;
+  };
+
+
+
+  const checkInternetConnectionForApp = async () => {
+    return NetInfo.fetch().then(state => {
+      if (!state.isConnected) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  };
+  const checkInternatFuntion = async () => {
+    const checkInternet = await goOnline()
+    setCheckInternetState(checkInternet)
+    console.log("checkInternet-----", checkInternet)
+    return checkInternet
+  }
   useEffect(() => {
     SplashScreen.hide()
+    checkInternatFuntion()
   }, []);
 
+  useEffect(() => {
+    checkInternatFuntion()
+  }, [checkInternetState]);
+  // const isCheckInt = checkInternatFuntion()
+
+  // console.log("checkInternet-------", checkInternet)
   return (
     // <View
     // style={{ flex: 1 }}>
@@ -72,14 +107,20 @@ const App = () => {
     <FlashMessage position="top" /> */
 
     /* </View> */
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <NativeBaseProvider theme={theme}>
-          <Navigation />
-          <FlashMessage position="top" />
-        </NativeBaseProvider>
-      </PersistGate>
-    </Provider>
+    <>
+      {!checkInternetState ? <View><Text>
+        Check INternet
+      </Text></View> :
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <NativeBaseProvider theme={theme}>
+              <Navigation />
+              <FlashMessage position="top" />
+            </NativeBaseProvider>
+          </PersistGate>
+        </Provider>}
+
+    </>
 
 
   )

@@ -17,10 +17,10 @@ const HomeScreenWrapper = ({ navigation }: any) => {
 
 
     const dispatch = useDispatch()
-    const restaurantlimit = 4
+    const restaurantlimit = 8
     const { data: featuredPartnerData, isLoading: isFeaturedPartnerDataLoading, isFetching: isFeaturedPartnerFetching } = useGetAllFeaturePartnerListQuery(
         {
-            limit: 20
+            limit: 8
         }
     )
 

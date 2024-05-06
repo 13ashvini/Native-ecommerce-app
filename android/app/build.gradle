@@ -90,6 +90,12 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+         releas {
+            storeFile file('tamangFood.keystore')
+            storePassword 'tamangFood'
+            keyAlias 'tamangFood'
+            keyPassword 'android'
+        }
     }
     buildTypes {
         debug {

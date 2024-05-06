@@ -21,6 +21,16 @@ const authService = apiAuthService.injectEndpoints({
                 method: "POST",
                 body
             }),
+        }),
+        //   LOGIN USER------------------------------------>>
+        forgotPassword: builder.mutation({
+            // @ts-ignore
+            // invalidatesTags: ["login"],
+            query: (body: any) => ({
+                url: `/user/login`,
+                method: "POST",
+                body
+            }),
         })
 
     }),
@@ -29,5 +39,6 @@ const authService = apiAuthService.injectEndpoints({
 })
 export const {
     useRegisterUserMutation,
-    useLoginUserMutation
+    useLoginUserMutation,
+    useForgotPasswordMutation
 } = authService

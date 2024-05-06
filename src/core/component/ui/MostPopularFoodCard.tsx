@@ -12,6 +12,7 @@ type Props = {
     foodType: string,
     price: string,
     onPress: () => void
+    quntity?: any
 }
 const MostPopularFoodCard = (
     { image,
@@ -19,7 +20,8 @@ const MostPopularFoodCard = (
         description,
         foodType,
         price,
-        onPress }: Props
+        onPress,
+        quntity }: Props
 ) => {
     return (
         <View style={styles.mainView}>
@@ -60,6 +62,15 @@ const MostPopularFoodCard = (
                         }}>Aud $ {price}</Text>
 
                     </View>
+                    {quntity &&
+                        <View>
+                            <Text style={{
+                                color: Color.mds_global_main_Yellow_color,
+                            }}>Qty: {quntity}</Text>
+
+                        </View>
+                    }
+
                 </View>
             </View>
         </View>

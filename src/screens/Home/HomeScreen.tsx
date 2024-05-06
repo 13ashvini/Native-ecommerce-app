@@ -30,6 +30,7 @@ const HomeScreen = ({ navigation,
     handleMoreRestaurant,
     hasMoreData }: Props) => {
     const BASE_URL = DEV_URL
+
     const renderItem = () => {
         return (
 
@@ -160,7 +161,7 @@ const HomeScreen = ({ navigation,
                                             }}
 
                                             ratingNumber={item?.ratingNumber}
-                                            availableFoodType={item?.foodtype}
+                                            availableFoodType={[]}
                                             image={item?.images}
                                             partnerName={item?.restaurantPartnerName}
                                             location={item?.location}

@@ -25,6 +25,7 @@ type Props = {
     secureTextEntry?: boolean
     name: string
     activeOutlineColor?: string
+    inputlabel?: string
 }
 
 const Input = ({
@@ -46,10 +47,20 @@ const Input = ({
     leftIcon,
     secureTextEntry,
     name,
-    activeOutlineColor
+    activeOutlineColor,
+    inputlabel
 }: Props) => {
     return (
-        <View style={{}}>
+        <View style={{ gap: 10 }}>
+            <View>
+                {inputlabel && (
+                    <Text
+                        style={styles.labeltext}
+                    >
+                        {inputlabel}
+                    </Text>
+                )}
+            </View>
             <TextInput
                 style={{ fontSize: Fonts.fontSize.body, backgroundColor: "white", paddingBottom: 0 }}
                 multiline={multiline}
@@ -93,6 +104,18 @@ const styles = {
         // borderWidth:4,
         // borderColor:"green"
 
+    },
+    labeltext: {
+        color: '#374151', // Slate 900 color
+        fontWeight: '500', // Medium font weight
+        ...Fonts.style.mds_ui_gothic_font_medium_bold,
+        display: 'flex', // Flex display
+        alignItems: 'flex-start', // Align items to the start
+        textTransform: 'capitalize', // Capitalize text
+        paddingHorizontal: 4, // Horizontal padding
+    },
+    disabled: {
+        opacity: 0.6, // Reduced opacity when disabled
     },
     // inputView :{
     //     display: "flex",

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Animated, Dimensions, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import * as Icon from "../../../core/svg"
 
 import Color from '../../../core/contstants/Color'
@@ -7,9 +7,12 @@ import Fonts from '../../../core/contstants/Fonts'
 import FastImage from 'react-native-fast-image'
 import Button from '../../../core/component/Buttons/Button'
 import { useRoute } from '@react-navigation/native';
-import { MostPopularFood, RestaurantsFeaturedItem, Seafood, appetizers, desiMainCourses, desserts, soups } from '../RestrauntsDetail/RestaurantWrapper'
 import { useGetFoodDetailByIdQuery } from '../../../service/foodListService'
 import { DEV_URL } from '../../../core/env/env'
+import { useAddUserOrderMutation } from '../../../service/orderService'
+import { showMessage } from 'react-native-flash-message'
+import RestaurantsSkeleton from '../../../core/component/ui/RestaurantsSkeleton'
+import { ScrollView } from 'native-base'
 type Props = {
     id: string
 }
@@ -18,136 +21,217 @@ const AddToOrder = ({ navigation }: any) => {
     const [quantityCounnt, setQountityCount] = useState(1)
     const [foodDetail, setFoodDetail] = useState<any | null>(null)
     const [loading, setLoading] = useState(false)
-    const MostPopularFoodData = MostPopularFood
-    const SeafoodData = Seafood
-    const appetizersFood = appetizers
-    const desiMainCoursesData = desiMainCourses
-    const dessertsData = desserts
-    const soupsData = soups
-    const RestaurantsFeaturedItemData = RestaurantsFeaturedItem
     const route = useRoute();
     const BASE_URL = DEV_URL
+    const [addToOrderLoader, setAddToOrderLoader] = useState(false)
+    const [addToOrder] = useAddUserOrderMutation()
+    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
     // @ts-ignore
     const { id } = route.params;
-    const ConcatedData = MostPopularFoodData.concat(SeafoodData).concat(appetizersFood).concat(desiMainCoursesData).concat(dessertsData).concat(soupsData).concat(RestaurantsFeaturedItemData)
 
-
-    // useEffect(() => {
-    //     const data = ConcatedData.filter((item: any) => {
-    //         return item?.id == id
-    //     });
-    //     setFoodDetailData(data[0])
-
-    // }, [id, ConcatedData]);
     const { data: foodDetailData, isLoading: isfoodDetailDataLoading, isFetching: isfoodDetailDataFetching } = useGetFoodDetailByIdQuery(id)
 
     useEffect(() => {
         if (!isfoodDetailDataLoading || !isfoodDetailDataFetching || foodDetailData) {
             // @ts-ignore
             setFoodDetail(foodDetailData?.data)
-            console.log("foodDetailData--9900", foodDetailData)
+
             setLoading(false)
         } else {
             setLoading(true)
         }
     }, [foodDetailData])
+    const handleAddToOrder = (
+    ) => {
+        setAddToOrderLoader(true)
+
+        const formattedValue = {
+            id: id,
+            quantity: quantityCounnt
+        }
+        addToOrder(formattedValue).then((res: any) => {
+            console.log("res-------", res)
+            if (res?.error) {
+                setAddToOrderLoader(false)
+                if (res?.error?.data?.message) {
+                    setAddToOrderLoader(false)
+                    showMessage({
+                        message: (res?.error?.data?.message),
+                        type: "danger",
+                    });
+                } else if (res?.error?.data?.error) (
+                    showMessage({
+                        message: (res?.error?.data?.error),
+                        type: "danger",
+                    })
+                )
+            } else if (res?.data) {
+                setAddToOrderLoader(false)
+                // AsyncStorage.setItem("access_token", res?.data?.token)
+                if (res?.data?.message) {
+                    showMessage({
+                        message: (res?.data?.message),
+                        type: "success",
+                        backgroundColor: Color.mds_global_main_Yellow_color,
+                        color: Color.mds_global_white_color,
+                    });
+
+
+                }
+            }
+        }).catch(() => {
+
+        })
+    }
+
+
+    useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true,
+        }).start();
+    }, [fadeAnim])
+    const checkoutAmout = foodDetail?.price * quantityCounnt
+    const win = Dimensions.get('window');
+    const ratio = win.width / 541;
     return (
-        <View>
+        <ScrollView>
+            <View>
+                {loading ?
+                    <View style={{ display: "flex", gap: 10, padding: 4 }}>
+                        <Animated.View style={[styles.skeletonImage, { opacity: fadeAnim }]}></Animated.View>
+                        <Animated.View >
+                            <View style={styles.placeholder} />
+                            <View style={styles.placeholder} />
+                            <View style={styles.placeholder} />
+                            <View style={styles.placeholder} />
 
-            <View style={{
-                justifyContent: 'center',
-                alignItems: 'center',
+                        </Animated.View>
+                        <Animated.View
+                            style={{
+                                flexDirection: "row",
+                                gap: 15,
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                            <View style={styles.countSkeleton} />
+                            <View style={styles.countSkeleton} />
+                            <View style={styles.countSkeleton} />
 
-            }}>
-                <FastImage source={{
-                    uri: `${BASE_URL}/${foodDetail?.image}`
-                }} style={styles?.image} resizeMode="stretch" />
-                <TouchableOpacity
-                    onPress={() => {
-                        navigation.goBack();
-                    }}
-                    style={{
-                        backgroundColor: "#4c5359",
-                        height: 34,
-                        width: 34,
-                        borderRadius: 20,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        position: "absolute",
-                        top: 15,
-                        left: 15
-                    }}
-                >
+
+                        </Animated.View>
+
+                    </View>
+                    :
                     <View>
-                        <Icon.CancelIcon />
-                    </View>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.textContentView}>
-                <Text style={styles.partnerNameStyle}
-                >{foodDetail?.foodName}</Text>
-                <Text style={styles.descriptionText}>
-                    {foodDetail?.description}
-                </Text>
-                <View style={styles?.iconStyle}>
-                    <Text>$$</Text>
-                    <Icon.dotIcon />
-                    <Text >  {foodDetail?.foodType}</Text>
-                </View>
-                <Text style={styles.priceTextStyle}>
-                    Aud $ {foodDetail?.price}
-                </Text>
-                <View style={styles.deliveryView}>
-                    <FlatList
-                        data={foodDetail?.availableFoodType}
-                        horizontal={true}
-                        renderItem={({ item }: any) => {
-                            return (
-                                <View style={styles?.iconStyle}>
-                                    <Icon.dotIcon />
-                                    <Text >  {item}</Text>
-                                </View>
-                            )
-                        }}
-                        ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-                    ></FlatList>
-                </View>
-                <View >
-                    <View style={styles.incrementItmeView} >
-                        <TouchableOpacity
-                            onPress={() => {
-                                if (quantityCounnt > 1) { // Check if quantity count is greater than 1
-                                    setQountityCount(quantityCounnt - 1)
-                                }
-                            }}
-                            style={styles.incrementButton}
-                        >
-                            <Text style={styles.incrementTextStyle}> - </Text>
-                        </TouchableOpacity>
-                        <Text style={styles.incrementTextStyle}>{quantityCounnt}</Text>
-                        <TouchableOpacity
-                            style={styles.incrementButton}
-                        >
-                            <Text
-                                onPress={() => {
-                                    setQountityCount(quantityCounnt + 1)
-                                }}
-                                style={styles.incrementTextStyle}
-                            > + </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{ marginVertical: 10 }}>
-                        <Button
-                            onPress={() => { }}
-                            title={<Text style={styles.buttonTextStyle}>ADD TO ORDER (Aud $ {foodDetail?.price})</Text>}
-                        >
 
-                        </Button>
-                    </View>
-                </View>
+                        <View style={{
+                            justifyContent: 'center',
+                            alignItems: 'center',
+
+                        }}>
+                            <FastImage source={{
+                                uri: `${BASE_URL}/${foodDetail?.image}`
+                            }} style={{
+                                width: win.width,
+                                flex: 1,
+                                height: 182,
+                                aspectRatio: 10,
+
+                            }} resizeMode="contain" />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    navigation.goBack();
+                                }}
+                                style={{
+                                    backgroundColor: "#4c5359",
+                                    height: 34,
+                                    width: 34,
+                                    borderRadius: 20,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    position: "absolute",
+                                    top: 15,
+                                    left: 15
+                                }}
+                            >
+                                <View>
+                                    <Icon.CancelIcon />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.textContentView}>
+                            <Text style={styles.partnerNameStyle}
+                            >{foodDetail?.name}</Text>
+                            <Text style={styles.descriptionText}>
+                                {foodDetail?.description}
+                            </Text>
+                            <View style={styles?.iconStyle}>
+                                <Text>$$</Text>
+                                <Icon.dotIcon />
+                                <Text >  {foodDetail?.foodtype}</Text>
+                            </View>
+                            <Text style={styles.priceTextStyle}>
+                                Aud $ {foodDetail?.price}
+                            </Text>
+
+                            {/* <View style={styles.deliveryView}>
+                            <FlatList
+                                data={foodDetail?.foodtype}
+                                horizontal={true}
+                                renderItem={({ item }: any) => {
+                                    return (
+                                        <View style={styles?.iconStyle}>
+                                            <Icon.dotIcon />
+                                            <Text >  {item}</Text>
+                                        </View>
+                                    )
+                                }}
+                                ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
+                            ></FlatList>
+                        </View> */}
+                            <View >
+                                <View style={styles.incrementItmeView} >
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            if (quantityCounnt > 1) { // Check if quantity count is greater than 1
+                                                setQountityCount(quantityCounnt - 1)
+                                            }
+                                        }}
+                                        style={styles.incrementButton}
+                                    >
+                                        <Text style={styles.incrementTextStyle}> - </Text>
+                                    </TouchableOpacity>
+                                    <Text style={styles.incrementTextStyle}>{quantityCounnt}</Text>
+                                    <TouchableOpacity
+                                        style={styles.incrementButton}
+                                    >
+                                        <Text
+                                            onPress={() => {
+                                                setQountityCount(quantityCounnt + 1)
+                                            }}
+                                            style={styles.incrementTextStyle}
+                                        > + </Text>
+                                    </TouchableOpacity>
+                                </View>
+                                <View style={{ marginVertical: 10 }}>
+                                    <Button
+                                        loaderColor={Color.mds_global_main_Yellow_color}
+                                        loader={addToOrderLoader}
+                                        onPress={handleAddToOrder}
+                                        title={<Text style={styles.buttonTextStyle}>ADD TO ORDER (Aud $ {checkoutAmout})</Text>}
+                                    >
+
+                                    </Button>
+                                </View>
+                            </View>
+                        </View>
+                    </View>}
             </View>
-        </View>
+        </ScrollView>
+
     )
 }
 
@@ -213,6 +297,42 @@ const styles = StyleSheet.create({
     {
         color: Color.mds_global_main_Yellow_color,
         ...Fonts.style.mds_ui_gothic_font_medium_bold
+    },
+    skeletonImage: {
+        backgroundColor: '#ccc',
+        // animationStyle: "Wave",
+        // flex: 1,
+        borderRadius: 10,
+        width: '100%',
+        height: 185,
+    },
+    container: {
+        backgroundColor: '#F6F6F6',
+        borderRadius: 13,
+        padding: 16,
+        marginBottom: 16,
+        marginTop: 50,
+    },
+    // waveAnimation: {
+    //     animationName: 'wave',
+    //     animationDuration: '2s',
+    //     animationIterationCount: 'infinite',
+    //     animationTimingFunction: 'linear',
+    // },
+    placeholder: {
+        backgroundColor: '#ccc',
+        height: 16,
+        borderRadius: 4,
+        marginBottom: 8,
+    },
+    countSkeleton: {
+        backgroundColor: '#ccc',
+        height: 25,
+        width: 25,
+        borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 8,
     }
 })
 export default AddToOrder

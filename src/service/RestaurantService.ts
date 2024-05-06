@@ -30,6 +30,29 @@ const restaurantService = apiAuthService.injectEndpoints({
 
             }),
         }),
+        // ADD RESTAURANT SERVICE API-
+        // addRestaurant: builder.mutation({
+        //     providesTags: ["restaurant"],
+        //     query: (formData: FormData) => ({
+        //         url: `/res/api/add-RestaurantPartner`,
+        //         method: "POST",
+        //         body: formData,
+        //         Headers: {
+        //             "Content-Type": "form-data",
+
+        //         }
+
+        //     }),
+        // }),
+        addRestaurant: builder.mutation({
+            invalidatesTags: ["restaurant"],
+            query: (formData: FormData) => ({
+                url: `/res/api/add-RestaurantPartner`,
+                method: "POST",
+                body: formData,
+                // Don't set Content-Type header for FormData, it's handled automatically
+            }),
+        }),
     }),
 });
 
@@ -37,6 +60,7 @@ const restaurantService = apiAuthService.injectEndpoints({
 export const {
     useGetAllRestaurantListQuery,
     useGetRestaurantByIdQuery,
-    useGetRestaurantCategoryByIdQuery
+    useGetRestaurantCategoryByIdQuery,
+    useAddRestaurantMutation
 
 } = restaurantService;

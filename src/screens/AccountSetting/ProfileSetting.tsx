@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, StyleSheet } from 'react-native'
-import React, { useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ErrorMessage, Formik, FormikHelpers } from 'formik'
 import * as Icon from "../../core/svg"
 import PhoneInput from 'react-native-phone-number-input'
@@ -10,6 +10,7 @@ import * as yup from "yup"
 import Fonts from '../../core/contstants/Fonts'
 import Button from '../../core/component/Buttons/Button'
 import Input from '../../core/component/Input/Input'
+import { useGetProfileDetailQuery, useUpdateProfileSettingMutation } from '../../service/profileService'
 type ProfileFormProps = {
     fullName: string
     email: string
@@ -18,37 +19,75 @@ type ProfileFormProps = {
 }
 const ProfileSetting = ({ navigation }: any) => {
     const formRef = useRef<any | null>(null)
-    console.log("formRed", formRef)
-    const phoneInputRef = useRef<PhoneInput>(null); // Ref for PhoneInput component
-    console.log("phoneInputRef", phoneInputRef.current?.state.number)
-    const FacebookIcon = Icon.FacebookIcon
-    const GoogleIcon = Icon.FacebookIcon
+    const phoneInputRef = useRef<PhoneInput>(null);
+    const [getProfileData, setGetProfileData] = useState<any | null>(null)
+    console.log("getProfileData", getProfileData)
+    const [updateProfile] = useUpdateProfileSettingMutation()
     const PasswordVisibleIcon = Icon.PasswordVisibleIcon
+    const [initialMobileNumber, setInitialMobileNumber] = useState<string | undefined>("");
+    const { data: profileData, isLoading: isProfileDataLoading, isFetching: isProfileDataFetching } = useGetProfileDetailQuery("")
+
+    // Update the useEffect to set initial mobile number when profileData is available
+    useEffect(() => {
+        if (profileData) {
+            setGetProfileData(profileData);
+            const mobileNumber = getProfileData?.data?.phoneNo;
+            setInitialMobileNumber(mobileNumber);
+        }
+    }, [getProfileData]);
+    useEffect(() => {
+        if (!isProfileDataLoading || !isProfileDataFetching || profileData) {
+            setGetProfileData(profileData)
+            console.log("profileData=-=-=-=", profileData)
+            // setGetProfileData(false)
+        } else {
+            // setGetProfileData(true)
+        }
+    }, [profileData])
     const FormInitialValue: ProfileFormProps = {
-        fullName: "",
-        email: "",
-        password: "",
-        mobileNumber: ""
-    }
+        fullName: getProfileData?.data?.name || "",
+        email: getProfileData?.data?.email || "",
+        password: getProfileData?.data?.password || "",
+        mobileNumber: initialMobileNumber?.trim() || "7777"
+    };
+    console.log("getProfileData?.data?.phoneNo", getProfileData?.data?.phoneNo)
+    console.log("initialMobileNumber", initialMobileNumber)
     const SubmitLoginForm = (values: ProfileFormProps, { setSubmitting }: FormikHelpers<ProfileFormProps>
     ) => {
+        const formattedValue = values
+        updateProfile(formattedValue).then((res: any) => {
+            console.log("res--", res)
+            if (res?.error) {
+                setSubmitting(false)
+                if (res?.error?.data?.message) {
+                    setSubmitting(false)
+                    showMessage({
+                        message: (res?.error?.data?.message),
+                        type: "danger",
+                    });
+                } else if (res?.error?.data?.error) (
+                    showMessage({
+                        message: (res?.error?.data?.error),
+                        type: "danger",
+                    })
+                )
+            } else if (res?.data) {
+                setSubmitting(false)
+                // AsyncStorage.setItem("access_token", res?.data?.token)
+                if (res?.data?.message) {
+                    showMessage({
+                        message: (res?.data?.message),
+                        type: "success",
+                        backgroundColor: Color.mds_global_main_Yellow_color,
+                        color: Color.mds_global_white_color,
+                    });
+                    navigation.navigate(Routes.AccountSettings)
 
-        setTimeout(() => {
-            setSubmitting(false)
-            formRef.current.resetForm()
-            formRef.current.setFieldValue('mobileNumber', '');
-            // let result = phoneInputRef?.current?.cle
-            // result = null
+                }
+            }
+        }).catch(() => {
 
-            // phoneInputRef.current?.state.number ='';
-            showMessage({
-                message: "Profile Change Setting",
-                type: "default",
-                backgroundColor: Color.mds_global_main_Yellow_color,
-                color: Color.mds_global_white_color,
-            });
-            navigation.navigate(Routes.AccountSettings)
-        }, 2000)
+        })
     }
     const ValidationSchema = yup.object({
         fullName: yup.string().required("Full Name is required"),
@@ -67,6 +106,7 @@ const ProfileSetting = ({ navigation }: any) => {
                     innerRef={formRef}
                     initialValues={FormInitialValue}
                     onSubmit={SubmitLoginForm}
+                    enableReinitialize={true}
                 >
                     {({ handleChange, resetForm, handleSubmit, values, isSubmitting }) => (
 
@@ -97,7 +137,7 @@ const ProfileSetting = ({ navigation }: any) => {
                                     textInputStyle={{ backgroundColor: "white" }}
                                     codeTextStyle={{ backgroundColor: "white" }}
                                     textContainerStyle={{ backgroundColor: "white", display: "flex", justifyContent: "center", alignItems: "center" }}
-                                    // defaultValue={""}
+                                    // defaultValue={getProfileData?.data?.phoneNo || ""}
                                     defaultCode="IN"
                                     layout='first'
                                     value={values?.mobileNumber}
@@ -111,7 +151,7 @@ const ProfileSetting = ({ navigation }: any) => {
                                         </Text>
                                     )}
                                 </ErrorMessage>
-                                <Input
+                                {/* <Input
                                     value={values?.password}
                                     onChangeText={handleChange('password')}
                                     label='Password'
@@ -121,7 +161,7 @@ const ProfileSetting = ({ navigation }: any) => {
                                     rightIcon={PasswordVisibleIcon}
                                     secureTextEntry={true}
                                     name={'password'}
-                                />
+                                /> */}
 
 
 

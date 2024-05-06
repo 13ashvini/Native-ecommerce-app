@@ -18,23 +18,11 @@ const restrauntsDetail = allRestaurantsListData
 
 type Props = {
     featuredFoodItems: any[]
-    mostPopularFoodData: any[]
-    seaFood: any[]
-    appetizers: any[]
-    mainCourceData: any[]
-    desserts: any[]
-    soups: any[]
     navigation: any
     restaurantsDetailData: any
 
 }
 const RestrauntsDetail = ({ featuredFoodItems,
-    mostPopularFoodData,
-    seaFood,
-    appetizers,
-    mainCourceData,
-    desserts,
-    soups,
     navigation,
     restaurantsDetailData,
     // foodList
@@ -57,7 +45,6 @@ const RestrauntsDetail = ({ featuredFoodItems,
     const isFoodTypeSelected = (foodType: string) => {
         return foodType === selectedFoodType;
     };
-    console.log("selectedFoodType", selectedFoodType)
 
     const renderItem = ({ item }: { item: any }) => {
         return (

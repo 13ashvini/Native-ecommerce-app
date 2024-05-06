@@ -7,11 +7,64 @@ import Color from '../../../core/contstants/Color'
 import Fonts from '../../../core/contstants/Fonts'
 import { Routes } from '../../../core/navigation/type'
 import Button from '../../../core/component/Buttons/Button'
+import { useForgotPasswordMutation } from '../../../service/authService'
+import { showMessage } from 'react-native-flash-message'
+import { CommonActions } from '@react-navigation/native'
 type Props = {
     navigation: any
 }
 const ForgotPassword = ({ navigation }: any) => {
     const [email, setEmail] = useState("")
+    const [ForgotPassword] = useForgotPasswordMutation()
+    const [forgotPasswordLoader, setForgotPasswordLoader] = useState(false)
+    const ForgotPasswordHandle = (
+    ) => {
+
+        ForgotPassword("email").then((res: any) => {
+            if (res?.error) {
+                setForgotPasswordLoader(false)
+                if (res?.error?.data?.message) {
+                    setForgotPasswordLoader(false)
+                    showMessage({
+                        message: (res?.error?.data?.message),
+                        type: "danger",
+                    });
+                } else if (res?.error?.data?.error) (
+                    showMessage({
+                        message: (res?.error?.data?.error),
+                        type: "danger",
+                    })
+                )
+            } else if (res?.data) {
+                setForgotPasswordLoader(false)
+                // AsyncStorage.setItem("access_token", res?.data?.token)
+                if (res?.data?.message) {
+                    showMessage({
+                        message: (res?.data?.message),
+                        type: "success",
+                        backgroundColor: Color.mds_global_main_Yellow_color,
+                        color: Color.mds_global_white_color,
+                    });
+                    navigation.dispatch(
+                        CommonActions.reset({
+                            index: 0,
+                            routes: [
+                                {
+                                    name: Routes.MAIN,
+                                    state: {
+                                        routes: [{ name: Routes.HomeNavigation }],
+                                    },
+                                },
+                            ],
+                        }),
+                    )
+
+                }
+            }
+        }).catch(() => {
+
+        })
+    }
     return (
         <View style={styles.mainView}>
             <AuthenticationScreenHeader

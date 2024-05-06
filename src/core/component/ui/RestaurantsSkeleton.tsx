@@ -33,7 +33,7 @@ const style = StyleSheet.create({
         flex: 1,
         borderRadius: 10,
         width: '100%',
-        height: 185,
+        height: 500,
     },
     container: {
         backgroundColor: '#F6F6F6',

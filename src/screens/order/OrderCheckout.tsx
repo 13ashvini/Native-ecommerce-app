@@ -9,40 +9,40 @@ import { FlatList } from 'native-base'
 import MostPopularFoodCard from '../../core/component/ui/MostPopularFoodCard'
 import { Routes } from '../../core/navigation/type'
 import { DEV_URL } from '../../core/env/env'
+import { useGetUserOrderListQuery } from '../../service/orderService'
 const OrderCheckout = ({ navigation }: any) => {
     const BASE_URL = DEV_URL
-    const [foodList, setFoodList] = useState<any>([])
-    const [foodListLoading, setFoodListLoading] = useState(false)
     const [subtotal, setSubtotal] = useState(0)
-    const { data: foodListlData, isLoading: isfoodListlDataLoading, isFetching: isfoodListlDataFetching } = useGetAllFoodListQuery({
-        id: "662775e7bf92944c1c5ba33b",
-        foodName: "Indian"
-    })
-    const deliveryCharge = 10
+    const [orderListData, setOrderListData] = useState<any[]>([])
+    const [foodListLoading, setFoodListLoading] = useState(false)
+    const deliveryCharge = 0
+    const { data: orderlist, isLoading: isOrderlistLoading, isFetching: isOrderlistFetching } = useGetUserOrderListQuery("")
     useEffect(() => {
-        if (!isfoodListlDataLoading || !isfoodListlDataFetching || foodListlData) {
-            setFoodList(foodListlData)
+        if (!isOrderlistLoading || !isOrderlistFetching || orderlist) {
+            // @ts-ignore
+            setOrderListData(orderlist)
+            console.log("orderlist=-=-=-=", orderlist)
+
             setFoodListLoading(false)
         } else {
             setFoodListLoading(true)
         }
-    }, [foodListlData])
+    }, [orderlist])
+        ;
     useEffect(() => {
-        // Calculate subtotal when foodList changes
-        let subtotalValue = 0;
-        foodList.forEach((item: any) => {
-            subtotalValue += item.price * (item.quantity || 1);
-
-        });
+        // Calculate subtotal when orderListData changes
+        const subtotalValue = orderListData.reduce((accumulator, item) => {
+            return accumulator + parseFloat(item.total);
+        }, 0);
         setSubtotal(subtotalValue);
-    }, [foodList]);
+    }, [orderListData]);
     const totalAmount = subtotal + deliveryCharge
     const renderItem = () => {
         return (
             <View style={{ padding: 10, gap: 10 }}>
                 <View>
                     <FlatList
-                        data={foodList}
+                        data={orderListData}
                         renderItem={({ item }: any) => {
                             return (
                                 <MostPopularFoodCard
@@ -51,11 +51,13 @@ const OrderCheckout = ({ navigation }: any) => {
                                             id: item?._id
                                         })
                                     }}
-                                    image={`${BASE_URL}/${item.image}`}
-                                    foodName={item.name}
+                                    image={`${BASE_URL}/${item.items[0]?.image}`}
+                                    foodName={item?.items[0]?.name}
                                     foodType={item.foodType}
-                                    price={item.price}
-                                    description={item.description}
+                                    price={item?.items[0].price}
+                                    description={item?.items[0]?.description}
+                                    quntity={item?.items[0]?.quantity}
+
                                 />
                             )
                         }}
@@ -92,7 +94,11 @@ const OrderCheckout = ({ navigation }: any) => {
                     paddingVertical: 10
                 }} >
                     <Button
-                        onPress={() => { }}
+                        onPress={() => {
+                            navigation.navigate(Routes.Profile, {
+                                screen: Routes.AddPaymentMethods
+                            })
+                        }}
                         title={<Text style={style.buttonStyle}>Checkout {totalAmount} $</Text>}
                     />
                 </View>

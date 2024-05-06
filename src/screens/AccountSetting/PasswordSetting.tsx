@@ -10,6 +10,7 @@ import * as yup from "yup"
 import Fonts from '../../core/contstants/Fonts'
 import Button from '../../core/component/Buttons/Button'
 import Input from '../../core/component/Input/Input'
+import { useUpdatePasswordSettingMutation } from '../../service/profileService'
 type ProfileFormProps = {
     newPassword: string,
     confirmPassword: string
@@ -19,6 +20,7 @@ type ProfileFormProps = {
 const PasswordSetting = ({ navigation }: any) => {
     const formRef = useRef<any | null>(null)
     const PasswordVisibleIcon = Icon.PasswordVisibleIcon
+    const [updatePassword] = useUpdatePasswordSettingMutation()
     const FormInitialValue: ProfileFormProps = {
         password: "",
         newPassword: "",
@@ -26,20 +28,40 @@ const PasswordSetting = ({ navigation }: any) => {
     }
     const SubmitLoginForm = (values: ProfileFormProps, { setSubmitting }: FormikHelpers<ProfileFormProps>
     ) => {
+        const formattedValue = values
+        updatePassword(formattedValue).then((res: any) => {
+            console.log("res--", res)
+            if (res?.error) {
+                setSubmitting(false)
+                if (res?.error?.data?.message) {
+                    setSubmitting(false)
+                    showMessage({
+                        message: (res?.error?.data?.message),
+                        type: "danger",
+                    });
+                } else if (res?.error?.data?.error) (
+                    showMessage({
+                        message: (res?.error?.data?.error),
+                        type: "danger",
+                    })
+                )
+            } else if (res?.data) {
+                setSubmitting(false)
+                // AsyncStorage.setItem("access_token", res?.data?.token)
+                if (res?.data?.message) {
+                    showMessage({
+                        message: (res?.data?.message),
+                        type: "success",
+                        backgroundColor: Color.mds_global_main_Yellow_color,
+                        color: Color.mds_global_white_color,
+                    });
+                    navigation.navigate(Routes.AccountSettings)
 
-        setTimeout(() => {
-            setSubmitting(false)
-            formRef.current.resetForm()
-            formRef.current.setFieldValue('mobileNumber', '');
+                }
+            }
+        }).catch(() => {
 
-            showMessage({
-                message: "Password Change Setting",
-                type: "default",
-                backgroundColor: Color.mds_global_main_Yellow_color,
-                color: Color.mds_global_white_color,
-            });
-            navigation.navigate(Routes.AccountSettings)
-        }, 2000)
+        })
     }
     const ValidationSchema = yup.object({
         confirmPassword: yup.string().required("Confirm Password is required").oneOf([yup.ref('newPassword')], 'Passwords must match'),

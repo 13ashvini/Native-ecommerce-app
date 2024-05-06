@@ -38,8 +38,8 @@ const AllRestaurantsCard = ({
     const DollarIcon = Icon?.DollarIcon
     const [index, setIndex] = React.useState(0)
     const isCarousel = React.useRef(null)
-
-
+    const win = Dimensions.get('window');
+    const ratio = win.width / 541; //541 is actual image width
     const renderItem = ({ item }: { item: any }) => {
         return (
             <View style={{
@@ -60,9 +60,14 @@ const AllRestaurantsCard = ({
                     }
 
                     }
-                    style={[styles?.image]}
+                    style={{
+                        width: win.width,
+                        flex: 1,
+                        height: 182,
+                        // aspectRatio: 1
+                    }}
 
-                    resizeMode={FastImage.resizeMode.cover}
+                    resizeMode={"stretch"}
                 />
             </View>
         );
@@ -166,12 +171,15 @@ const styles = StyleSheet.create({
         gap: 10,
         alignItems: "center"
     },
-    image: {
-        flex: 1,
-        borderRadius: 10,
-        width: '100%',
-        height: 185,
+    // image: {
+    //     flex: 1,
+    //     borderRadius: 10,
+    //     width: '100%',
+    //     height: 185,
 
+    // },
+    imageStyle: {
+        //362 is actual height of image
     },
     ratingStyle: {
         backgroundColor: Color.mds_global_main_Yellow_color

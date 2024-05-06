@@ -18,6 +18,9 @@ interface Props {
     textStyle?: any;
     optionBorderStyle?: any;
     selectedOptionBorderStyle?: any
+    label?: string
+    disabled?: boolean
+
 }
 
 const RadioButton: React.FC<Props> = ({
@@ -28,7 +31,9 @@ const RadioButton: React.FC<Props> = ({
     selectedButtonStyle,
     textStyle,
     optionBorderStyle,
-    selectedOptionBorderStyle
+    selectedOptionBorderStyle,
+    label,
+    disabled
 }) => {
     const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
@@ -39,41 +44,51 @@ const RadioButton: React.FC<Props> = ({
 
     return (
         <View style={[styles.container, containerStyle]}>
-            {options.map((option) => (
-                <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-                    <TouchableOpacity
-                        key={option.value}
-                        onPress={() => handleSelect(option)}
-                        style={[
-                            styles.optionButton,
-                            buttonStyle,
-                            selectedOption === option && styles.selectedOptionButton,
-                            selectedOption === option && selectedButtonStyle,
-                        ]}
+            <View>
+                {label && (
+                    <Text
+                        style={styles.labeltext}
                     >
-                        <View style={[styles.optionBorder, optionBorderStyle, selectedOption === option && styles.selectedOptionBorder,
-                        selectedOption === option && selectedOptionBorderStyle,
-                        ]}>
-                            <Text style={[styles.optionText,]}></Text>
-                        </View>
 
-                    </TouchableOpacity>
-                    <Text style={[styles.labelStyle, textStyle]}>{option.label}</Text>
-                </View>
-            ))}
+                        {label}
+                    </Text>
+                )}
+            </View>
+            <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+                {options.map((option) => (
+                    <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+                        <TouchableOpacity
+                            key={option.value}
+                            onPress={() => handleSelect(option)}
+                            style={[
+                                styles.optionButton,
+                                buttonStyle,
+                                selectedOption === option && styles.selectedOptionButton,
+                                selectedOption === option && selectedButtonStyle,
+                            ]}
+                        >
+                            <View style={[styles.optionBorder, optionBorderStyle, selectedOption === option && styles.selectedOptionBorder,
+                            selectedOption === option && selectedOptionBorderStyle,
+                            ]}>
+                                <Text style={[styles.optionText,]}></Text>
+                            </View>
+
+                        </TouchableOpacity>
+                        <Text style={[styles.labelStyle, textStyle]}>{option.label}</Text>
+                    </View>
+                ))}
+            </View>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        alignItems: 'center',
-
+        flexDirection: 'column',
+        gap: 10,
         justifyContent: 'space-evenly'
     },
     optionButton: {
-
         borderColor: '#ccc',
         borderRadius: 30,
         height: 13,
@@ -85,7 +100,7 @@ const styles = StyleSheet.create({
     optionBorder: {
         display: "flex",
         flexDirection: "row",
-        borderWidth: 3,
+        borderWidth: 2,
         borderColor: '#ccc',
         borderRadius: 30,
         height: 20,
@@ -110,7 +125,19 @@ const styles = StyleSheet.create({
     labelStyle: {
         ...Fonts.style.mds_ui_gothic_font_medium_semi,
         color: Color.mds_global_black_color
-    }
+    },
+    labeltext: {
+        color: '#374151', // Slate 900 color
+        fontWeight: '500', // Medium font weight
+        ...Fonts.style.mds_ui_gothic_font_medium_bold,
+        display: 'flex', // Flex display
+        alignItems: 'flex-start', // Align items to the start
+        textTransform: 'capitalize', // Capitalize text
+        paddingHorizontal: 4, // Horizontal padding
+    },
+    disabled: {
+        opacity: 0.6, // Reduced opacity when disabled
+    },
 });
 
 export default RadioButton;
