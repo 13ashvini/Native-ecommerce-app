@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
+import { Animated, Dimensions, FlatList, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import FastImage from 'react-native-fast-image';
 import Carousel from 'react-native-snap-carousel';
 import * as Icon from "../../../core/svg"
@@ -13,6 +13,8 @@ import { useRoute } from '@react-navigation/native';
 import { DEV_URL } from '../../../core/env/env';
 import { Pagination } from 'react-native-snap-carousel'
 import { useGetAllFoodListQuery } from '../../../service/foodListService';
+import FeaturedCardSkeleton from '../../../core/component/ui/FeaturedCardSkeleton';
+import FoodCardSkeleton from '../../../core/component/ui/FoodCardSkeleton';
 
 const restrauntsDetail = allRestaurantsListData
 
@@ -20,11 +22,12 @@ type Props = {
     featuredFoodItems: any[]
     navigation: any
     restaurantsDetailData: any
-
+    restaurantDetailLoading: boolean
 }
 const RestrauntsDetail = ({ featuredFoodItems,
     navigation,
     restaurantsDetailData,
+    restaurantDetailLoading
     // foodList
 }: Props) => {
     const width = Dimensions.get('window').width;
@@ -33,16 +36,18 @@ const RestrauntsDetail = ({ featuredFoodItems,
     const isCarousel = React.useRef(null)
     const routes = useRoute()
     const { restaurantId }: any = routes.params
-    const [selectedFoodType, setSelectedFoodType] = useState(restaurantsDetailData?.foodtype[0]); // State to keep track of selected food type
+    const [selectedFoodType, setSelectedFoodType] = useState<any>(restaurantsDetailData?.foodtype[0]?.name); // State to keep track of selected food type
     const [foodList, setFoodList] = useState<any | null>(null)
+    console.log("foodList", foodList)
     const [foodListLoading, setFoodListLoading] = useState(false)
+    const fadeAnim = useRef(new Animated.Value(0)).current;
     // Function to handle food type selection
-    const handleFoodTypeSelection = (foodType: string) => {
+    const handleFoodTypeSelection = (foodType: any) => {
         setSelectedFoodType(foodType === selectedFoodType ? "" : foodType);
     };
 
     // Function to determine if a food type is selected
-    const isFoodTypeSelected = (foodType: string) => {
+    const isFoodTypeSelected = (foodType: any) => {
         return foodType === selectedFoodType;
     };
 
@@ -67,6 +72,7 @@ const RestrauntsDetail = ({ featuredFoodItems,
     useEffect(() => {
         if (!isfoodListlDataLoading || !isfoodListlDataFetching || foodListlData) {
             setFoodList(foodListlData)
+            console.log("foodListlData", foodListlData)
             setFoodListLoading(false)
         } else {
             setFoodListLoading(true)
@@ -75,440 +81,223 @@ const RestrauntsDetail = ({ featuredFoodItems,
 
     useEffect(() => {
         if (restaurantsDetailData?.foodtype && restaurantsDetailData.foodtype.length > 0) {
-            setSelectedFoodType(restaurantsDetailData.foodtype[0]);
+            setSelectedFoodType(restaurantsDetailData.foodtype[0]?.name);
         }
     }, [restaurantsDetailData]);
+    useEffect(() => {
+        Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 2000,
+            useNativeDriver: true,
+        }).start();
+    }, [fadeAnim])
     const mainRenderItem = () => {
         return (
             <View style={{ display: "flex", gap: 5 }}>
-                <View >
-                    <Carousel
-                        layout={'stack'} layoutCardOffset={`18`}
-                        paginationDot={true}
-                        data={restaurantsDetailData?.images}
-                        renderItem={renderItem}
-                        sliderWidth={width}
-                        itemWidth={width}
-                        loop={true}
-                        onItemClick={() => {
+                {restaurantDetailLoading ? <View style={{ display: "flex", gap: 10, padding: 4 }}>
+                    <Animated.View style={[styles.skeletonImage, { opacity: fadeAnim }]}></Animated.View>
+                    <Animated.View >
+                        <View style={styles.placeholder} />
+                        <View style={styles.placeholder} />
+                        <View style={styles.placeholder} />
+                        <View style={styles.placeholder} />
 
-                        }}
-                        autoplay={true}
-                        autoplayInterval={3000}
-                        onSnapToItem={(index: any) => setIndex(index)}
-                        useScrollView={true}
-                    />
-                    < Pagination
-                        carouselRef={isCarousel}
-                        dotsLength={restaurantsDetailData?.images?.length}
-                        activeDotIndex={index}
-                        dotStyle={styles.dotStyle
-                        }
-                        inactiveDotOpacity={0.4}
-                        inactiveDotScale={0.6}
-                        tappableDots={true}
-                        containerStyle={styles.paginationContainer} />
-                    <TouchableOpacity
-                        style={{
-                            // backgroundColor: "#4c5359",
-                            height: 34,
-                            width: 34,
-                            borderRadius: 20,
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            position: "absolute",
-                            top: 15,
-                            left: 15
-                        }}
-                    >
-                        <View>
-                            <Icon.BackIcon color={"white"} />
-                        </View>
-                    </TouchableOpacity>
-                </View>
-                <View style={{ display: "flex", gap: 6, padding: 10 }}>
-                    <Text style={styles.partnerNameStyle}
-                    >{restaurantsDetailData?.restaurantPartnerName}</Text>
-                    <View style={styles.deliveryView}>
-                        <FlatList
-                            data={restaurantsDetailData?.foodtype}
-                            horizontal={true}
-                            renderItem={({ item }: any) => {
-                                return (
-                                    <View style={styles?.iconStyle}>
-                                        <Icon.dotIcon />
-                                        <Text >  {item}</Text>
-                                    </View>
-                                )
-                            }}
-                            keyExtractor={(item: any, index) => item._id?.toString() + index}
-                            ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-                        ></FlatList>
-                    </View>
-                    <View style={styles.iconStyle}>
-                        {restaurantsDetailData?.rating && <Text style={styles?.ratingStyle}>{restaurantsDetailData?.rating || 1} </Text>}
-                        <View style={styles.iconStyle}>
-                            <Icon.StarIcon />
-                            <Text style={styles?.iconStyle}> Ratings</Text>
-                        </View>
-                    </View>
-                    <View style={styles.takeWayView}>
-                        <View style={styles.iconStyle}>
-                            <View style={styles.iconStyle}>
-                                < Icon.ClockIcon color={Color?.mds_global_main_Yellow_color} size={20} />
-                                <Text style={styles?.iconStyle}> {restaurantsDetailData?.time}</Text>
-                            </View>
+                    </Animated.View>
 
-                            <View style={styles.iconStyle}>
-                                <Icon.DollarIcon color={Color.mds_global_main_Yellow_color} />
-                                <Text>{restaurantsDetailData?.deliveryType}</Text>
-                            </View>
-                        </View>
-                        <Button
-                            textStyle={styles.buttonStyle}
-                            onPress={() => { }}
-                            title={<Text style={styles.buttonTextStyle}>TAKE AWAY</Text>}
-                        ></Button>
-                    </View>
-                </View>
-                <View style={{ paddingHorizontal: 10, display: "flex", gap: 5, marginVertical: 5 }}>
-                    <View><Text style={styles.FeaturedItemsText}>Featured Items</Text></View>
+
+                </View> :
                     <View>
-                        <FlatList
-                            data={featuredFoodItems}
-                            renderItem={({ item }: any) => {
-                                return (
-                                    <View >
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                navigation.navigate(Routes.AddToOrder, {
-                                                    id: item?.id,
-                                                });
-                                            }}
-                                        >
-                                            <FastImage source={item?.image} style={styles?.featureImageStyle} resizeMode="cover" />
-                                        </TouchableOpacity>
-                                        <Text style={styles.featureFoodText}>{item?.foodName}</Text>
-                                        <View style={styles.iconStyle}>
-                                            <Icon.dotIcon />
-                                            <Text>  {item?.foodType}</Text>
-                                        </View>
-                                        <View style={styles.iconStyle}>
-                                            <Text style={{ color: Color.mds_global_main_Yellow_color }}> $$ </Text>
-                                            <Text style={{ color: Color.mds_global_main_Yellow_color }}> Aud {item?.price}</Text>
-                                        </View>
-                                    </View>
-                                )
-                            }}
-                            horizontal={true}
-                            showsHorizontalScrollIndicator={false}
-                            removeClippedSubviews={true}
-                            keyExtractor={(item: any, index: any) => index?.toString()}
-                            ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
-                        ></FlatList>
-                    </View>
-                </View>
-                <View style={{ display: "flex", gap: 8 }}>
-                    <ScrollView horizontal={true} >
-                        <View style={styles.foodCategoriesMainView}>
-                            {restaurantsDetailData?.foodtype?.map((food: any) => {
-                                return (
-                                    <View>
-                                        <View>
-                                            <TouchableOpacity
-                                                onPress={() => handleFoodTypeSelection(food)}>
-                                                <Text style={[styles.categoryTypeTex,
-                                                // showPropertyStatusTab === "Seafood" && styles.activecategoryTypeText
-                                                isFoodTypeSelected(food) && styles.activecategoryTypeText
-                                                ]}
+                        <View >
+                            <Carousel
+                                layout={'stack'} layoutCardOffset={`18`}
+                                paginationDot={true}
+                                data={restaurantsDetailData?.images}
+                                renderItem={renderItem}
+                                sliderWidth={width}
+                                itemWidth={width}
+                                loop={true}
+                                onItemClick={() => {
 
-                                                >
-                                                    {food}
-                                                </Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </View>
-                                )
-                            })}
-
-                            {/* <View>
-                                <Text style={[styles.categoryTypeTex,
-                                showPropertyStatusTab === "Appetizers" && styles.activecategoryTypeText
-                                ]}
-                                    onPress={() => {
-                                        setShowPropertyStatusTab("Appetizers")
-                                    }}
-                                >
-                                    Appetizers
-                                </Text>
-                            </View>
-                            <View>
-                                <Text style={[styles.categoryTypeTex,
-                                showPropertyStatusTab === "Desserts" && styles.activecategoryTypeText
-                                ]}
-                                    onPress={() => {
-                                        setShowPropertyStatusTab("Desserts")
-                                    }}
-                                >
-                                    Desserts
-                                </Text>
-                            </View>
-                            <View>
-                                <Text style={[styles.categoryTypeTex,
-                                showPropertyStatusTab === "main course" && styles.activecategoryTypeText
-                                ]}
-                                    onPress={() => {
-                                        setShowPropertyStatusTab("main course")
-                                    }}>
-                                    Main Cource
-                                </Text>
-                            </View>
-                            <View>
-                                <Text style={[styles.categoryTypeTex,
-                                showPropertyStatusTab === "Soup" && styles.activecategoryTypeText
-                                ]}
-                                    onPress={() => {
-                                        setShowPropertyStatusTab("Soup")
-                                    }}>
-                                    Soup
-                                </Text>
-                            </View> */}
+                                }}
+                                autoplay={true}
+                                autoplayInterval={3000}
+                                onSnapToItem={(index: any) => setIndex(index)}
+                                useScrollView={true}
+                            />
+                            < Pagination
+                                carouselRef={isCarousel}
+                                dotsLength={restaurantsDetailData?.images?.length}
+                                activeDotIndex={index}
+                                dotStyle={styles.dotStyle
+                                }
+                                inactiveDotOpacity={0.4}
+                                inactiveDotScale={0.6}
+                                tappableDots={true}
+                                containerStyle={styles.paginationContainer} />
+                            <TouchableOpacity
+                                style={{
+                                    // backgroundColor: "#4c5359",
+                                    height: 34,
+                                    width: 34,
+                                    borderRadius: 20,
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    position: "absolute",
+                                    top: 15,
+                                    left: 15
+                                }}
+                            >
+                                <View>
+                                    <Icon.BackIcon color={"white"} />
+                                </View>
+                            </TouchableOpacity>
                         </View>
-                    </ScrollView>
-                    <View style={{ flex: 1, gap: 5 }}>
-                        <Text style={styles.MostPopularText}>
-                            Most Popular {selectedFoodType || ""} Food
-                        </Text>
-                        <View style={{ paddingHorizontal: 10 }}>
+                        <View style={{ display: "flex", gap: 6, padding: 10 }}>
+                            <Text style={styles.partnerNameStyle}
+                            >{restaurantsDetailData?.restaurantPartnerName}</Text>
+                            <View style={styles.deliveryView}>
+                                <FlatList
+                                    data={restaurantsDetailData?.foodtype}
+                                    horizontal={true}
+                                    renderItem={({ item }: any) => {
+                                        return (
+                                            <View style={styles?.iconStyle}>
+                                                <Icon.dotIcon />
+                                                <Text >  {item?.name}</Text>
+                                            </View>
+                                        )
+                                    }}
+                                    keyExtractor={(item: any, index) => item._id?.toString() + index}
+                                    ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
+                                ></FlatList>
+                            </View>
+                            <View style={styles.iconStyle}>
+                                {restaurantsDetailData?.rating && <Text style={styles?.ratingStyle}>{restaurantsDetailData?.rating || 1} </Text>}
+                                <View style={styles.iconStyle}>
+                                    <Icon.StarIcon />
+                                    <Text style={styles?.iconStyle}> Ratings</Text>
+                                </View>
+                            </View>
+                            <View style={styles.takeWayView}>
+                                <View style={styles.iconStyle}>
+                                    <View style={styles.iconStyle}>
+                                        < Icon.ClockIcon color={Color?.mds_global_main_Yellow_color} size={20} />
+                                        <Text style={styles?.iconStyle}> {restaurantsDetailData?.time}</Text>
+                                    </View>
+
+                                    <View style={styles.iconStyle}>
+                                        <Icon.DollarIcon color={Color.mds_global_main_Yellow_color} />
+                                        <Text>{restaurantsDetailData?.deliveryType}</Text>
+                                    </View>
+                                </View>
+                                <Button
+                                    textStyle={styles.buttonStyle}
+                                    onPress={() => { }}
+                                    title={<Text style={styles.buttonTextStyle}>TAKE AWAY</Text>}
+                                ></Button>
+                            </View>
+                        </View>
+                    </View>
+                }
+                {restaurantDetailLoading ? <FeaturedCardSkeleton data={[1, 2, 3, 4, 4]} /> :
+                    <View style={{ paddingHorizontal: 10, display: "flex", gap: 5, marginVertical: 5 }}>
+                        <View><Text style={styles.FeaturedItemsText}>Featured Items</Text></View>
+                        <View>
                             <FlatList
-                                data={foodList}
+                                data={featuredFoodItems}
                                 renderItem={({ item }: any) => {
                                     return (
-                                        <MostPopularFoodCard
-                                            onPress={() => {
-                                                navigation.navigate(Routes.AddToOrder, {
-                                                    id: item?._id
-                                                })
-                                            }}
-                                            image={`${BASE_URL}/${item.image}`}
-                                            foodName={item.name}
-                                            foodType={item.foodType}
-                                            price={item.price}
-                                            description={item.description}
-                                        />
+                                        <View >
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    navigation.navigate(Routes.AddToOrder, {
+                                                        id: item?.id,
+                                                    });
+                                                }}
+                                            >
+                                                <FastImage source={item?.image} style={styles?.featureImageStyle} resizeMode="cover" />
+                                            </TouchableOpacity>
+
+                                            <View style={styles.iconStyle}>
+                                                <Icon.dotIcon />
+                                                <Text>  {item?.foodType}</Text>
+                                            </View>
+                                            <View style={styles.iconStyle}>
+                                                <Text style={{ color: Color.mds_global_main_Yellow_color }}> $$ </Text>
+                                                <Text style={{ color: Color.mds_global_main_Yellow_color }}> Aud {item?.price}</Text>
+                                            </View>
+                                        </View>
                                     )
                                 }}
-                                keyExtractor={(item: any,) => item._id?.toString()}
-                                ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                removeClippedSubviews={true}
+                                keyExtractor={(item: any, index: any) => index?.toString()}
+                                ItemSeparatorComponent={() => <View style={{ width: 15 }} />}
                             ></FlatList>
                         </View>
+                    </View>}
+                {restaurantDetailLoading ? <FoodCardSkeleton data={[1, 2, 3, 4,]}
+                /> :
+                    <View style={{ display: "flex", gap: 8 }}>
+                        <ScrollView horizontal={true} >
+                            <View style={styles.foodCategoriesMainView}>
+                                {restaurantsDetailData?.foodtype?.map((food: any) => {
+                                    return (
+                                        <View>
+                                            <View>
+                                                <TouchableOpacity
+                                                    onPress={() => handleFoodTypeSelection(food?.name)}>
+                                                    <Text style={[styles.categoryTypeTex,
+                                                    isFoodTypeSelected(food?.name) && styles.activecategoryTypeText
+                                                    ]}
 
+                                                    >
+                                                        {food?.name}
+                                                    </Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    )
+                                })}
 
-                    </View>
-                    {/* <View style={{ paddingHorizontal: 10 }}>
-                        {showPropertyStatusTab === "Seafood" && <>
-                            <View style={{ flex: 1, gap: 8 }}>
-                                <View style={{ flex: 1, gap: 5 }}>
-                                    <Text style={styles.MostPopularText}>
-                                        Most Popular
-                                    </Text>
-                                    <FlatList
-                                        data={mostPopularFoodData}
-                                        renderItem={({ item }: any) => {
-                                            return (
-                                                <MostPopularFoodCard
-                                                    onPress={() => {
-                                                        navigation.navigate(Routes.AddToOrder, {
-                                                            id: item?.id,
-                                                        });
-                                                    }}
-                                                    image={item.image}
-                                                    foodName={item.foodName}
-                                                    foodType={item.foodType}
-                                                    price={item.price}
-                                                    description={item.description}
-                                                />
-                                            )
-                                        }}
-
-                                        keyExtractor={(item: any, index: any) => index}
-                                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                                    ></FlatList>
-
-
-                                </View>
-                                <View style={{ flex: 1, gap: 5 }}>
-                                    <Text style={styles.MostPopularText}>
-                                        SeaFood
-                                    </Text>
-                                    <FlatList
-                                        data={seaFood}
-                                        renderItem={({ item }: any) => {
-                                            return (
-                                                <MostPopularFoodCard
-                                                    onPress={() => {
-                                                        navigation.navigate(Routes.AddToOrder, {
-                                                            id: item?.id,
-                                                        });
-                                                    }}
-                                                    image={item.image}
-                                                    foodName={item.foodName}
-                                                    foodType={item.foodType}
-                                                    price={item.price}
-                                                    description={item.description}
-                                                />
-                                            )
-                                        }}
-                                        keyExtractor={(item: any) => item.id}
-                                        ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                                    ></FlatList>
-
-
-                                </View>
                             </View>
-                        </>
-
-                        }
-                    </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                        {showPropertyStatusTab === "Appetizers" && <>
-                            <View style={{ flex: 1, gap: 5 }}>
-                                <Text style={styles.MostPopularText}>
-                                    Most Popular
-                                </Text>
+                        </ScrollView>
+                        <View style={{ flex: 1, gap: 5 }}>
+                            <Text style={styles.MostPopularText}>
+                                Most Popular {selectedFoodType || ""} Food
+                            </Text>
+                            <View style={{ paddingHorizontal: 10 }}>
                                 <FlatList
-                                    data={appetizers}
+                                    data={foodList}
                                     renderItem={({ item }: any) => {
                                         return (
                                             <MostPopularFoodCard
                                                 onPress={() => {
                                                     navigation.navigate(Routes.AddToOrder, {
-                                                        id: item?.id
+                                                        id: item?._id
                                                     })
                                                 }}
-                                                image={item.image}
-                                                foodName={item.foodName}
+                                                image={`${BASE_URL}/${item.image}`}
+                                                foodName={item.name}
                                                 foodType={item.foodType}
                                                 price={item.price}
                                                 description={item.description}
                                             />
                                         )
                                     }}
-                                    keyExtractor={(item: any) => item.id}
+                                    keyExtractor={(item: any) => item._id?.toString()}
                                     ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
                                 ></FlatList>
-
-
                             </View>
-                        </>
 
-                        }
+
+                        </View>
+
                     </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                        {showPropertyStatusTab === "Desserts" && <>
-                            <View style={{ flex: 1, gap: 5 }}>
-                                <Text style={styles.MostPopularText}>
-                                    Most Popular Desserts
-                                </Text>
-                                <FlatList
-                                    data={desserts}
-                                    renderItem={({ item }: any) => {
-                                        return (
-                                            <MostPopularFoodCard
-                                                onPress={() => {
-                                                    navigation.navigate(Routes.AddToOrder, {
-                                                        id: item?.id
-                                                    })
-                                                }}
+                }
 
-                                                image={item.image}
-                                                foodName={item.foodName}
-                                                foodType={item.foodType}
-                                                price={item.price}
-                                                description={item.description}
-                                            />
-                                        )
-                                    }}
-                                    keyExtractor={(item: any) => item.id}
-                                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                                ></FlatList>
-
-
-                            </View>
-                        </>
-
-                        }
-                    </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                        {showPropertyStatusTab === "main course" && <>
-                            <View style={{ flex: 1, gap: 5 }}>
-                                <Text style={styles.MostPopularText}>
-                                    Most Popular Thali
-                                </Text>
-                                <FlatList
-                                    data={mainCourceData}
-                                    renderItem={({ item }: any) => {
-                                        return (
-                                            <MostPopularFoodCard
-                                                onPress={() => {
-                                                    navigation.navigate(Routes.AddToOrder, {
-                                                        id: item?.id
-                                                    })
-                                                }}
-                                                image={item.image}
-                                                foodName={item.foodName}
-                                                foodType={item.foodType}
-                                                price={item.price}
-                                                description={item.description}
-                                            />
-                                        )
-                                    }}
-                                    keyExtractor={(item: any) => item.id}
-                                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                                ></FlatList>
-
-
-                            </View>
-                        </>
-
-                        }
-                    </View>
-                    <View style={{ paddingHorizontal: 10 }}>
-                        {showPropertyStatusTab === "Soup" && <>
-                            <View style={{ flex: 1, gap: 5 }}>
-                                <Text style={styles.MostPopularText}>
-                                    Most Popular Soups
-                                </Text>
-                                <FlatList
-                                    data={soups}
-                                    renderItem={({ item }: any) => {
-                                        return (
-                                            <MostPopularFoodCard
-                                                onPress={() => {
-                                                    navigation.navigate(Routes.AddToOrder, {
-                                                        id: item?.id
-                                                    })
-                                                }}
-                                                image={item.image}
-                                                foodName={item.foodName}
-                                                foodType={item.foodType}
-                                                price={item.price}
-                                                description={item.description}
-                                            />
-                                        )
-                                    }}
-                                    keyExtractor={(item: any) => item.id}
-                                    ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                                ></FlatList>
-
-
-                            </View>
-                        </>
-
-                        }
-                    </View> */}
-                </View>
             </View>
         )
     }
@@ -614,6 +403,33 @@ const styles = StyleSheet.create({
         // alignSelf: 'center',
         bottom: 0,
         right: 0
+    },
+    skeletonImage: {
+        backgroundColor: '#ccc',
+        // animationStyle: "Wave",
+        // flex: 1,
+        borderRadius: 10,
+        width: '100%',
+        height: 185,
+    },
+    container: {
+        backgroundColor: '#F6F6F6',
+        borderRadius: 13,
+        padding: 16,
+        marginBottom: 16,
+        marginTop: 50,
+    },
+    // waveAnimation: {
+    //     animationName: 'wave',
+    //     animationDuration: '2s',
+    //     animationIterationCount: 'infinite',
+    //     animationTimingFunction: 'linear',
+    // },
+    placeholder: {
+        backgroundColor: '#ccc',
+        height: 16,
+        borderRadius: 4,
+        marginBottom: 8,
     },
 })
 export default RestrauntsDetail

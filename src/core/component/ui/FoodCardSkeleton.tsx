@@ -8,13 +8,13 @@ type FadeInViewProps = PropsWithChildren<{ style: ViewStyle }>;
 type Props = {
     data: any[]
 }
-const FeaturedCardSkeleton = ({ data }: Props) => {
-    const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+const FoodCardSkeleton = ({ data }: Props) => {
+    const fadeAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 1000,
+            duration: 10000,
             useNativeDriver: true,
         }).start();
     }, [fadeAnim])
@@ -25,18 +25,18 @@ const FeaturedCardSkeleton = ({ data }: Props) => {
                 data={data}
                 renderItem={() => {
                     return (
-                        <View style={{ display: "flex", gap: 4, flex: 1, marginHorizontal: 4 }}>
+                        <View style={{ display: "flex", flexDirection: "row", flex: 1, gap: 4, marginHorizontal: 4, alignItems: "center" }}>
                             <Animated.View style={[style.skeletonImage, { opacity: fadeAnim }]}></Animated.View>
-                            <View >
+                            <Animated.View style={{ flex: 1 }}>
                                 <View style={style.placeholder} />
                                 <View style={style.placeholder} />
                                 <View style={style.placeholder} />
-                            </View>
+                                <View style={style.placeholder} />
+                            </Animated.View>
                         </View>
                     )
                 }}
                 // horizontal={true}
-                numColumns={2}
                 showsHorizontalScrollIndicator={false}
                 keyExtractor={(item: any) => item.id}
                 ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
@@ -48,10 +48,10 @@ const style = StyleSheet.create({
     skeletonImage: {
         backgroundColor: "#cccccc",
         // animationStyle: "Wave",
-        flex: 1,
+
         borderRadius: 10,
-        width: '100%',
-        height: 185,
+        width: 155,
+        height: 155,
     },
     container: {
         backgroundColor: "#cccccc",
@@ -87,6 +87,6 @@ const style = StyleSheet.create({
         elevation: 2,
     },
 })
-export default FeaturedCardSkeleton
+export default FoodCardSkeleton
 
 

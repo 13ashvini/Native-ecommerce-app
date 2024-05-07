@@ -50,7 +50,7 @@ const AddToOrder = ({ navigation }: any) => {
             quantity: quantityCounnt
         }
         addToOrder(formattedValue).then((res: any) => {
-            console.log("res-------", res)
+
             if (res?.error) {
                 setAddToOrderLoader(false)
                 if (res?.error?.data?.message) {
@@ -67,7 +67,6 @@ const AddToOrder = ({ navigation }: any) => {
                 )
             } else if (res?.data) {
                 setAddToOrderLoader(false)
-                // AsyncStorage.setItem("access_token", res?.data?.token)
                 if (res?.data?.message) {
                     showMessage({
                         message: (res?.data?.message),
@@ -94,7 +93,6 @@ const AddToOrder = ({ navigation }: any) => {
     }, [fadeAnim])
     const checkoutAmout = foodDetail?.price * quantityCounnt
     const win = Dimensions.get('window');
-    const ratio = win.width / 541;
     return (
         <ScrollView>
             <View>

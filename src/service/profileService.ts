@@ -26,7 +26,7 @@ const profileService = apiAuthService.injectEndpoints({
             // @ts-ignore
             invalidatesTags: ["profile"],
             query: (body: any) => ({
-                url: `/user/updated-user`,
+                url: `/user/change-password`,
                 method: "PUT",
                 body
             }),

@@ -17,10 +17,13 @@ const ForgotPassword = ({ navigation }: any) => {
     const [email, setEmail] = useState("")
     const [ForgotPassword] = useForgotPasswordMutation()
     const [forgotPasswordLoader, setForgotPasswordLoader] = useState(false)
-    const ForgotPasswordHandle = (
+
+    const forgotPasswordHandle = (
     ) => {
 
-        ForgotPassword("email").then((res: any) => {
+        ForgotPassword({
+            email: email
+        }).then((res: any) => {
             if (res?.error) {
                 setForgotPasswordLoader(false)
                 if (res?.error?.data?.message) {
@@ -50,9 +53,9 @@ const ForgotPassword = ({ navigation }: any) => {
                             index: 0,
                             routes: [
                                 {
-                                    name: Routes.MAIN,
+                                    name: Routes.AUTHORIZATIONNAVIGATION,
                                     state: {
-                                        routes: [{ name: Routes.HomeNavigation }],
+                                        routes: [{ name: Routes.RESETEMAIL }],
                                     },
                                 },
                             ],
@@ -85,11 +88,9 @@ const ForgotPassword = ({ navigation }: any) => {
             </View>
 
             <Button
-                onPress={() => {
-                    navigation.navigate(Routes.AUTHORIZATIONNAVIGATION, {
-                        screen: Routes.RESETEMAIL
-                    })
-                }}
+                onPress={forgotPasswordHandle}
+                loader={forgotPasswordLoader}
+                loaderColor={Color.mds_global_main_Yellow_color}
                 title={<Text style={styles.buttonStyle}>RESET PASSWORD</Text>}
 
             ></Button>

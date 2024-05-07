@@ -30,7 +30,7 @@ const TopRastarants = [{
 },
 {
     id: 13,
-    image: [images?.FeatureFoodImage10],
+    image: [],
     partnerName: "Popeyes 1426 Flmst",
     location: "Forrest Place, Perth",
     rating: "4.3",
@@ -196,7 +196,7 @@ const RestaurantSearch = ({ navigation }: any) => {
                                                 {item?.foodtype?.map((foodtype: any, index: any) => {
                                                     return <View style={styles.iconStyle} key={index}>
                                                         <Icons.dotIcon />
-                                                        <Text>  {foodtype}</Text>
+                                                        <Text>  {foodtype?.name}</Text>
 
                                                     </View>
                                                 })}

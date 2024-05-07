@@ -60,7 +60,7 @@ const CustomThemeProvider = ({ children }: any) => {
 
 
 const App = () => {
-  const [checkInternetState, setCheckInternetState] = useState(false)
+  const [checkInternetState, setCheckInternetState] = useState(true)
   console.log("checkInternetState-=-=-000", checkInternetState)
   const goOnline = async () => {
     // if ((await isOfflineFirst(apiPath)) && !isWeb()) {
@@ -96,9 +96,7 @@ const App = () => {
   useEffect(() => {
     checkInternatFuntion()
   }, [checkInternetState]);
-  // const isCheckInt = checkInternatFuntion()
 
-  // console.log("checkInternet-------", checkInternet)
   return (
     // <View
     // style={{ flex: 1 }}>
@@ -108,17 +106,17 @@ const App = () => {
 
     /* </View> */
     <>
-      {!checkInternetState ? <View><Text>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <NativeBaseProvider theme={theme}>
+            <Navigation />
+            <FlashMessage position="top" />
+          </NativeBaseProvider>
+        </PersistGate>
+      </Provider>
+      {/* {!checkInternetState && <View><Text>
         Check INternet
-      </Text></View> :
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <NativeBaseProvider theme={theme}>
-              <Navigation />
-              <FlashMessage position="top" />
-            </NativeBaseProvider>
-          </PersistGate>
-        </Provider>}
+      </Text></View>} */}
 
     </>
 

@@ -16,7 +16,7 @@ const restaurantService = apiAuthService.injectEndpoints({
         getRestaurantById: builder.query({
             providesTags: ["restaurant"],
             query: (id: string) => ({
-                url: `/res/api/detail-restaurantItem/${id}`,
+                url: `/res/api/detail-restaurant/${id}`,
                 method: "GET",
 
             }),

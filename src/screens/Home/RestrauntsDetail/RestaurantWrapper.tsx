@@ -5,7 +5,7 @@ import images from '../../../core/assests/images'
 import { DEV_URL } from '../../../core/env/env';
 import { useGetRestaurantByIdQuery } from '../../../service/RestaurantService';
 import { useRoute } from '@react-navigation/native';
-import { useGetAllFoodListQuery } from '../../../service/foodListService';
+
 
 
 
@@ -60,12 +60,10 @@ export const RestaurantsFeaturedItem = [{
 
 const RestaurantWrapper = ({ navigation }: any) => {
     const [restaurantDetail, setRestaurantDetail] = useState<any | null>(null)
-
     const [loading, setLoading] = useState(false)
     const routes = useRoute()
     const { restaurantId }: any = routes.params
     const { data: restaurantDetailData, isLoading: isRestaurantDetailDataLoading, isFetching: isRestaurantDetailDataFetching } = useGetRestaurantByIdQuery(restaurantId)
-
     useEffect(() => {
         if (!isRestaurantDetailDataLoading || !isRestaurantDetailDataFetching || restaurantDetailData) {
             setRestaurantDetail(restaurantDetailData)
@@ -78,10 +76,9 @@ const RestaurantWrapper = ({ navigation }: any) => {
     return (
         <View>
             <RestrauntsDetail
-
+                restaurantDetailLoading={loading}
                 restaurantsDetailData={restaurantDetail?.data}
                 navigation={navigation}
-
                 featuredFoodItems={RestaurantsFeaturedItem}
             />
         </View>

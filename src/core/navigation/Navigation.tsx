@@ -1,8 +1,8 @@
 
 import { NavigationContainer, DefaultTheme, DarkTheme, CommonActions } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import React, { createContext, useContext, useEffect } from 'react';
-import { View, useColorScheme } from 'react-native'
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Text, View, useColorScheme } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { navigationRef } from './RootNavigation'
 
@@ -15,18 +15,87 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store/Store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setAccessToken } from '../../Slice/authslice';
+import { addEventListener } from "@react-native-community/netinfo";
 
 
 
 const RootStack = createStackNavigator()
+const CheckInternte = ({ isContected, setIsConcted }: any) => {
+    const [showMessage, setShowMessage] = useState(false);
 
+    useEffect(() => {
+        const unsubscribe = addEventListener(state => {
+            console.log("Connection type", state.type);
+            console.log("Is connected?", state.isConnected);
+            setIsConcted(state.isConnected)            // setShowMessage(isContected);
+            if (isContected) {
+                console.log("dsdasdas11")
+                setShowMessage(true);
+                setTimeout(() => {
+                    setShowMessage(false);
+                }, 2000); // Hide the message after 2 seconds
+            }
+
+        });
+
+        return () => unsubscribe();
+    }, [])
+    return (
+        // <View style={{}}>
+        //     {isContected ?
+        //         <Text
+        //             style={{
+        //                 padding: 10,
+        //                 backgroundColor: "green",
+        //                 color: 'white'
+        //             }}
+        //         >Back Online</Text> :
+        //         <View style={{}}>
+
+        //             <Text style={{
+        //                 padding: 10,
+        //                 backgroundColor: "red",
+        //                 color: 'white'
+        //             }}>{isContected ? '' : 'No Internet connection.'}</Text>
+        //         </View >
+        //     }
+        // </View>
+        <View style={{}}>
+            {(showMessage && !isContected) && (
+                <Text
+                    style={{
+                        padding: 10,
+                        backgroundColor: "green",
+                        color: "white"
+                    }}
+                >
+                    Back Online
+                </Text>
+            )}
+            {isContected ?
+                null :
+                <View style={{}}>
+
+                    <Text style={{
+                        padding: 10,
+                        backgroundColor: "red",
+                        color: 'white'
+                    }}>{isContected ? '' : 'No Internet connection.'}</Text>
+                </View >
+            }
+        </View>
+
+    )
+}
 
 const Navigation = () => {
     const { tokenData } = useSelector((state: RootState) => state.auth)
     console.log("tokenData", tokenData)
     const dispatch = useDispatch()
     const colorScheme = useColorScheme();
-    const ThemeContext = createContext(DefaultTheme);
+    const [isContected, setIsConcted] = useState(false)
+
+
 
     const lightTheme = {
         ...DefaultTheme,
@@ -96,6 +165,7 @@ const Navigation = () => {
                     <RootStack.Screen name={Routes?.MAIN} component={BottomTabNavigation} />
                 </RootStack.Navigator>
             </NavigationContainer>
+            <CheckInternte isContected={isContected} setIsConcted={setIsConcted} />
 
         </GestureHandlerRootView>
 

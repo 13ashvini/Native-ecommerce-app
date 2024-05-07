@@ -8,6 +8,7 @@ import { DEV_URL } from '../../core/env/env'
 import MostPopularFoodCard from '../../core/component/ui/MostPopularFoodCard'
 import { useGetAllFoodListQuery } from '../../service/foodListService'
 import { useGetUserOrderListQuery } from '../../service/orderService'
+import FoodCardSkeleton from '../../core/component/ui/FoodCardSkeleton'
 
 type Props = {
     navigation: any
@@ -20,7 +21,6 @@ const Order = ({ navigation }: Props) => {
     useEffect(() => {
         if (!isOrderlistLoading || !isOrderlistFetching || orderlist) {
             setOrderListData(orderlist)
-            console.log("orderlist=-=-=-=", orderlist)
             setFoodListLoading(false)
         } else {
             setFoodListLoading(true)
@@ -36,28 +36,41 @@ const Order = ({ navigation }: Props) => {
                         <Text>Clear All</Text>
                     </View>
                     <View>
-                        <FlatList
-                            data={orderListData}
-                            renderItem={({ item }: any) => {
-                                return (
-                                    <MostPopularFoodCard
-                                        onPress={() => {
-                                            navigation.navigate(Routes.AddToOrder, {
-                                                id: item?._id
-                                            })
-                                        }}
-                                        image={`${BASE_URL}/${item.items[0]?.image}`}
-                                        foodName={item?.items[0]?.name}
-                                        foodType={item.foodType}
-                                        price={item?.total}
-                                        description={item?.items[0]?.description}
-                                        quntity={item?.items[0]?.quantity}
-                                    />
-                                )
-                            }}
-                            keyExtractor={(item: any,) => item._id?.toString()}
-                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                        ></FlatList>
+                        {foodListLoading ? <FoodCardSkeleton
+                            data={[1, 2, 3, 4]}
+                        /> :
+                            <View>
+                                {
+                                    orderListData?.length === 0 ? <View>
+                                        <Text> No Data Found</Text>
+                                    </View> :
+                                        <FlatList
+                                            data={orderListData}
+                                            renderItem={({ item }: any) => {
+                                                return (
+                                                    <MostPopularFoodCard
+                                                        onPress={() => {
+                                                            navigation.navigate(Routes.AddToOrder, {
+                                                                id: item?._id
+                                                            })
+                                                        }}
+                                                        image={`${BASE_URL}/${item.items[0]?.image}`}
+                                                        foodName={item?.items[0]?.name}
+                                                        foodType={item.foodType}
+                                                        price={item?.total}
+                                                        description={item?.items[0]?.description}
+                                                        quntity={item?.items[0]?.quantity}
+                                                    />
+                                                )
+                                            }}
+                                            keyExtractor={(item: any,) => item._id?.toString()}
+                                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                                        ></FlatList>
+                                }
+                            </View>
+                        }
+
+
                     </View>
                     <TouchableOpacity
                         onPress={() => {
@@ -76,27 +89,41 @@ const Order = ({ navigation }: Props) => {
                         <Text>Clear All</Text>
                     </View>
                     <View>
-                        <FlatList
-                            data={orderListData}
-                            renderItem={({ item }: any) => {
-                                return (
-                                    <MostPopularFoodCard
-                                        onPress={() => {
-                                            navigation.navigate(Routes.AddToOrder, {
-                                                id: item?._id
-                                            })
-                                        }}
-                                        image={`${BASE_URL}/${item.items[0]?.image}`}
-                                        foodName={item?.items[0]?.name}
-                                        foodType={item.foodType}
-                                        price={item?.items[0]?.price}
-                                        description={item?.items[0]?.description}
-                                    />
-                                )
-                            }}
-                            keyExtractor={(item: any,) => item._id?.toString()}
-                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
-                        ></FlatList>
+                        {foodListLoading ? <FoodCardSkeleton
+                            data={[1, 2, 3, 4]}
+                        /> :
+                            <View>
+                                {
+                                    orderListData?.length === 0 ? <View>
+                                        <Text> No Data Found</Text>
+                                    </View> :
+
+                                        <FlatList
+                                            data={orderListData}
+                                            renderItem={({ item }: any) => {
+                                                return (
+                                                    <MostPopularFoodCard
+                                                        onPress={() => {
+                                                            navigation.navigate(Routes.AddToOrder, {
+                                                                id: item?._id
+                                                            })
+                                                        }}
+                                                        image={`${BASE_URL}/${item.items[0]?.image}`}
+                                                        foodName={item?.items[0]?.name}
+                                                        foodType={item.foodType}
+                                                        price={item?.items[0]?.price}
+                                                        description={item?.items[0]?.description}
+                                                    />
+                                                )
+                                            }}
+                                            keyExtractor={(item: any,) => item._id?.toString()}
+                                            ItemSeparatorComponent={() => <View style={{ height: 15 }} />}
+                                        ></FlatList>
+                                }
+                            </View>
+                        }
+
+
                     </View>
                 </View>
             </View >

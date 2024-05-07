@@ -1,34 +1,35 @@
 import { View, Text, FlatList, StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { MostPopularFood, RestaurantsFeaturedItem, Seafood, appetizers, desiMainCourses, desserts, soups } from '../Home/RestrauntsDetail/RestaurantWrapper'
 import { useRoute } from '@react-navigation/native'
 import MostPopularFoodCard from '../../core/component/ui/MostPopularFoodCard'
 import { Routes } from '../../core/navigation/type'
 import Fonts from '../../core/contstants/Fonts'
 import Color from '../../core/contstants/Color'
+import { useGetAllFoodListQuery } from '../../service/foodListService'
 
 const SearchFoodItem = ({ navigation }: any) => {
-    const [foodDetailData, setFoodDetailData] = useState<any[]>([])
-    const MostPopularFoodData = MostPopularFood
-    const SeafoodData = Seafood
-    const appetizersFood = appetizers
-    const desiMainCoursesData = desiMainCourses
-    const dessertsData = desserts
-    const soupsData = soups
-    const RestaurantsFeaturedItemData = RestaurantsFeaturedItem
+    const [foodDetailData, setFoodDetailData] = useState<any | null>(null)
+    // const [foodList, setFoodList] = useState<any | null>(null)
+
+    const [foodListLoading, setFoodListLoading] = useState(false)
+
+
     const route = useRoute();
     // @ts-ignore
-    const { categoryName } = route.params;
-    console.log("categoryName", categoryName)
-    const ConcatedData = MostPopularFoodData.concat(SeafoodData).concat(appetizersFood).concat(desiMainCoursesData).concat(dessertsData).concat(soupsData).concat(RestaurantsFeaturedItemData)
-    console.log("ConcatedData----", ConcatedData)
+    const { categoryName, restaurantId } = route.params;
+    const { data: foodListlData, isLoading: isfoodListlDataLoading, isFetching: isfoodListlDataFetching } = useGetAllFoodListQuery({
+        id: restaurantId,
+        foodName: categoryName
+    })
+
     useEffect(() => {
-        const categoryFilterData = ConcatedData.filter((item: any) => {
-            return item?.category?.toUpperCase().includes(categoryName?.toUpperCase())
-        })
-        setFoodDetailData(categoryFilterData)
-    }, [])
-    console.log("foodDetailData---------------------", foodDetailData)
+        if (!isfoodListlDataLoading || !isfoodListlDataFetching || foodListlData) {
+            setFoodDetailData(foodListlData)
+            setFoodListLoading(false)
+        } else {
+            setFoodListLoading(true)
+        }
+    }, [foodListlData])
     return (
         // <View>
         <View style={{ flex: 1, gap: 10, padding: 5, paddingHorizontal: 10 }}>

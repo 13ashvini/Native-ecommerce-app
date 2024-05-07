@@ -12,9 +12,9 @@ import Button from '../../core/component/Buttons/Button'
 import Input from '../../core/component/Input/Input'
 import { useUpdatePasswordSettingMutation } from '../../service/profileService'
 type ProfileFormProps = {
-    newPassword: string,
+    currentPassword: string,
     confirmPassword: string
-    password: string
+    newPassword: string
 
 }
 const PasswordSetting = ({ navigation }: any) => {
@@ -22,7 +22,7 @@ const PasswordSetting = ({ navigation }: any) => {
     const PasswordVisibleIcon = Icon.PasswordVisibleIcon
     const [updatePassword] = useUpdatePasswordSettingMutation()
     const FormInitialValue: ProfileFormProps = {
-        password: "",
+        currentPassword: "",
         newPassword: "",
         confirmPassword: ""
     }
@@ -78,12 +78,12 @@ const PasswordSetting = ({ navigation }: any) => {
                     initialValues={FormInitialValue}
                     onSubmit={SubmitLoginForm}
                 >
-                    {({ handleChange, resetForm, handleSubmit, values, isSubmitting }) => (
+                    {({ handleChange, handleSubmit, values, isSubmitting }) => (
 
                         <View style={{ flex: 1, justifyContent: "center" }}>
                             <View style={styles.viewStyle}>
                                 <Input
-                                    value={values?.password}
+                                    value={values?.currentPassword}
                                     onChangeText={handleChange('password')}
                                     label='Password'
                                     activeUnderlineColor={Color.mds_global_gray_color}

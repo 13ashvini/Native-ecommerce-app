@@ -11,55 +11,7 @@ import { Routes } from '../../core/navigation/type'
 import { useGetRestaurantByIdQuery, useGetRestaurantCategoryByIdQuery } from '../../service/RestaurantService'
 import { useRoute } from '@react-navigation/native'
 import { DEV_URL } from '../../core/env/env'
-const categoryData = [{
-    id: 1,
-    name: "Chinese",
-    image: images?.categoryImage1
 
-},
-{
-    id: 2,
-    name: "Appetizer",
-    image: images?.categoryImage2
-
-},
-{
-    id: 3,
-    name: "Mexician",
-    image: images?.categoryImage3
-
-},
-{
-    id: 4,
-    name: "Dessert",
-    image: images?.categoryImage5
-
-},
-{
-    id: 5,
-    name: "Bakery",
-    image: images?.categoryImage6
-
-},
-{
-    id: 6,
-    name: "Burger",
-    image: images?.mostPopularlFood3
-
-}, {
-    id: 7,
-    name: "Main Course",
-    image: images?.DesiFoodImage7
-
-},
-{
-    id: 8,
-    name: "Soup",
-    image: images?.soupImage1
-
-},
-
-]
 
 const RestaurantsCategoryListData = ({ navigation }: any) => {
     const BASE_URL = DEV_URL
@@ -70,11 +22,9 @@ const RestaurantsCategoryListData = ({ navigation }: any) => {
     const [loadingCategory, setLoadingCategory] = useState(false)
     const [hasMoreData, setHasMoreData] = useState(true);
     const [categoryListData, setCategoryListData] = useState<any[]>([])
-    console.log("categoryListdatattt", categoryListData)
     const routes = useRoute()
     // @ts-ignore
     const { id } = routes?.params
-    console.log("id-----", id)
     const categoryLimit = 4
     const { data: categoryList, isLoading: isiscategoryListDataLoading, isFetching: isiscategoryListDataFetching } = useGetRestaurantCategoryByIdQuery
         (
@@ -83,7 +33,6 @@ const RestaurantsCategoryListData = ({ navigation }: any) => {
     useEffect(() => {
         // @ts-ignore
         let categoryListById = categoryList
-        console.log("categoryList--------", categoryListById)
         let Categorylimit = 6
         if (categoryList) {
             // @ts-ignore
@@ -119,7 +68,8 @@ const RestaurantsCategoryListData = ({ navigation }: any) => {
                     <TouchableOpacity
                         onPress={() => {
                             navigation.navigate(Routes.searchFoodItems, {
-                                categoryName: item?.name
+                                categoryName: item?.name,
+                                restaurantId: id
                             })
                         }}
                     >
